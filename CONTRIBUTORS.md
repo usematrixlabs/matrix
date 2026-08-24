@@ -1,7 +1,7 @@
 # Contributors
 
-Matrix is developed by a five-member engineering team for Smart India
-Hackathon 2026, under Problem Statement SIH26158.
+Matrix is developed by an engineering team for Smart India Hackathon 2026,
+under Problem Statement SIH26158.
 
 | Member | Role | Ownership |
 |---|---|---|
