@@ -179,6 +179,12 @@ The complete architecture is documented in:
 docs/architecture/system-architecture.md
 ```
 
+Subsystem interface contracts are documented in:
+
+```text
+docs/architecture/contracts/
+```
+
 ---
 
 # 📂 Repository Structure
