@@ -8,13 +8,22 @@ class Reconstructor:
     """Generate 3D reconstruction from visual observations."""
 
     def __init__(self, visual_data, localization_data):
+        """
+        Initialize a reconstructor with visual observations and camera localization data.
+        
+        Parameters:
+            visual_data: Visual observations used for reconstruction.
+            localization_data: Camera localization data used for reconstruction.
+        """
         self.visual_data = visual_data
         self.localization_data = localization_data
 
     def reconstruct(self):
-        """Generate 3D point cloud and/or mesh.
-
-        Returns reconstruction data compatible with S4 interface.
+        """
+        Provide 3D reconstruction data in the S4-compatible format.
+        
+        Returns:
+            dict: A mapping containing an empty point cloud, no mesh, and empty metadata.
         """
         # TODO: Implement 3D reconstruction
         return {
