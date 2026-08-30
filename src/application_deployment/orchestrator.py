@@ -8,13 +8,24 @@ class Orchestrator:
     """Orchestrate the Matrix pipeline and manage deployment."""
 
     def __init__(self, config: dict | None = None):
+        """
+        Initialize the orchestrator with optional configuration and an initialized pipeline state.
+        
+        Parameters:
+            config (dict | None): Configuration settings for the orchestrator.
+        """
         self.config = config or {}
         self.pipeline_status = "initialized"
 
     def run_pipeline(self, video_path: str, output_dir: str | None = None):
-        """Run the full S1→S2→S3→S4 processing pipeline.
-
-        Returns pipeline result summary.
+        """
+        Record pipeline processing and provide a completion summary.
+        
+        The current implementation does not process the video; it reports completion and
+        includes the requested output directory.
+        
+        Returns:
+            dict: A summary containing the completion status and output directory.
         """
         # TODO: Implement pipeline orchestration
         self.pipeline_status = "processing"
@@ -24,8 +35,10 @@ class Orchestrator:
         }
 
     def get_status(self):
-        """Return current pipeline processing status.
-
-        Returns status dict for UI/status presentation.
+        """
+        Report the current pipeline processing status.
+        
+        Returns:
+            dict: A dictionary containing the current status.
         """
         return {"status": self.pipeline_status}
