@@ -21,7 +21,7 @@ Matrix is organized into five primary subsystems:
 The canonical system architecture is documented in:
 
 ```text
-docs/architecture/system-architecture.md
+docs/architecture/system.md
 ```
 
 **This document is authoritative for system-level boundaries and interfaces.**
@@ -125,12 +125,22 @@ Before modifying code, an agent should:
 docs/architecture/system-architecture.md
 ```
 
-4. Inspect the existing implementation.
-5. Identify upstream and downstream dependencies.
-6. Determine whether the proposed change affects an interface.
-7. Determine whether the architecture document needs updating.
+4. Read the interface contracts:
+
+```text
+docs/architecture/contracts/
+```
+
+5. Inspect the existing implementation.
+6. Identify upstream and downstream dependencies.
+7. Determine whether the proposed change affects an interface.
+8. Determine whether the architecture document needs updating.
 
 Do not immediately start coding based only on the task description.
+
+### Architectural change documentation
+
+If the proposed change alters how Matrix components interact (subsystem boundaries, data flow, interfaces, or coordinate conventions), **`docs/architecture/system-architecture.md` must be updated in the same change**. See [23. Architecture Update Standard](#23-architecture-update-standard) and the [🚨 Non-Negotiable Rule](#-non-negotiable-rule) at the end of this document.
 
 ---
 
