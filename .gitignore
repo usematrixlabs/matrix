@@ -275,3 +275,8 @@ settings.local.*
 .DS_Store
 .directory
 EOF
+
+# venv
+pyvenv.cfg
+lib
+bin
