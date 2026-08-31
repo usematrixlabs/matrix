@@ -288,6 +288,18 @@ class ControlPoints:
         return int(self.source.shape[0])
 
     @property
+    def source_array(self) -> np.ndarray:
+        """Return normalized source control points as an ``(N, 3)`` array."""
+
+        return self.source
+
+    @property
+    def target_array(self) -> np.ndarray:
+        """Return normalized target control points as an ``(N, 3)`` array."""
+
+        return self.target
+
+    @property
     def source_centroid(self) -> np.ndarray:
         """Return the centroid of the source control points."""
 
