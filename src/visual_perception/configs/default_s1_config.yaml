@@ -1,0 +1,27 @@
+# Subsystem 1 (Visual Perception) Default Configuration
+
+# Input paths
+video_path: null
+telemetry_path: null
+
+# Output directories
+output_dir: "data/output/s1_observations"
+frames_dir: "data/output/s1_observations/frames"
+keyframes_dir: "data/output/s1_observations/keyframes"
+
+# Frame Extraction
+frame_rate: 2.0
+time_start: 0.0
+time_end: null
+target_width: null
+target_height: null
+
+# Keyframe Selection
+keyframe_method: "uniform"
+quality_threshold: 50.0
+max_keyframes: null
+
+# Logging
+log_level: "INFO"
+log_file: null
+
