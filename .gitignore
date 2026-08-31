@@ -276,7 +276,6 @@ settings.local.*
 .directory
 EOF
 
-<<<<<<< HEAD
 # venv
 pyvenv.cfg
 lib
@@ -284,11 +283,3 @@ bin
 Scripts/
 Lib/
 Bin/
-=======
-# ----------------
-# VENV
-# ----------------
-Lib/
-Scripts/
-pyvenv.cfg
->>>>>>> 1cfd2a1 (feat: update .gitignore to include VENV files and add control_points.py for 3D control point management)
