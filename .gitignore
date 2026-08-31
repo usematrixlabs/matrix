@@ -280,3 +280,6 @@ EOF
 pyvenv.cfg
 lib
 bin
+Scripts/
+Lib/
+Bin/
