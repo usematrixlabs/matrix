@@ -9,6 +9,8 @@ description = "UAV video-to-3D geospatial reconstruction system"
 requires-python = ">=3.10"
 
 [project.dependencies]
+numpy = "^1.25.0"
+
 
 [tool.setuptools.packages.find]
 where = ["src"]
