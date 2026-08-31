@@ -21,12 +21,16 @@ class S1Config:
     frames_dir: str = "data/output/s1_observations/frames"
     keyframes_dir: str = "data/output/s1_observations/keyframes"
 
-    # Frame Extraction Parameters
-    frame_rate: float = 2.0  # Frames extracted per second
+    # Frame Extraction & Sampling Parameters (Phase 4)
+    sampling_mode: str = "fixed"  # "fixed", "fps", "all"
+    sampling_interval: int = 10  # Sample every N frames when sampling_mode="fixed"
+    frame_rate: float = 2.0  # Frames extracted per second when sampling_mode="fps"
     time_start: float = 0.0  # Start time offset in seconds
     time_end: Optional[float] = None  # End time offset in seconds
     target_width: Optional[int] = None
     target_height: Optional[int] = None
+    image_format: str = "jpg"  # "jpg", "jpeg", "png"
+    jpeg_quality: int = 95  # JPEG quality (1-100)
 
     # Keyframe Selection Parameters
     keyframe_method: str = "uniform"  # "uniform", "laplacian_variance", "feature_diff"
@@ -66,7 +70,6 @@ class S1Config:
             with open(path, "r", encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
         except ImportError:
-            # Fallback if PyYAML is not installed: try JSON if formatted as JSON
             with open(path, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
@@ -86,4 +89,3 @@ class S1Config:
         except ImportError:
             with open(yaml_path, "w", encoding="utf-8") as f:
                 json.dump(self.to_dict(), f, indent=2)
-

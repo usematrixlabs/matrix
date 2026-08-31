@@ -74,6 +74,8 @@ class S1Pipeline:
             self.config.telemetry_path = telemetry_path
         if output_dir:
             self.config.output_dir = output_dir
+            self.config.frames_dir = str(os.path.join(output_dir, "frames"))
+            self.config.keyframes_dir = str(os.path.join(output_dir, "keyframes"))
 
         # Ensure output directories are created
         self.config.ensure_directories()
@@ -119,11 +121,14 @@ class S1Pipeline:
         else:
             self.logger.info("No video path provided to pipeline. Proceeding in initial/empty mode.")
 
-        # Step 3: Extract Frames
+        # Step 3: Extract & Sample Frames (Phase 4)
         self.logger.info("Running frame extraction...")
         extracted_frames = self.extractor.extract(
             start_time=self.config.time_start,
             end_time=self.config.time_end,
+            sampling_interval=self.config.sampling_interval,
+            sampling_mode=self.config.sampling_mode,
+            output_dir=self.config.frames_dir,
         )
 
         # Step 4: Select Keyframes
@@ -139,6 +144,8 @@ class S1Pipeline:
             visual_metadata={
                 "total_frames_extracted": len(extracted_frames),
                 "total_keyframes_selected": len(selected_keyframes),
+                "sampling_mode": self.config.sampling_mode,
+                "sampling_interval": self.config.sampling_interval,
                 "extraction_fps": self.config.frame_rate,
                 "keyframe_method": self.config.keyframe_method,
             },
@@ -185,7 +192,10 @@ def main() -> None:
     parser.add_argument("--telemetry", "-t", type=str, help="Path to optional telemetry JSON file")
     parser.add_argument("--config", "-c", type=str, help="Path to YAML configuration file")
     parser.add_argument("--output-dir", "-o", type=str, help="Output directory for frames & observations")
+    parser.add_argument("--sampling-mode", "-m", type=str, choices=["fixed", "fps", "all"], help="Sampling mode")
+    parser.add_argument("--sampling-interval", "-i", type=int, help="Fixed interval in frames (e.g. 10)")
     parser.add_argument("--frame-rate", "-r", type=float, help="Extraction rate (FPS)")
+    parser.add_argument("--image-format", type=str, choices=["jpg", "jpeg", "png"], help="Frame image format")
     parser.add_argument("--log-level", "-l", type=str, default="INFO", help="Logging level")
     parser.add_argument("--save-output", "-s", type=str, help="Path to save output JSON contract")
 
@@ -203,8 +213,16 @@ def main() -> None:
         config.telemetry_path = args.telemetry
     if args.output_dir:
         config.output_dir = args.output_dir
+        config.frames_dir = str(os.path.join(args.output_dir, "frames"))
+        config.keyframes_dir = str(os.path.join(args.output_dir, "keyframes"))
+    if args.sampling_mode:
+        config.sampling_mode = args.sampling_mode
+    if args.sampling_interval:
+        config.sampling_interval = args.sampling_interval
     if args.frame_rate:
         config.frame_rate = args.frame_rate
+    if args.image_format:
+        config.image_format = args.image_format
     if args.log_level:
         config.log_level = args.log_level
 

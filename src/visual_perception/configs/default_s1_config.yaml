@@ -9,12 +9,16 @@ output_dir: "data/output/s1_observations"
 frames_dir: "data/output/s1_observations/frames"
 keyframes_dir: "data/output/s1_observations/keyframes"
 
-# Frame Extraction
+# Frame Extraction & Sampling (Phase 4)
+sampling_mode: "fixed"
+sampling_interval: 10
 frame_rate: 2.0
 time_start: 0.0
 time_end: null
 target_width: null
 target_height: null
+image_format: "jpg"
+jpeg_quality: 95
 
 # Keyframe Selection
 keyframe_method: "uniform"
@@ -24,4 +28,3 @@ max_keyframes: null
 # Logging
 log_level: "INFO"
 log_file: null
-
