@@ -1,14 +1,15 @@
 """S1 Frame Extractor.
 
 Extracts individual frames from UAV video input and creates structured Frame records.
-Validates input video stream before extraction.
+Validates input video stream and extracts metadata before extraction.
 """
 
 from typing import List, Optional
 
 from .config import S1Config
 from .logger import get_logger
-from .types import Frame, VideoMetadata
+from .metadata_extractor import MetadataExtractor
+from .types import Frame, VideoMetadata, VideoMetadataRecord
 from .video_validator import VideoValidator
 
 
@@ -28,7 +29,9 @@ class FrameExtractor:
         self.frame_rate = frame_rate or self.config.frame_rate
         self.logger = get_logger(self.__class__.__name__, log_level=self.config.log_level)
         self.validator = VideoValidator(log_level=self.config.log_level)
+        self.metadata_extractor = MetadataExtractor(log_level=self.config.log_level)
         self.video_metadata: Optional[VideoMetadata] = None
+        self.metadata_record: Optional[VideoMetadataRecord] = None
 
     def validate(self, video_path: Optional[str] = None) -> VideoMetadata:
         """Validate the UAV video and cache metadata.
@@ -44,7 +47,12 @@ class FrameExtractor:
             from .exceptions import VideoNotFoundError
             raise VideoNotFoundError("No video path provided to FrameExtractor for validation.")
 
-        self.video_metadata = self.validator.validate(target_path)
+        self.metadata_record = self.metadata_extractor.extract(
+            video_path=target_path,
+            sidecar_path=self.config.telemetry_path,
+            start_time_offset=self.config.time_start,
+        )
+        self.video_metadata = self.metadata_record.video
         self.video_path = target_path
         return self.video_metadata
 

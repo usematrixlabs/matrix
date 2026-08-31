@@ -16,13 +16,19 @@ from .exceptions import (
 from .frame_extractor import FrameExtractor
 from .keyframe_selector import KeyframeSelector
 from .logger import get_logger
+from .metadata_extractor import MetadataExtractor
 from .pipeline import S1Pipeline
 from .types import (
+    CameraMetadata,
+    FlightMetadata,
     Frame,
+    FrameTimingInfo,
     Keyframe,
     S1Output,
+    SensorMetadata,
     UAVTelemetry,
     VideoMetadata,
+    VideoMetadataRecord,
     VisualObservations,
 )
 from .video_validator import VideoValidator
@@ -34,6 +40,11 @@ __all__ = [
     "UAVTelemetry",
     "VisualObservations",
     "VideoMetadata",
+    "FrameTimingInfo",
+    "CameraMetadata",
+    "FlightMetadata",
+    "SensorMetadata",
+    "VideoMetadataRecord",
     "S1Output",
     # Configuration & Logging
     "S1Config",
@@ -42,6 +53,7 @@ __all__ = [
     "FrameExtractor",
     "KeyframeSelector",
     "VideoValidator",
+    "MetadataExtractor",
     "S1Pipeline",
     # Exceptions
     "VideoValidationError",

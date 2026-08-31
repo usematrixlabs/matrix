@@ -1,8 +1,9 @@
 """S1 Type Definitions and Interface Contracts.
 
 Data models representing visual observations, frames, keyframes,
-validated video metadata, and optional UAV sensor telemetry,
-conforming to the S1 -> S2 contract (docs/architecture/contracts/perception-localization.md).
+validated video metadata, timing information, optional camera/flight/sensor
+metadata, and UAV sensor telemetry, conforming to the S1 -> S2 contract
+(docs/architecture/contracts/perception-localization.md).
 """
 
 from dataclasses import asdict, dataclass, field
@@ -28,6 +29,117 @@ class VideoMetadata:
     def to_dict(self) -> Dict[str, Any]:
         """Serialize video metadata to dictionary."""
         return asdict(self)
+
+
+@dataclass
+class FrameTimingInfo:
+    """Represents timing information and per-frame timestamp indexing for a video stream."""
+
+    fps: float
+    frame_interval_seconds: float  # dt = 1.0 / fps
+    total_frames: int
+    start_timestamp: float = 0.0
+    end_timestamp: float = 0.0
+    duration_seconds: float = 0.0
+
+    def get_timestamp_for_frame(self, frame_index: int) -> float:
+        """Calculate the monotonic timestamp (in seconds) for a given 0-indexed frame."""
+        if frame_index < 0:
+            raise ValueError(f"Frame index must be non-negative, got {frame_index}")
+        return round(self.start_timestamp + (frame_index * self.frame_interval_seconds), 6)
+
+    def get_frame_index_for_timestamp(self, timestamp: float) -> int:
+        """Calculate the nearest frame index for a given timestamp offset."""
+        if timestamp < self.start_timestamp:
+            return 0
+        offset = timestamp - self.start_timestamp
+        idx = int(round(offset / self.frame_interval_seconds))
+        return min(idx, max(0, self.total_frames - 1))
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize timing info to dictionary."""
+        return asdict(self)
+
+
+@dataclass
+class CameraMetadata:
+    """Represents optional camera and optical characteristics (explicitly None if absent)."""
+
+    camera_id: Optional[str] = "primary"
+    camera_make: Optional[str] = None
+    camera_model: Optional[str] = None
+    focal_length_mm: Optional[float] = None
+    sensor_width_mm: Optional[float] = None
+    sensor_height_mm: Optional[float] = None
+    field_of_view_deg: Optional[float] = None
+    lens_parameters: Optional[Dict[str, Any]] = None
+    exposure_mode: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize camera metadata to dictionary."""
+        return asdict(self)
+
+
+@dataclass
+class FlightMetadata:
+    """Represents optional flight mission and aircraft metadata (explicitly None if absent)."""
+
+    flight_id: Optional[str] = None
+    aircraft_model: Optional[str] = None
+    takeoff_timestamp: Optional[float] = None
+    pilot_operator: Optional[str] = None
+    mission_type: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize flight metadata to dictionary."""
+        return asdict(self)
+
+
+@dataclass
+class SensorMetadata:
+    """Represents optional sensor availability and sampling rates (explicitly None/False if absent)."""
+
+    has_gps: bool = False
+    has_imu: bool = False
+    has_rtk: bool = False
+    gps_sampling_rate_hz: Optional[float] = None
+    imu_sampling_rate_hz: Optional[float] = None
+    coordinate_system: Optional[str] = "WGS84"
+    altitude_reference: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize sensor metadata to dictionary."""
+        return asdict(self)
+
+
+@dataclass
+class VideoMetadataRecord:
+    """Structured internal representation of the source video and associated metadata (Phase 3 deliverable)."""
+
+    video: VideoMetadata
+    timing: FrameTimingInfo
+    camera: CameraMetadata = field(default_factory=CameraMetadata)
+    flight: FlightMetadata = field(default_factory=FlightMetadata)
+    sensor: SensorMetadata = field(default_factory=SensorMetadata)
+    source_file: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize complete structured video representation."""
+        return {
+            "video": {
+                "width": self.video.width,
+                "height": self.video.height,
+                "fps": self.video.fps,
+                "frame_count": self.video.frame_count,
+                "duration_sec": self.video.duration_seconds,
+                "codec": self.video.codec,
+            },
+            "timing": self.timing.to_dict(),
+            "camera": self.camera.to_dict(),
+            "flight": self.flight.to_dict(),
+            "sensor": self.sensor.to_dict(),
+            "source_file": self.source_file or self.video.video_path,
+        }
 
 
 @dataclass

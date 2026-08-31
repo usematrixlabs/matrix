@@ -16,7 +16,16 @@ from .exceptions import VideoValidationError
 from .frame_extractor import FrameExtractor
 from .keyframe_selector import KeyframeSelector
 from .logger import get_logger
-from .types import Frame, Keyframe, S1Output, UAVTelemetry, VideoMetadata, VisualObservations
+from .metadata_extractor import MetadataExtractor
+from .types import (
+    Frame,
+    Keyframe,
+    S1Output,
+    UAVTelemetry,
+    VideoMetadata,
+    VideoMetadataRecord,
+    VisualObservations,
+)
 from .video_validator import VideoValidator
 
 
@@ -32,6 +41,7 @@ class S1Pipeline:
         self.config = config or S1Config()
         self.logger = get_logger("S1Pipeline", log_level=self.config.log_level, log_file=self.config.log_file)
         self.validator = VideoValidator(log_level=self.config.log_level)
+        self.metadata_extractor = MetadataExtractor(log_level=self.config.log_level)
         self.extractor = FrameExtractor(config=self.config)
         self.selector = KeyframeSelector(config=self.config)
 
@@ -81,15 +91,20 @@ class S1Pipeline:
         elif self.config.telemetry_path:
             self.logger.warning("Telemetry file '%s' not found.", self.config.telemetry_path)
 
-        # Step 2: Validate UAV Video Input (Phase 2)
-        video_metadata: Optional[VideoMetadata] = None
+        # Step 2: Validate UAV Video Input & Extract Structured Metadata (Phase 2 & Phase 3)
+        video_metadata_record: Optional[VideoMetadataRecord] = None
         if self.config.video_path:
-            self.logger.info("Validating UAV video input '%s'...", self.config.video_path)
+            self.logger.info("Extracting structured metadata for '%s'...", self.config.video_path)
             try:
-                video_metadata = self.validator.validate(self.config.video_path)
-                self.extractor.video_metadata = video_metadata
+                video_metadata_record = self.metadata_extractor.extract(
+                    video_path=self.config.video_path,
+                    sidecar_path=self.config.telemetry_path,
+                    start_time_offset=self.config.time_start,
+                )
+                self.extractor.video_metadata = video_metadata_record.video
+                self.extractor.metadata_record = video_metadata_record
             except VideoValidationError as e:
-                self.logger.error("Video validation failed: %s", e)
+                self.logger.error("Video metadata extraction failed: %s", e)
                 if strict_validation:
                     raise
                 # Return failure contract
@@ -130,20 +145,26 @@ class S1Pipeline:
         )
 
         elapsed = time.time() - start_time
+        temporal_info = {
+            "processing_time_seconds": round(elapsed, 4),
+            "start_time_offset": self.config.time_start,
+            "end_time_offset": self.config.time_end,
+        }
+        if video_metadata_record:
+            temporal_info["frame_interval_seconds"] = video_metadata_record.timing.frame_interval_seconds
+            temporal_info["video_duration_seconds"] = video_metadata_record.timing.duration_seconds
+
         s1_output = S1Output(
             visual_observations=visual_obs,
-            temporal_information={
-                "processing_time_seconds": round(elapsed, 4),
-                "start_time_offset": self.config.time_start,
-                "end_time_offset": self.config.time_end,
-            },
+            temporal_information=temporal_info,
             available_uav_information=telemetry_data,
             status="completed",
             metadata={
                 "subsystem": "S1_Visual_Perception",
                 "version": "0.1.0",
                 "video_source": self.config.video_path,
-                "video_metadata": video_metadata.to_dict() if video_metadata else None,
+                "video_metadata": video_metadata_record.video.to_dict() if video_metadata_record else None,
+                "video_metadata_record": video_metadata_record.to_dict() if video_metadata_record else None,
                 "output_dir": self.config.output_dir,
             },
         )
