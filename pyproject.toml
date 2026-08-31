@@ -6,7 +6,7 @@ build-backend = "setuptools.backends._legacy:_Backend"
 name = "matrix"
 version = "0.1.0"
 description = "UAV video-to-3D geospatial reconstruction system"
-requires-python = ">=3.10"
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "numpy>=1.25.0,<2.0.0",
 ]
