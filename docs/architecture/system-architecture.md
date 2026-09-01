@@ -17,6 +17,7 @@ The five primary subsystems are:
 | **S3** | 3D Reconstruction | Generates dense point clouds, meshes, and textures | `docs/architecture/contracts/` |
 | **S4** | Georeferencing & Validation | Performs world coordinate transformation and accuracy validation | `docs/architecture/contracts/` |
 | **S5** | Application & Deployment | UI, API orchestration, and visualization | `docs/architecture/contracts/` |
+| **Orchestrator** | Pipeline (`src/pipeline/`) | Thin wrapper that invokes S1–S5 in sequence, preserves outputs, and stops clearly on failure | See [§5 Pipeline Orchestrator](#5-pipeline-orchestrator-srcpipeline) |
 
 ---
 
@@ -154,3 +155,93 @@ Input Error  ──>  Processing Error  ──>  Quality Warning  ──>  Degra
                         │    & Visualization        │
                         └───────────────────────────┘
 ```
+
+---
+
+## 5. Pipeline Orchestrator (`src/pipeline/`)
+
+The orchestrator is a thin wrapper that invokes each subsystem's main
+exported entry point in sequence and passes outputs from one stage to
+the next. It does **not** implement any S1–S4 algorithms itself and does
+not reach into any subsystem's internals — every cross-subsystem
+boundary it touches is one of the documented interface contracts in
+`docs/architecture/contracts/`.
+
+### 5.1 Responsibility
+
+* Create a per-run output directory.
+* Invoke S1, S2, S3, S4, S5 in order.
+* Pass stage outputs forward through their documented contracts.
+* Preserve all outputs and stop clearly on failure.
+* Emit a `PipelineResult` describing success / failure and the path of
+  the final bundled output.
+
+### 5.2 Entry Point
+
+```python
+from src.pipeline.orchestrator import run_pipeline
+
+result = run_pipeline(
+    video_path="benchmarks/dataset/video-1005/video.mp4",
+    gps_path="benchmarks/dataset/video-1005/gps.csv",
+    output_dir="benchmarks/results/video-1005",
+)
+```
+
+CLI form:
+
+```bash
+python -m src.pipeline.orchestrator \
+    --video benchmarks/dataset/video-1005/video.mp4 \
+    --gps   benchmarks/dataset/video-1005/gps.csv \
+    --output benchmarks/results/video-1005
+```
+
+### 5.3 Stage Wiring
+
+| Stage | Subsystem | Public Entry Point                          | Input Contract                                        | Output Contract                                  |
+| :--- | :--- | :------------------------------------------ | :---------------------------------------------------- | :----------------------------------------------- |
+| S1 | Visual Perception | `src.visual_perception.S1Pipeline` | `--video` path | `s1/observations.json` + `s1/frames/` |
+| S2 | Localization & Sensor Fusion | `src.localization_sensor_fusion` (`Localizer`, `SensorFusion`, `S2Exporter`) | `s1_output` observations + `--gps` CSV | `s2/s2_output.json` |
+| S3 | 3D Reconstruction | `src.reconstruction.S3ReconstructionPipeline` | `s2_output.json` | `s3/scene.ply` + `s3/metadata.json` |
+| S4 | Georeferencing & Validation | `src.georeferencing_validation.Georeferencer` | `s3/scene.ply` | `s4/georeferenced.ply` + `s4/georeferencing.json` |
+| S5 | Application & Deployment | `src.application_deployment.Finalizer` | per-stage artifacts | `s5/final_output.json` |
+
+The GPS CSV enters the system through **S2** (sensor fusion), not
+through the orchestrator as a separate processing stage.
+
+### 5.4 Output Layout
+
+For one run, the orchestrator creates the following layout under the
+user-supplied output directory. Each subsystem owns its own subdirectory
+and the orchestrator never reads another subsystem's internal files
+beyond the documented contract outputs.
+
+```text
+output_dir/
+├── s1/
+│   ├── observations.json
+│   └── frames/
+├── s2/
+│   └── s2_output.json
+├── s3/
+│   ├── scene.ply
+│   └── metadata.json
+├── s4/
+│   ├── georeferenced.ply
+│   └── georeferencing.json
+└── s5/
+    └── final_output.json
+```
+
+### 5.5 Failure Handling
+
+The orchestrator catches all stage exceptions at the pipeline boundary,
+records the failing stage in `PipelineResult.failed_stage`, prints a
+stack trace to stderr, and returns a `PipelineResult(success=False, ...)`.
+All artifacts produced by stages that ran successfully are preserved on
+disk so they can be inspected or replayed.
+
+Stages are also allowed to record **degraded** outcomes (e.g., S4 with
+an empty input point cloud) rather than failing the whole pipeline.
+These are surfaced through `stage_status` and the `sN/` summary files.
