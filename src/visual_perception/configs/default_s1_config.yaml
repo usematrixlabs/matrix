@@ -1,0 +1,47 @@
+# Subsystem 1 (Visual Perception) Default Configuration
+
+# Input paths
+video_path: null
+telemetry_path: null
+calibration_path: null
+
+# Output directories
+output_dir: "data/output/s1_observations"
+frames_dir: "data/output/s1_observations/frames"
+keyframes_dir: "data/output/s1_observations/keyframes"
+
+# Frame Extraction & Sampling (Phase 4)
+sampling_mode: "fixed"
+sampling_interval: 10
+frame_rate: 2.0
+time_start: 0.0
+time_end: null
+target_width: null
+target_height: null
+image_format: "jpg"
+jpeg_quality: 95
+
+# Visual Quality Assessment (Phase 7)
+enable_quality_assessment: true
+blur_threshold: 100.0
+underexposure_threshold: 30.0
+overexposure_threshold: 230.0
+low_feature_threshold: 50
+min_entropy_threshold: 3.5
+
+# Keyframe Detection (Phase 8)
+keyframe_method: "content_change"
+keyframe_change_threshold: 0.15
+min_keyframe_interval_frames: 2
+max_keyframe_interval_frames: 15
+skip_poor_quality_keyframes: true
+quality_threshold: 50.0
+max_keyframes: null
+
+# Failure & Degradation Handling (Phase 11)
+min_valid_observations: 1
+max_degraded_ratio: 0.8
+
+# Logging
+log_level: "INFO"
+log_file: null

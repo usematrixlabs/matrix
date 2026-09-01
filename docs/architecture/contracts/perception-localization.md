@@ -2,79 +2,160 @@
 
 ## Overview
 
-S1 (Visual Perception) provides visual observations and available UAV sensor information to S2 (Localization & Sensor Fusion) for camera localization and trajectory estimation.
+S1 (Visual Perception) produces structured visual observations, frame images, camera calibration, degradation diagnostics, and available UAV sensor information for S2 (Localization & Sensor Fusion) to estimate camera trajectory and poses.
 
-## Inputs
+---
 
-### Visual Observations
+## 1. Physical Package Structure (`s1_output/`)
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `frames` | `array<Frame>` | Ordered list of image frames / keyframes extracted from UAV video |
-| `keyframes` | `array<Keyframe>` | Subset of frames selected for feature extraction and matching |
-| `frame_ordering` | `sequence` | Temporal ordering of frames as they were captured |
-| `visual_metadata` | `object` | Per-frame metadata including quality scores, feature counts, etc. |
+S1 packages observations into a self-contained, portable artifact directory:
 
-### Frame (individual)
+```text
+s1_output/
+│
+├── frames/
+│   ├── frame_000001.jpg
+│   ├── frame_000002.jpg
+│   └── ...
+│
+└── observations.json
+```
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `image_path` | `string` | Path or identifier for the frame image |
-| `timestamp` | `float` | Capture timestamp (monotonic, seconds) |
-| `frame_id` | `string` | Unique identifier for the frame |
-| `image_width` | `int` | Width in pixels |
-| `image_height` | `int` | Height in pixels |
-| `exposure_time` | `float` | Camera exposure time (if available) |
-| `camera_id` | `string` | Camera identifier (if multiple cameras) |
+Image references within `observations.json` use relative paths (`frames/frame_000001.jpg`) from the package root.
 
-### Available UAV Information (optional)
+---
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `gps_coordinates` | `object` | Latitude, longitude, altitude if available |
-| `gnss_status` | `string` | GNSS fix status (e.g., "fixed", "float", "none") |
-| `imu_data` | `object` | Accelerometer and gyroscope measurements |
-| `altitude` | `float` | Barometric or GPS altitude |
-| `rtk_ppk` | `object` | RTK/PPK correction data |
-| `flight_telemetry` | `object` | Flight controller state, speed, heading, etc. |
-| `sensor_measurements` | `object` | Other available sensor data |
+## 2. Observation Schema (`observations.json`)
 
-## Outputs
+The canonical schema is formally defined in [`observations-schema.json`](observations-schema.json).
 
-S2 returns camera localization results associating poses with the visual observations provided by S1.
+### Root Container
 
-## Preconditions
+```json
+{
+  "schema_version": "1.0.0",
+  "subsystem": "S1_Visual_Perception",
+  "created_at": "2026-09-01T15:30:00Z",
+  "video_source": "data/raw/flight_01.mp4",
+  "total_observations": 120,
+  "keyframe_count": 24,
+  "keyframe_density": 0.20,
+  "temporal_information": {
+    "time_unit": "seconds",
+    "time_reference": "relative_capture_time",
+    "is_monotonic": true,
+    "duration_seconds": 60.0
+  },
+  "camera": {
+    "width": 1920,
+    "height": 1080,
+    "intrinsics": {
+      "fx": 1450.0,
+      "fy": 1452.0,
+      "cx": 960.0,
+      "cy": 540.0,
+      "camera_matrix": [
+        [1450.0, 0.0, 960.0],
+        [0.0, 1452.0, 540.0],
+        [0.0, 0.0, 1.0]
+      ]
+    },
+    "distortion": {
+      "coefficients": [-0.12, 0.05, 0.0, 0.0, 0.0],
+      "model": "radtan"
+    },
+    "is_calibrated": true
+  },
+  "quality_summary": {
+    "GOOD": 115,
+    "BLURRY": 5,
+    "OVEREXPOSED": 0,
+    "UNDEREXPOSED": 0,
+    "LOW_FEATURE": 0,
+    "CORRUPTED": 0
+  },
+  "observations": [ ... ]
+}
+```
 
-- S1 must preserve all available UAV-supplied information without silently discarding it
-- Timestamp association between frames and sensor data must be maintainable
-- Frame identifiers must be unique and consistent throughout the pipeline
+### Observation Item Schema
 
-## Guarantees
+```json
+{
+  "observation_id": "frame_000123",
+  "timestamp": 12.34,
+  "image": "frames/frame_000123.jpg",
+  "camera": {
+    "width": 1920,
+    "height": 1080,
+    "intrinsics": null,
+    "distortion": null
+  },
+  "quality": {
+    "status": "GOOD",
+    "blur_score": 245.3,
+    "quality_score": 88.5,
+    "flags": []
+  },
+  "keyframe": true
+}
+```
 
-- Each localization result must include a documented association to the relevant observation via `frame_id` and/or `timestamp`
-- If GPS/GNSS/IMU data is provided by S1, S2 must fuse it with visual observations
-- If no additional sensor data is available, S2 must still produce localization using visual-only methods
-- S2 must not assume any particular optional sensor is always present
+---
 
-## Failure Conditions
+## 3. Data Dictionary
 
-- If S1 discards sensor information that S2 needs, localization quality may degrade unexpectedly
-- If timestamps are not associated with frames, temporal alignment with sensor data is lost
-- If frame identifiers are not unique, observation-to-pose association becomes ambiguous
+### Visual Observation Fields
 
-## Version
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `observation_id` | `string` | **Yes** | Stable, deterministic identifier (e.g. `frame_000001`) |
+| `timestamp` | `float` | **Yes** | Monotonic capture timestamp in seconds ($t_k < t_{k+1}$) |
+| `image` | `string` | **Yes** | Relative path to image file (`frames/frame_000001.jpg`) |
+| `camera` | `object` | **Yes** | Camera geometry (`width`, `height`) and optional calibration (`intrinsics`, `distortion`) |
+| `quality` | `object` | **Yes** | Quality condition report (`status`, `blur_score`, `quality_score`, `flags`) |
+| `keyframe` | `boolean` | **Yes** | `true` if promoted to keyframe, `false` otherwise |
 
-**Contract version:** 1.0.0
+### Quality Status Enum
 
-**Since:** Matrix S1→S2 interface establishment
+* `GOOD`: Sharp, well-exposed, feature-rich observation.
+* `BLURRY`: Motion or defocus blur detected ($\sigma_{\Delta}^2 < \text{threshold}$).
+* `OVEREXPOSED`: Luminance washed out ($\mu > 230$).
+* `UNDEREXPOSED`: Insufficient illumination ($\mu < 30$).
+* `LOW_FEATURE`: Low texture / feature count.
+* `CORRUPTED`: Unreadable array or decoding failure.
 
-## Associated Interfaces
+### Camera Calibration Fields
 
-- **S1 Output:** See [S1 → S2 Interface](system.md#4-s1-s2-interface) in system architecture
-- **S2 Output:** See [S2 → S3 Interface](system.md#6-s2-s3-interface) in system architecture
+* `width`, `height`: Image dimensions in pixels (always guaranteed).
+* `intrinsics`: `fx`, `fy`, `cx`, `cy`, and $3\times 3$ `camera_matrix` (or `null` if uncalibrated).
+* `distortion`: `coefficients` and `model` (or `null` if uncalibrated).
+* `is_calibrated`: Explicit boolean flag.
 
-## Change Log
+---
 
-| Version | Date | Change |
-| --- | --- | --- |
-| 1.0.0 | — | Initial contract definition |
+## 4. Failure & Degradation Contract (Phase 11)
+
+`S1Output` provides explicit top-level health indicators:
+
+* **`status`**: `"completed"` (healthy), `"degraded"` (sparse/blurry frames), `"failed"` (unusable/corrupt).
+* **`warnings`**: List of non-fatal operational warnings (e.g. `missing_camera_calibration`, `missing_uav_telemetry`, `insufficient_valid_observations`).
+* **`errors`**: List of fatal error messages when status is `"failed"`.
+* **`diagnostics`**: Structured dictionary containing observation counts, valid/corrupted breakdown, and sensor availability.
+
+---
+
+## 5. Guarantees & Preconditions
+
+* **Non-Destructive Observations:** All candidate observations are preserved in `observations.json` with `keyframe: bool`. S2 can evaluate all observations or keyframes only.
+* **Portable Relative Paths:** All `image` paths are relative to `s1_output/` root.
+* **Stable IDs:** Observation identifiers remain immutable through S1 $\rightarrow$ S2 $\rightarrow$ S3.
+* **Monotonic Timestamps:** Timestamps represent source video capture time in seconds, never wall-clock processing time.
+* **Explicit Degradation:** Corrupt or invalid frames are never silently reported as valid.
+
+---
+
+## 6. Versioning
+
+* **Contract Version:** 1.2.0
+* **Schema Reference:** [`observations-schema.json`](observations-schema.json)
