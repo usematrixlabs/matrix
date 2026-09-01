@@ -1,20 +1,35 @@
 [build-system]
 requires = ["setuptools>=61.0"]
-build-backend = "setuptools.backends._legacy:_Backend"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "matrix"
 version = "0.1.0"
-description = "UAV video-to-3D geospatial reconstruction system"
+description = "Matrix: UAV video-to-3D geospatial reconstruction system"
+readme = "README.md"
 requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24.0",
+    "pyyaml>=6.0",
+    "pydantic>=2.0.0",
+]
 
-[project.dependencies]
+[project.optional-dependencies]
+s1 = [
+    "opencv-python-headless>=4.8.0",
+]
+dev = [
+    "pytest>=7.0.0",
+]
+all = [
+    "opencv-python-headless>=4.8.0",
+    "pytest>=7.0.0",
+]
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
+include = ["src*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
-python_classes = []
-python_functions = []
