@@ -3,6 +3,7 @@
 # Input paths
 video_path: null
 telemetry_path: null
+calibration_path: null
 
 # Output directories
 output_dir: "data/output/s1_observations"

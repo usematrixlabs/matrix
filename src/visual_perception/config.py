@@ -17,6 +17,7 @@ class S1Config:
     # Input and Output Paths
     video_path: Optional[str] = None
     telemetry_path: Optional[str] = None
+    calibration_path: Optional[str] = None  # Optional path to camera calibration file (Phase 9)
     output_dir: str = "data/output/s1_observations"
     frames_dir: str = "data/output/s1_observations/frames"
     keyframes_dir: str = "data/output/s1_observations/keyframes"

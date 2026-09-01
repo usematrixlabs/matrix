@@ -1,8 +1,7 @@
-"""S1 Video Metadata Extractor.
+"""S1 Metadata Extractor.
 
-Extracts stream geometry, FPS, frame counts, per-frame timing info,
-and optional camera, flight, and sensor metadata into a structured record
-conforming to Phase 3 requirements.
+Extracts structured metadata from video streams, timing models, optional camera/flight/sensor
+metadata, and camera calibration parameters. Conforms to Phase 3 & Phase 9 deliverables.
 """
 
 import json
@@ -10,8 +9,11 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from .camera_calibrator import CameraCalibrationLoader
+from .exceptions import VideoMetadataError
 from .logger import get_logger
 from .types import (
+    CameraCalibration,
     CameraMetadata,
     FlightMetadata,
     FrameTimingInfo,
@@ -23,38 +25,51 @@ from .video_validator import VideoValidator
 
 
 class MetadataExtractor:
-    """Extracts structured video stream and auxiliary UAV metadata."""
+    """Extracts stream properties, timing parameters, and sidecar metadata."""
 
     def __init__(self, log_level: str = "INFO"):
-        """Initialize the metadata extractor."""
+        """Initialize the metadata extractor.
+
+        Parameters:
+            log_level (str): Logging level.
+        """
         self.logger = get_logger(self.__class__.__name__, log_level=log_level)
         self.validator = VideoValidator(log_level=log_level)
+        self.calibration_loader = CameraCalibrationLoader()
 
     def extract(
         self,
         video_path: str,
         sidecar_path: Optional[str] = None,
         sidecar_data: Optional[Dict[str, Any]] = None,
+        calibration_path: Optional[str] = None,
         start_time_offset: float = 0.0,
     ) -> VideoMetadataRecord:
-        """Extract complete structured metadata for a source video.
+        """Extract complete structured metadata for a UAV video source.
 
         Parameters:
-            video_path (str): Path to the UAV input video.
-            sidecar_path (Optional[str]): Path to optional sidecar JSON containing camera/flight/sensor info.
-            sidecar_data (Optional[Dict[str, Any]]): Dictionary containing optional camera/flight/sensor info.
-            start_time_offset (float): Initial time offset in seconds.
+            video_path (str): Path to the video file.
+            sidecar_path (Optional[str]): Path to auxiliary metadata JSON/dictionary.
+            sidecar_data (Optional[Dict[str, Any]]): Pre-loaded dictionary of sidecar metadata.
+            calibration_path (Optional[str]): Path to camera calibration JSON/YAML.
+            start_time_offset (float): Initial timestamp offset in seconds.
 
         Returns:
-            VideoMetadataRecord: Structured internal representation of the video.
+            VideoMetadataRecord: Structured video and sensor metadata representation.
+
+        Raises:
+            VideoValidationError: If the source video fails validation checks.
         """
         self.logger.info("Extracting video metadata for '%s'...", video_path)
 
-        # 1. Validate video and extract stream properties
+        # 1. Validate stream and extract fundamental stream properties
         video_meta = self.validator.validate(video_path)
 
-        # 2. Build precise frame timing information
-        frame_interval = round(1.0 / video_meta.fps, 8) if video_meta.fps > 0 else 0.0
+        # 2. Build monotonic FrameTimingInfo
+        if video_meta.fps <= 0:
+            raise VideoMetadataError(f"Cannot calculate timing info with invalid FPS: {video_meta.fps}")
+
+        frame_interval = round(1.0 / video_meta.fps, 6)
         timing_info = FrameTimingInfo(
             fps=video_meta.fps,
             frame_interval_seconds=frame_interval,
@@ -78,7 +93,20 @@ class MetadataExtractor:
         elif sidecar_path:
             self.logger.warning("Sidecar metadata path '%s' not found.", sidecar_path)
 
-        # 4. Extract Camera Metadata (explicitly None if absent)
+        # 4. Extract Camera Calibration (Phase 9)
+        calib_source = (
+            calibration_path
+            or raw_sidecar.get("calibration")
+            or raw_sidecar.get("camera_parameters")
+            or raw_sidecar.get("camera_calibration")
+        )
+        calibration_meta = self.calibration_loader.load_calibration(
+            calibration_source=calib_source,
+            image_width=video_meta.width,
+            image_height=video_meta.height,
+        )
+
+        # 5. Extract Camera Metadata (explicitly None if absent)
         camera_dict = raw_sidecar.get("camera", {})
         camera_meta = CameraMetadata(
             camera_id=camera_dict.get("camera_id", "primary"),
@@ -90,9 +118,10 @@ class MetadataExtractor:
             field_of_view_deg=camera_dict.get("field_of_view_deg"),
             lens_parameters=camera_dict.get("lens_parameters"),
             exposure_mode=camera_dict.get("exposure_mode"),
+            calibration=calibration_meta,
         )
 
-        # 5. Extract Flight Metadata (explicitly None if absent)
+        # 6. Extract Flight Metadata (explicitly None if absent)
         flight_dict = raw_sidecar.get("flight", {})
         flight_meta = FlightMetadata(
             flight_id=flight_dict.get("flight_id"),
@@ -102,7 +131,7 @@ class MetadataExtractor:
             mission_type=flight_dict.get("mission_type"),
         )
 
-        # 6. Extract Sensor Metadata (explicitly None/False if absent)
+        # 7. Extract Sensor Metadata (explicitly None/False if absent)
         sensor_dict = raw_sidecar.get("sensor", {}) or raw_sidecar.get("sensors", {})
         has_gps = sensor_dict.get("has_gps", bool(raw_sidecar.get("gps_coordinates") or raw_sidecar.get("gps")))
         has_imu = sensor_dict.get("has_imu", bool(raw_sidecar.get("imu_data") or raw_sidecar.get("imu")))
@@ -124,15 +153,17 @@ class MetadataExtractor:
             camera=camera_meta,
             flight=flight_meta,
             sensor=sensor_meta,
+            calibration=calibration_meta,
             source_file=str(Path(video_path).resolve()),
         )
 
         self.logger.info(
-            "Video metadata extraction complete: %dx%d, %.2f FPS, %d frames (dt=%.4fs)",
+            "Video metadata extraction complete: %dx%d, %.2f FPS, %d frames (dt=%.4fs, is_calibrated=%s)",
             video_meta.width,
             video_meta.height,
             video_meta.fps,
             video_meta.frame_count,
             timing_info.frame_interval_seconds,
+            calibration_meta.is_calibrated,
         )
         return record

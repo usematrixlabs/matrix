@@ -1,7 +1,8 @@
 """S1 Visual Perception Pipeline Runner.
 
 Coordinates video decoding, frame extraction, keyframe selection,
-quality assessment, and metadata preservation conforming to the S1 -> S2 interface contract.
+quality assessment, camera calibration, and metadata preservation conforming
+to the S1 -> S2 interface contract.
 """
 
 import argparse
@@ -21,6 +22,7 @@ from .metadata_extractor import MetadataExtractor
 from .quality_assessor import QualityAssessor
 from .timestamp_handler import TimestampHandler
 from .types import (
+    CameraCalibration,
     Frame,
     Keyframe,
     S1Output,
@@ -53,6 +55,7 @@ class S1Pipeline:
         self,
         video_path: Optional[str] = None,
         telemetry_path: Optional[str] = None,
+        calibration_path: Optional[str] = None,
         output_dir: Optional[str] = None,
         strict_validation: bool = True,
     ) -> S1Output:
@@ -61,6 +64,7 @@ class S1Pipeline:
         Parameters:
             video_path (Optional[str]): Path to the UAV input video.
             telemetry_path (Optional[str]): Path to optional UAV telemetry file.
+            calibration_path (Optional[str]): Path to optional camera calibration file.
             output_dir (Optional[str]): Destination directory for outputs.
             strict_validation (bool): If True, raises validation exceptions immediately.
 
@@ -76,6 +80,8 @@ class S1Pipeline:
             self.extractor.video_path = video_path
         if telemetry_path:
             self.config.telemetry_path = telemetry_path
+        if calibration_path:
+            self.config.calibration_path = calibration_path
         if output_dir:
             self.config.output_dir = output_dir
             self.config.frames_dir = str(os.path.join(output_dir, "frames"))
@@ -97,7 +103,7 @@ class S1Pipeline:
         elif self.config.telemetry_path:
             self.logger.warning("Telemetry file '%s' not found.", self.config.telemetry_path)
 
-        # Step 2: Validate UAV Video Input & Extract Structured Metadata (Phase 2 & Phase 3)
+        # Step 2: Validate UAV Video Input & Extract Structured Metadata (Phase 2, 3, 9)
         video_metadata_record: Optional[VideoMetadataRecord] = None
         if self.config.video_path:
             self.logger.info("Extracting structured metadata for '%s'...", self.config.video_path)
@@ -105,6 +111,7 @@ class S1Pipeline:
                 video_metadata_record = self.metadata_extractor.extract(
                     video_path=self.config.video_path,
                     sidecar_path=self.config.telemetry_path,
+                    calibration_path=self.config.calibration_path,
                     start_time_offset=self.config.time_start,
                 )
                 self.extractor.video_metadata = video_metadata_record.video
@@ -155,8 +162,14 @@ class S1Pipeline:
             "CORRUPTED": sum(1 for f in extracted_frames if f.quality and f.quality.status == "CORRUPTED"),
         }
 
-        # Step 6: Assemble S1 -> S2 Interface Output
+        # Step 6: Assemble S1 -> S2 Interface Output (Phase 9 Calibration preservation)
         frame_ordering = [f.frame_id for f in extracted_frames]
+        calib_dict = (
+            video_metadata_record.calibration.to_dict()
+            if video_metadata_record and video_metadata_record.calibration
+            else None
+        )
+
         visual_obs = VisualObservations(
             frames=extracted_frames,
             keyframes=selected_keyframes,
@@ -172,6 +185,7 @@ class S1Pipeline:
                 "stable_identifiers_validated": True,
                 "capture_timestamps_validated": True,
                 "quality_summary": quality_summary,
+                "camera_calibration": calib_dict,
             },
         )
 
@@ -199,16 +213,17 @@ class S1Pipeline:
                 "video_source": self.config.video_path,
                 "video_metadata": video_metadata_record.video.to_dict() if video_metadata_record else None,
                 "video_metadata_record": video_metadata_record.to_dict() if video_metadata_record else None,
+                "camera_calibration": calib_dict,
                 "output_dir": self.config.output_dir,
             },
         )
 
         self.logger.info(
-            "S1 Pipeline completed in %.3fs (Extracted %d frames, %d keyframes, Density: %.1f%%, Quality: %s)",
+            "S1 Pipeline completed in %.3fs (Extracted %d frames, %d keyframes, Calibrated=%s, Quality: %s)",
             elapsed,
             len(extracted_frames),
             len(selected_keyframes),
-            keyframe_density * 100.0,
+            bool(calib_dict and calib_dict.get("is_calibrated")),
             str(quality_summary),
         )
         return s1_output
@@ -219,6 +234,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Matrix S1 — Visual Perception Pipeline")
     parser.add_argument("--video", "-v", type=str, help="Path to input UAV video file")
     parser.add_argument("--telemetry", "-t", type=str, help="Path to optional telemetry JSON file")
+    parser.add_argument("--calibration", "-cal", type=str, help="Path to optional camera calibration file (JSON/YAML)")
     parser.add_argument("--config", "-c", type=str, help="Path to YAML configuration file")
     parser.add_argument("--output-dir", "-o", type=str, help="Output directory for frames & observations")
     parser.add_argument("--sampling-mode", "-m", type=str, choices=["fixed", "fps", "all"], help="Sampling mode")
@@ -243,6 +259,8 @@ def main() -> None:
         config.video_path = args.video
     if args.telemetry:
         config.telemetry_path = args.telemetry
+    if args.calibration:
+        config.calibration_path = args.calibration
     if args.output_dir:
         config.output_dir = args.output_dir
         config.frames_dir = str(os.path.join(args.output_dir, "frames"))

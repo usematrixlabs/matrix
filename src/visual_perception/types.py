@@ -2,7 +2,7 @@
 
 Data models representing visual observations, frames, keyframes,
 validated video metadata, timing information, optional camera/flight/sensor
-metadata, visual quality assessment, and UAV sensor telemetry,
+metadata, camera calibration parameters, visual quality assessment, and UAV sensor telemetry,
 conforming to the S1 -> S2 contract (docs/architecture/contracts/perception-localization.md).
 """
 
@@ -26,6 +26,39 @@ class QualityAssessment:
     def to_dict(self) -> Dict[str, Any]:
         """Serialize quality assessment to dictionary."""
         return asdict(self)
+
+
+@dataclass
+class CameraCalibration:
+    """Represents camera intrinsic calibration parameters and lens distortion (Phase 9)."""
+
+    width: int
+    height: int
+    fx: Optional[float] = None  # Focal length in x (pixels)
+    fy: Optional[float] = None  # Focal length in y (pixels)
+    cx: Optional[float] = None  # Principal point x (pixels)
+    cy: Optional[float] = None  # Principal point y (pixels)
+    distortion_coefficients: Optional[List[float]] = None  # [k1, k2, p1, p2, k3, ...]
+    distortion_model: Optional[str] = None  # "radtan", "pinhole", "fisheye", "brown_conrady"
+    camera_matrix: Optional[List[List[float]]] = None  # 3x3 intrinsic matrix
+    is_calibrated: bool = False  # Explicit calibration status flag
+    calibration_source: Optional[str] = None  # File path or source identifier
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize camera calibration parameters to dictionary with explicit nulls."""
+        return {
+            "width": self.width,
+            "height": self.height,
+            "fx": self.fx,
+            "fy": self.fy,
+            "cx": self.cx,
+            "cy": self.cy,
+            "distortion_coefficients": self.distortion_coefficients,
+            "distortion_model": self.distortion_model,
+            "camera_matrix": self.camera_matrix,
+            "is_calibrated": self.is_calibrated,
+            "calibration_source": self.calibration_source,
+        }
 
 
 @dataclass
@@ -81,7 +114,7 @@ class FrameTimingInfo:
 
 @dataclass
 class CameraMetadata:
-    """Represents optional camera and optical characteristics (explicitly None if absent)."""
+    """Represents optional camera characteristics and optical calibration (explicitly None if absent)."""
 
     camera_id: Optional[str] = "primary"
     camera_make: Optional[str] = None
@@ -92,10 +125,14 @@ class CameraMetadata:
     field_of_view_deg: Optional[float] = None
     lens_parameters: Optional[Dict[str, Any]] = None
     exposure_mode: Optional[str] = None
+    calibration: Optional[CameraCalibration] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Serialize camera metadata to dictionary."""
-        return asdict(self)
+        d = asdict(self)
+        if self.calibration:
+            d["calibration"] = self.calibration.to_dict()
+        return d
 
 
 @dataclass
@@ -132,13 +169,14 @@ class SensorMetadata:
 
 @dataclass
 class VideoMetadataRecord:
-    """Structured internal representation of the source video and associated metadata (Phase 3 deliverable)."""
+    """Structured internal representation of the source video and associated metadata (Phase 3 & Phase 9 deliverable)."""
 
     video: VideoMetadata
     timing: FrameTimingInfo
     camera: CameraMetadata = field(default_factory=CameraMetadata)
     flight: FlightMetadata = field(default_factory=FlightMetadata)
     sensor: SensorMetadata = field(default_factory=SensorMetadata)
+    calibration: Optional[CameraCalibration] = None
     source_file: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -154,6 +192,7 @@ class VideoMetadataRecord:
             },
             "timing": self.timing.to_dict(),
             "camera": self.camera.to_dict(),
+            "calibration": self.calibration.to_dict() if self.calibration else (self.camera.calibration.to_dict() if self.camera.calibration else None),
             "flight": self.flight.to_dict(),
             "sensor": self.sensor.to_dict(),
             "source_file": self.source_file or self.video.video_path,

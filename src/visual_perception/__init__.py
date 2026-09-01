@@ -4,6 +4,7 @@ Transforms UAV video into usable visual observations and preserves
 input information required by downstream subsystems.
 """
 
+from .camera_calibrator import CameraCalibrationLoader
 from .config import S1Config
 from .exceptions import (
     VideoCorruptError,
@@ -22,6 +23,7 @@ from .pipeline import S1Pipeline
 from .quality_assessor import QualityAssessor
 from .timestamp_handler import TimestampHandler
 from .types import (
+    CameraCalibration,
     CameraMetadata,
     FlightMetadata,
     Frame,
@@ -46,6 +48,7 @@ __all__ = [
     "VideoMetadata",
     "FrameTimingInfo",
     "CameraMetadata",
+    "CameraCalibration",
     "FlightMetadata",
     "SensorMetadata",
     "VideoMetadataRecord",
@@ -59,6 +62,7 @@ __all__ = [
     "KeyframeSelector",
     "VideoValidator",
     "MetadataExtractor",
+    "CameraCalibrationLoader",
     "ObservationIdentifier",
     "TimestampHandler",
     "QualityAssessor",
