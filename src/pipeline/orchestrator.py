@@ -255,14 +255,31 @@ def run_s4(s3_output_dir: Path, output_dir: Path) -> Path:
     reconstruction (no real GCPs), this falls back to an identity
     Helmert fit so the S4 stage remains runnable end-to-end and emits a
     valid ``georeferenced.ply`` artifact.
+
+    If S3 produced an empty PLY (e.g., due to missing camera intrinsics),
+    S4 records a degraded result instead of raising, so that S5 still
+    runs and the full pipeline summary is preserved.
     """
     _stage_log("S4", "Running georeferencing & validation...")
 
     from src.reconstruction.geometry.ply_io import PlyIO
 
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     ply_path = s3_output_dir / "scene.ply"
     if not ply_path.exists():
-        raise RuntimeError(f"S3 output PLY not found: {ply_path}")
+        _stage_log("S4", "degraded: S3 produced no PLY artifact.")
+        out_ply = output_dir / "georeferenced.ply"
+        with open(out_ply, "w", encoding="utf-8") as f:
+            f.write("")
+        meta_path = output_dir / "georeferencing.json"
+        with open(meta_path, "w", encoding="utf-8") as f:
+            json.dump(
+                {"status": "degraded", "reason": "S3 produced no PLY artifact."},
+                f,
+                indent=2,
+            )
+        return out_ply
 
     point_cloud = PlyIO.read_ply(ply_path)
     points = np.asarray(point_cloud.points, dtype=np.float64)
@@ -273,9 +290,28 @@ def run_s4(s3_output_dir: Path, output_dir: Path) -> Path:
     )
 
     if points.shape[0] < 3:
-        raise RuntimeError(
-            f"S3 produced only {points.shape[0]} points; S4 needs ≥3 for Helmert fit."
+        _stage_log(
+            "S4",
+            f"degraded: S3 produced {points.shape[0]} points; need ≥3 for Helmert fit.",
         )
+        out_ply = output_dir / "georeferenced.ply"
+        with open(out_ply, "w", encoding="utf-8") as f:
+            f.write("")
+        meta_path = output_dir / "georeferencing.json"
+        with open(meta_path, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "status": "degraded",
+                    "reason": (
+                        f"S3 produced only {int(points.shape[0])} points; "
+                        "cannot fit a Helmert transformation."
+                    ),
+                    "num_points": int(points.shape[0]),
+                },
+                f,
+                indent=2,
+            )
+        return out_ply
 
     reconstruction = ReconstructionInput(
         points=points,
@@ -299,7 +335,6 @@ def run_s4(s3_output_dir: Path, output_dir: Path) -> Path:
     )
     result = georeferencer.georeference()
 
-    output_dir.mkdir(parents=True, exist_ok=True)
     out_ply = output_dir / "georeferenced.ply"
 
     from src.reconstruction.models.s3_output import PointCloudData as _PCD

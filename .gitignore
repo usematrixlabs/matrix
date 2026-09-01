@@ -286,3 +286,4 @@ Bin/
 
 # Results
 benchmarks/results/**/s1/frames/*.jpg
+benchmarks/results/*

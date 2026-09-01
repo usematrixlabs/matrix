@@ -177,15 +177,22 @@ class S2Payload:
 
             pose_raw = raw.get("pose") or {}
             pose = None
-            if isinstance(pose_raw, dict) or pose_raw is not None:
+            if isinstance(pose_raw, dict) and (pose_raw.get("position") or pose_raw.get("orientation")):
+                position = pose_raw.get("position")
+                if isinstance(position, dict):
+                    position = [position.get("x", 0.0), position.get("y", 0.0), position.get("z", 0.0)]
+                orientation = pose_raw.get("orientation")
+                if isinstance(orientation, dict):
+                    orientation = [
+                        orientation.get("x", orientation.get("qx", 0.0)),
+                        orientation.get("y", orientation.get("qy", 0.0)),
+                        orientation.get("z", orientation.get("qz", 0.0)),
+                        orientation.get("w", orientation.get("qw", 1.0)),
+                    ]
                 pose = CameraPose(
-                    position=pose_raw.get("position") if isinstance(pose_raw, dict) else None,
-                    orientation=pose_raw.get("orientation") if isinstance(pose_raw, dict) else None,
-                    orientation_format=(
-                        pose_raw.get("orientation_format", "QUATERNION_XYZW")
-                        if isinstance(pose_raw, dict)
-                        else "QUATERNION_XYZW"
-                    ),
+                    position=position,
+                    orientation=orientation,
+                    orientation_format=pose_raw.get("orientation_format", "QUATERNION_XYZW"),
                 )
 
             loc_raw = raw.get("localization") or {}
