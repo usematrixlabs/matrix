@@ -283,3 +283,6 @@ bin
 Scripts/
 Lib/
 Bin/
+
+# Results
+benchmarks/results/**/s1/frames/*.jpg
