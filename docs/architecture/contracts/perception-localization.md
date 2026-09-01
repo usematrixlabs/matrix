@@ -2,7 +2,7 @@
 
 ## Overview
 
-S1 (Visual Perception) produces structured visual observations, frame images, camera calibration, and available UAV sensor information for S2 (Localization & Sensor Fusion) to estimate camera trajectory and poses.
+S1 (Visual Perception) produces structured visual observations, frame images, camera calibration, degradation diagnostics, and available UAV sensor information for S2 (Localization & Sensor Fusion) to estimate camera trajectory and poses.
 
 ---
 
@@ -134,16 +134,28 @@ The canonical schema is formally defined in [`observations-schema.json`](observa
 
 ---
 
-## 4. Guarantees & Preconditions
+## 4. Failure & Degradation Contract (Phase 11)
+
+`S1Output` provides explicit top-level health indicators:
+
+* **`status`**: `"completed"` (healthy), `"degraded"` (sparse/blurry frames), `"failed"` (unusable/corrupt).
+* **`warnings`**: List of non-fatal operational warnings (e.g. `missing_camera_calibration`, `missing_uav_telemetry`, `insufficient_valid_observations`).
+* **`errors`**: List of fatal error messages when status is `"failed"`.
+* **`diagnostics`**: Structured dictionary containing observation counts, valid/corrupted breakdown, and sensor availability.
+
+---
+
+## 5. Guarantees & Preconditions
 
 * **Non-Destructive Observations:** All candidate observations are preserved in `observations.json` with `keyframe: bool`. S2 can evaluate all observations or keyframes only.
 * **Portable Relative Paths:** All `image` paths are relative to `s1_output/` root.
 * **Stable IDs:** Observation identifiers remain immutable through S1 $\rightarrow$ S2 $\rightarrow$ S3.
 * **Monotonic Timestamps:** Timestamps represent source video capture time in seconds, never wall-clock processing time.
+* **Explicit Degradation:** Corrupt or invalid frames are never silently reported as valid.
 
 ---
 
-## 5. Versioning
+## 6. Versioning
 
-* **Contract Version:** 1.1.0
+* **Contract Version:** 1.2.0
 * **Schema Reference:** [`observations-schema.json`](observations-schema.json)

@@ -173,3 +173,5 @@ class QualityAssessor:
 
         return assessment
 
+    assess = assess_frame
+

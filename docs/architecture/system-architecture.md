@@ -1,6 +1,6 @@
 # Matrix — System Architecture
 
-This document describes the canonical system architecture, subsystem boundaries, data flow, and interface contracts for **Matrix** (SIH26158).
+This document describes the canonical system architecture, subsystem boundaries, data flow, interface contracts, and failure handling for **Matrix** (SIH26158).
 
 ---
 
@@ -12,7 +12,7 @@ The five primary subsystems are:
 
 | Subsystem | Name | Responsibility | Output Contract |
 | :--- | :--- | :--- | :--- |
-| **S1** | Visual Perception | Ingests video, extracts frames, assigns stable IDs, timestamps, quality scores, keyframe flags, and packages `s1_output/` | `docs/architecture/contracts/perception-localization.md` |
+| **S1** | Visual Perception | Ingests video, extracts frames, assigns stable IDs, timestamps, quality scores, keyframe flags, evaluates degradation health, and packages `s1_output/` | `docs/architecture/contracts/perception-localization.md` |
 | **S2** | Localization & Sensor Fusion | Estimates camera poses, trajectory, and fuses telemetry | `docs/architecture/contracts/` |
 | **S3** | 3D Reconstruction | Generates dense point clouds, meshes, and textures | `docs/architecture/contracts/` |
 | **S4** | Georeferencing & Validation | Performs world coordinate transformation and accuracy validation | `docs/architecture/contracts/` |
@@ -68,7 +68,50 @@ s1_output/
 
 ---
 
-## 3. End-to-End Pipeline Sequence
+## 3. Failure & Degradation Taxonomy (Phase 11)
+
+Matrix recognizes five standardized status/error categories:
+
+```text
+Input Error  ──>  Processing Error  ──>  Quality Warning  ──>  Degraded Result  ──>  Completed
+ (Hard Fail)        (Hard Fail)           (Non-blocking)         (Usable/Degraded)     (Healthy)
+```
+
+| Category | Trigger / Condition | System Behaviour | Pipeline Status |
+| :--- | :--- | :--- | :--- |
+| **Input Error** | Missing video, 0-byte file, corrupt header, unsupported codec | Halts pipeline immediately with explicit descriptive error | `"failed"` |
+| **Processing Error** | Decoder crash, filesystem I/O error | Halts processing, logs diagnostic stack trace | `"failed"` |
+| **Quality Warning** | Missing camera calibration, missing optional UAV telemetry | Continues processing with explicit `null` fields; appends warning | `"completed"` |
+| **Degraded Result** | Insufficient visual observations ($< 5$ frames), high blur/featureless ratio ($> 80\%$) | Completes packaging but flags output for downstream caution | `"degraded"` |
+| **Completed** | Valid stream, adequate observations, healthy quality metrics | Completes normal packaging | `"completed"` |
+
+### S1 Diagnostics Object Schema
+
+```json
+{
+  "health_status": "completed",
+  "is_valid": true,
+  "is_degraded": false,
+  "degraded_reasons": [],
+  "observations_summary": {
+    "total_extracted": 120,
+    "valid_count": 120,
+    "corrupted_count": 0,
+    "good_count": 115,
+    "blurry_count": 5,
+    "keyframes_selected": 24,
+    "keyframe_density": 0.20
+  },
+  "sensor_availability": {
+    "camera_calibration": true,
+    "telemetry_present": false
+  }
+}
+```
+
+---
+
+## 4. End-to-End Pipeline Sequence
 
 ```text
                          UAV INPUT (Video + Telemetry)
@@ -84,6 +127,7 @@ s1_output/
                         │ • Multi-metric quality    │
                         │ • Keyframe detection      │
                         │ • Camera calibration      │
+                        │ • Health diagnostics      │
                         │ • Portable packaging      │
                         └─────────────┬─────────────┘
                                       │ s1_output/ (frames/ + observations.json)
@@ -110,4 +154,3 @@ s1_output/
                         │    & Visualization        │
                         └───────────────────────────┘
 ```
-

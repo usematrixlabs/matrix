@@ -1,8 +1,8 @@
 """S1 Visual Perception Pipeline Runner.
 
 Coordinates video decoding, frame extraction, keyframe selection,
-quality assessment, camera calibration, and metadata preservation conforming
-to the S1 -> S2 interface contract. Packages final output to observations.json.
+quality assessment, camera calibration, degradation diagnostics, and metadata preservation
+conforming to the S1 -> S2 interface contract.
 """
 
 import argparse
@@ -13,6 +13,7 @@ import time
 from typing import Optional
 
 from .config import S1Config
+from .diagnostics import S1DiagnosticsEvaluator
 from .exceptions import VideoValidationError
 from .frame_extractor import FrameExtractor
 from .identifier import ObservationIdentifier
@@ -52,6 +53,7 @@ class S1Pipeline:
         self.extractor = FrameExtractor(config=self.config)
         self.selector = KeyframeSelector(config=self.config)
         self.packager = ObservationPackager(config=self.config)
+        self.diagnostics_evaluator = S1DiagnosticsEvaluator(config=self.config)
 
     def run(
         self,
@@ -96,12 +98,14 @@ class S1Pipeline:
 
         # Step 1: Ingest telemetry if available (without interpreting it)
         telemetry_data = UAVTelemetry()
+        telemetry_loaded = False
         if self.config.telemetry_path and os.path.exists(self.config.telemetry_path):
             self.logger.info("Ingesting UAV telemetry from '%s'", self.config.telemetry_path)
             try:
                 with open(self.config.telemetry_path, "r", encoding="utf-8") as f:
                     raw_telemetry = json.load(f)
                 telemetry_data = UAVTelemetry(**{k: v for k, v in raw_telemetry.items() if k in UAVTelemetry.__dataclass_fields__})
+                telemetry_loaded = True
             except Exception as e:
                 self.logger.warning("Could not parse telemetry file '%s': %s", self.config.telemetry_path, e)
         elif self.config.telemetry_path:
@@ -121,12 +125,19 @@ class S1Pipeline:
                 self.extractor.video_metadata = video_metadata_record.video
                 self.extractor.metadata_record = video_metadata_record
             except VideoValidationError as e:
-                self.logger.error("Video metadata extraction failed: %s", e)
+                self.logger.error("Video validation / metadata extraction failed: %s", e)
                 if strict_validation:
                     raise
                 # Return failure contract
                 return S1Output(
                     status="failed",
+                    errors=[str(e)],
+                    diagnostics={
+                        "health_status": "failed",
+                        "error": str(e),
+                        "is_valid": False,
+                        "is_degraded": False,
+                    },
                     metadata={
                         "subsystem": "S1_Visual_Perception",
                         "error": str(e),
@@ -166,7 +177,15 @@ class S1Pipeline:
             "CORRUPTED": sum(1 for f in extracted_frames if f.quality and f.quality.status == "CORRUPTED"),
         }
 
-        # Step 6: Assemble S1 -> S2 Interface Output (Phase 9 Calibration preservation)
+        # Step 6: Failure & Degradation Health Evaluation (Phase 11)
+        status, warnings, diagnostics = self.diagnostics_evaluator.evaluate_health(
+            frames=extracted_frames,
+            keyframes=selected_keyframes,
+            video_record=video_metadata_record,
+            telemetry_loaded=telemetry_loaded,
+        )
+
+        # Step 7: Assemble S1 -> S2 Interface Output (Phase 9 Calibration preservation)
         frame_ordering = [f.frame_id for f in extracted_frames]
         calib_dict = (
             video_metadata_record.calibration.to_dict()
@@ -210,7 +229,10 @@ class S1Pipeline:
             visual_observations=visual_obs,
             temporal_information=temporal_info,
             available_uav_information=telemetry_data,
-            status="completed",
+            status=status,
+            warnings=warnings,
+            errors=[],
+            diagnostics=diagnostics,
             metadata={
                 "subsystem": "S1_Visual_Perception",
                 "version": "0.1.0",
@@ -222,7 +244,7 @@ class S1Pipeline:
             },
         )
 
-        # Step 7: Package into canonical observations.json artifact (Phase 10)
+        # Step 8: Package into canonical observations.json artifact (Phase 10)
         if package_output and extracted_frames:
             package_json_path = self.packager.package(
                 output_dir=self.config.output_dir,
@@ -232,12 +254,12 @@ class S1Pipeline:
             s1_output.metadata["observations_json"] = package_json_path
 
         self.logger.info(
-            "S1 Pipeline completed in %.3fs (Extracted %d frames, %d keyframes, Calibrated=%s, Quality: %s)",
+            "S1 Pipeline finished in %.3fs (Status=%s, Extracted=%d, Keyframes=%d, Warnings=%d)",
             elapsed,
+            status,
             len(extracted_frames),
             len(selected_keyframes),
-            bool(calib_dict and calib_dict.get("is_calibrated")),
-            str(quality_summary),
+            len(warnings),
         )
         return s1_output
 

@@ -6,6 +6,7 @@ input information required by downstream subsystems.
 
 from .camera_calibrator import CameraCalibrationLoader
 from .config import S1Config
+from .diagnostics import S1DiagnosticsEvaluator
 from .exceptions import (
     VideoCorruptError,
     VideoFormatError,
@@ -68,6 +69,7 @@ __all__ = [
     "TimestampHandler",
     "QualityAssessor",
     "ObservationPackager",
+    "S1DiagnosticsEvaluator",
     "S1Pipeline",
     # Exceptions
     "VideoValidationError",

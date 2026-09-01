@@ -2,8 +2,8 @@
 
 Data models representing visual observations, frames, keyframes,
 validated video metadata, timing information, optional camera/flight/sensor
-metadata, camera calibration parameters, visual quality assessment, and UAV sensor telemetry,
-conforming to the S1 -> S2 contract (docs/architecture/contracts/perception-localization.md).
+metadata, camera calibration parameters, visual quality assessment, failure diagnostics,
+and UAV sensor telemetry, conforming to the S1 -> S2 contract (docs/architecture/contracts/perception-localization.md).
 """
 
 from dataclasses import asdict, dataclass, field
@@ -275,12 +275,15 @@ class VisualObservations:
 
 @dataclass
 class S1Output:
-    """Top-level S1 output contract conforming to S1 -> S2 interface."""
+    """Top-level S1 output contract conforming to S1 -> S2 interface (Phase 11 diagnostics)."""
 
     visual_observations: VisualObservations = field(default_factory=VisualObservations)
     temporal_information: Dict[str, Any] = field(default_factory=dict)
     available_uav_information: UAVTelemetry = field(default_factory=UAVTelemetry)
-    status: str = "initialized"
+    status: str = "initialized"  # "completed", "degraded", "failed", "initialized"
+    warnings: List[str] = field(default_factory=list)
+    errors: List[str] = field(default_factory=list)
+    diagnostics: Dict[str, Any] = field(default_factory=dict)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -290,5 +293,8 @@ class S1Output:
             "temporal_information": self.temporal_information,
             "available_uav_information": self.available_uav_information.to_dict(),
             "status": self.status,
+            "warnings": self.warnings,
+            "errors": self.errors,
+            "diagnostics": self.diagnostics,
             "metadata": self.metadata,
         }

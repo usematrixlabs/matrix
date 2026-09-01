@@ -38,6 +38,10 @@ skip_poor_quality_keyframes: true
 quality_threshold: 50.0
 max_keyframes: null
 
+# Failure & Degradation Handling (Phase 11)
+min_valid_observations: 1
+max_degraded_ratio: 0.8
+
 # Logging
 log_level: "INFO"
 log_file: null

@@ -50,6 +50,10 @@ class S1Config:
     quality_threshold: float = 50.0  # Minimum sharpness / quality score
     max_keyframes: Optional[int] = None
 
+    # Failure and Degradation Handling Parameters (Phase 11)
+    min_valid_observations: int = 1  # Minimum valid frames before status becomes "degraded"
+    max_degraded_ratio: float = 0.8  # Maximum ratio of blurry/corrupt/low-feature frames before "degraded"
+
     # Logging Parameters
     log_level: str = "INFO"
     log_file: Optional[str] = None
