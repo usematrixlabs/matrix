@@ -168,3 +168,6 @@ class VisualLocalizerEngine:
 
         norm = np.sqrt(qw**2 + qx**2 + qy**2 + qz**2)
         return float(qw / norm), float(qx / norm), float(qy / norm), float(qz / norm)
+
+# Alias for legacy references expecting the Colmap naming convention
+ColmapLocalizationEngine = VisualLocalizerEngine
