@@ -19,6 +19,7 @@ from .keyframe_selector import KeyframeSelector
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
 from .pipeline import S1Pipeline
+from .timestamp_handler import TimestampHandler
 from .types import (
     CameraMetadata,
     FlightMetadata,
@@ -56,6 +57,7 @@ __all__ = [
     "VideoValidator",
     "MetadataExtractor",
     "ObservationIdentifier",
+    "TimestampHandler",
     "S1Pipeline",
     # Exceptions
     "VideoValidationError",

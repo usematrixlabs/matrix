@@ -1,7 +1,7 @@
 """S1 Frame Extractor.
 
 Extracts individual frames from UAV video input using configurable sampling intervals,
-computes capture timestamps, saves images with zero-padded identifiers, and creates
+computes precise capture timestamps, saves images with zero-padded identifiers, and creates
 structured Frame records conforming to S1 -> S2 interface specifications.
 """
 
@@ -15,6 +15,7 @@ from .exceptions import VideoNotFoundError, VideoUnreadableError
 from .identifier import ObservationIdentifier
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
+from .timestamp_handler import TimestampHandler
 from .types import Frame, VideoMetadata, VideoMetadataRecord
 from .video_validator import VideoValidator
 
@@ -91,7 +92,7 @@ class FrameExtractor:
             output_dir (Optional[str]): Directory to save extracted frame images.
 
         Returns:
-            List[Frame]: Chronologically ordered list of extracted Frame objects.
+            List[Frame]: Chronologically ordered list of extracted Frame objects with validated capture timestamps.
         """
         if not self.video_path:
             self.logger.warning("No video path provided to FrameExtractor.")
@@ -175,9 +176,18 @@ class FrameExtractor:
 
                 # Sample if frame falls on the sampling step
                 if (current_frame_idx - start_frame_idx) % step == 0:
-                    # Deterministic stable identifier generation
+                    # Deterministic stable identifier generation (Phase 5)
                     frame_id = ObservationIdentifier.generate_id(frame_counter)
-                    timestamp = round(self.config.time_start + (current_frame_idx / fps), 6)
+
+                    # Compute precise capture timestamp (Phase 6)
+                    pos_msec = cap.get(cv2.CAP_PROP_POS_MSEC)
+                    capture_timestamp = TimestampHandler.calculate_timestamp(
+                        source_frame_idx=current_frame_idx,
+                        fps=fps,
+                        start_offset=self.config.time_start,
+                        pos_msec=pos_msec if pos_msec > 0 else None,
+                    )
+
                     image_filename = f"{frame_id}.{image_ext}"
                     image_path = target_frames_dir / image_filename
 
@@ -197,7 +207,7 @@ class FrameExtractor:
                     height, width = frame_to_save.shape[:2]
                     frame_record = Frame(
                         frame_id=frame_id,
-                        timestamp=timestamp,
+                        timestamp=capture_timestamp,
                         image_path=str(image_path.resolve()),
                         image_width=width,
                         image_height=height,
@@ -211,11 +221,14 @@ class FrameExtractor:
         finally:
             cap.release()
 
-        # Validate identifier uniqueness before returning
+        # Validate identifier uniqueness (Phase 5)
         ObservationIdentifier.validate_unique_ids(extracted_frames)
 
+        # Validate strict timestamp monotonicity (Phase 6)
+        TimestampHandler.validate_monotonicity(extracted_frames)
+
         self.logger.info(
-            "Frame sampling complete: Extracted %d frames from '%s' with stable IDs",
+            "Frame sampling complete: Extracted %d frames from '%s' with validated timestamps",
             len(extracted_frames),
             self.video_metadata.filename,
         )

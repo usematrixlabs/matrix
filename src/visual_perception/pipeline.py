@@ -18,6 +18,7 @@ from .identifier import ObservationIdentifier
 from .keyframe_selector import KeyframeSelector
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
+from .timestamp_handler import TimestampHandler
 from .types import (
     Frame,
     Keyframe,
@@ -122,7 +123,7 @@ class S1Pipeline:
         else:
             self.logger.info("No video path provided to pipeline. Proceeding in initial/empty mode.")
 
-        # Step 3: Extract & Sample Frames (Phase 4 & Phase 5)
+        # Step 3: Extract & Sample Frames (Phase 4, 5, 6)
         self.logger.info("Running frame extraction...")
         extracted_frames = self.extractor.extract(
             start_time=self.config.time_start,
@@ -132,11 +133,12 @@ class S1Pipeline:
             output_dir=self.config.frames_dir,
         )
 
-        # Validate unique stable IDs across extracted frames
+        # Validate unique stable IDs (Phase 5) and monotonic capture timestamps (Phase 6)
         if extracted_frames:
             ObservationIdentifier.validate_unique_ids(extracted_frames)
+            TimestampHandler.validate_monotonicity(extracted_frames)
 
-        # Step 4: Select Keyframes (preserving source observation frame_ids)
+        # Step 4: Select Keyframes (preserving source observation frame_ids and timestamps)
         self.logger.info("Running keyframe selection...")
         selected_keyframes = self.selector.select(frames=extracted_frames)
 
@@ -154,11 +156,15 @@ class S1Pipeline:
                 "extraction_fps": self.config.frame_rate,
                 "keyframe_method": self.config.keyframe_method,
                 "stable_identifiers_validated": True,
+                "capture_timestamps_validated": True,
             },
         )
 
         elapsed = time.time() - start_time
         temporal_info = {
+            "time_unit": "seconds",
+            "time_reference": "relative_capture_time",
+            "is_monotonic": True,
             "processing_time_seconds": round(elapsed, 4),
             "start_time_offset": self.config.time_start,
             "end_time_offset": self.config.time_end,
