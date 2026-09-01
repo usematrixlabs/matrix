@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
+import numpy as np
 from pydantic import BaseModel, Field
 
 
@@ -70,6 +71,20 @@ class QuaternionOrientation(BaseModel):
     qy: float
     qz: float
     qw: float
+
+    def to_numpy_scalar_first(self) -> np.ndarray:
+        """Returns array in scalar-first format: [qw, qx, qy, qz] (Eigen / PyTorch)."""
+        return np.array([self.qw, self.qx, self.qy, self.qz], dtype=np.float64)
+
+    def to_numpy_scalar_last(self) -> np.ndarray:
+        """Returns array in scalar-last format: [qx, qy, qz, qw] (SciPy / ROS)."""
+        return np.array([self.qx, self.qy, self.qz, self.qw], dtype=np.float64)
+
+
+class FusedState(BaseModel):
+    position: Position
+    orientation: QuaternionOrientation
+    velocity: Position
 
 
 class CameraPose(BaseModel):

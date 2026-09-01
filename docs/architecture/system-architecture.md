@@ -135,8 +135,13 @@ Input Error  ──>  Processing Error  ──>  Quality Warning  ──>  Degra
                         ┌───────────────────────────┐
                         │ S2 · Localization         │
                         │    & Sensor Fusion        │
+                        │                           │
+                        │ • Visual pose estimation  │
+                        │ • EKF state filtering     │
+                        │ • Telemetry fusion        │
+                        │ • Trajectory smoothing    │
                         └─────────────┬─────────────┘
-                                      │ S1 observations + Poses
+                                      │ S1 observations + Fused Poses
                                       ▼
                         ┌───────────────────────────┐
                         │ S3 · 3D Reconstruction    │
@@ -154,3 +159,91 @@ Input Error  ──>  Processing Error  ──>  Quality Warning  ──>  Degra
                         │    & Visualization        │
                         └───────────────────────────┘
 ```
+
+---
+
+## 5. S2: Localization & Sensor Fusion
+
+### Overview
+
+S2 estimates camera poses, trajectories, and fusion by combining:
+
+- **Visual localization:** PnP pose estimation from visual features (S1 observations)
+- **Telemetry fusion:** Optional IMU, GPS, or other sensor data
+- **State filtering:** Extended Kalman Filter (EKF) for robust, temporally consistent pose estimation
+
+### State Representation
+
+The S2 EKF maintains a 6-dimensional state vector:
+
+```text
+state = [x, y, z, vx, vy, vz]^T
+
+where:
+  x, y, z     = position (m) in local reconstruction coordinates
+  vx, vy, vz  = velocity (m/s) in local reconstruction coordinates
+```
+
+### EKF Pipeline
+
+1. **Prediction Step**
+   - Time step: `dt` between successive observations
+   - Motion model: constant velocity (kinematic model)
+   - State propagation: `x_pred = F * x_prev` where `F` is the state transition matrix
+   - Covariance update: `P_pred = F * P_prev * F^T + Q`
+
+2. **Measurement Update Step**
+   - Measurement: 3D visual position [x_visual, y_visual, z_visual] from pose estimation
+   - Measurement matrix: `H` extracts position from state
+   - Innovation (residual): `y = z_meas - H * x_pred`
+   - Kalman gain: `K = P_pred * H^T * (H * P_pred * H^T + R)^-1`
+   - State correction: `x_fused = x_pred + K * y`
+   - Covariance update: `P_fused = (I - K * H) * P_pred`
+
+3. **Dynamic Measurement Noise**
+   - Measurement covariance `R` scales based on visual confidence score
+   - High confidence → low measurement noise (trust visual estimate)
+   - Low confidence → high measurement noise (trust prior state)
+
+### Output Contract
+
+S2 returns the original S2ObservationOutput with updated pose from the EKF filter:
+
+```python
+S2ObservationOutput(
+    observation_id="frame_000123",
+    timestamp=12.34,
+    image="frames/frame_000123.jpg",
+    pose=CameraPose(
+        position=Position(x=fused_x, y=fused_y, z=fused_z),
+        orientation=QuaternionOrientation(qx, qy, qz, qw)
+    ),
+    localization=LocalizationMeta(
+        source=["visual", "fusion"],
+        status="estimated",
+        quality=LocalizationQuality(confidence=0.95)
+    )
+)
+```
+
+### Key Architectural Properties
+
+1. **Coordinate System:** All poses are in **local reconstruction coordinates** (not geographic)
+2. **Temporal Consistency:** EKF enforces smooth, physically plausible trajectories
+3. **Confidence Propagation:** Measurement covariance adapts based on visual quality scores
+4. **Observation Preservation:** All observations are fused; keyframe distinction is downstream
+5. **State Accessibility:** State vector and covariance are internal; output is via updated observations
+
+### Failure Conditions
+
+- If no valid pose estimate can be obtained (e.g., degenerate point set), S2 logs a warning and may skip that observation
+- If temporal data is missing, S2 assumes a default time step and logs a diagnostic
+- If multiple observations arrive out-of-order, S2 resets its temporal state to maintain monotonicity
+
+---
+
+## 6. S2 → S3 Interface
+
+See [S2 → S3 Interface Contract](contracts/localization-reconstruction.md).
+
+---

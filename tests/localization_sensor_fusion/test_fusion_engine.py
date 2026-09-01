@@ -39,7 +39,27 @@ def test_fusion_engine_step():
 
     fused_obs = engine.process_observation(obs)
     
-    # Verify the state converged closer to the measurement
+    # Verify the fused observation has a pose with position
+    assert fused_obs.pose is not None
     assert fused_obs.pose.position.x is not None
     assert fused_obs.pose.position.y is not None
     assert fused_obs.pose.position.z is not None
+
+def test_dynamic_gps_covariance_weighting():
+    engine = SensorFusionEngine()
+    
+    # High-confidence measurement (low variance)
+    z_accurate = np.array([10.0, 10.0, 10.0])
+    R_tight = np.diag([0.01, 0.01, 0.01])  # High GPS precision
+    engine.update(z_accurate, R_custom=R_tight)
+    
+    # State should pull strongly toward accurate position
+    assert np.isclose(engine.state[0], 10.0, atol=0.5)
+
+    # Low-confidence measurement (high variance)
+    z_noisy = np.array([100.0, 100.0, 100.0])
+    R_loose = np.diag([50.0, 50.0, 50.0])  # Poor GPS HDOP
+    engine.update(z_noisy, R_custom=R_loose)
+    
+    # State should resist moving toward the noisy measurement
+    assert engine.state[0] < 30.0
