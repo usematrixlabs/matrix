@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any
+from pyexpat import features
+from typing import Any, Dict
 from src.localization_sensor_fusion.schemas.contracts import (
     QualityStatus,
     S1ObservationInput,
@@ -40,23 +41,17 @@ class S1InputAdapter:
 
         return True
 
-    def transform_for_engine(
-        self, observation: S1ObservationInput
-    ) -> dict[str, Any] | None:
-        """Transforms validated S1 observation into COLMAP/Engine feature format.
-
-        Returns None if frame fails quality checks.
-        """
-        if not self.validate_quality(observation):
-            return None
+    def transform_for_engine(self, raw_input: Dict[str, Any]) -> Dict[str, Any]:
+        """Transforms raw S1 input into COLMAP engine input structure."""
+        features = raw_input.get("features", {})
+        keypoints = features.get("keypoints", [])
+    
+        keypoints_count = raw_input.get("keypoints_count", len(keypoints))
 
         return {
-            "frame_id": observation.observation_id,
-            "timestamp": observation.timestamp,
-            "image_path": str(observation.image),
-            "camera_intrinsics": (
-                observation.camera.intrinsics.model_dump()
-                if observation.camera and observation.camera.intrinsics
-                else None
-            ),
+            "frame_id": raw_input.get("frame_id"),
+            "image_path": raw_input.get("image_path"),
+            "keypoints_count": keypoints_count,
+            "features": features,
+            "timestamp": raw_input.get("timestamp"),
         }
