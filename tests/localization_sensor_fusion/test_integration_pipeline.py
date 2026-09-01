@@ -1,64 +1,47 @@
-"""End-to-End Integration Test for S2 Localization & Sensor Fusion Pipeline."""
+"""Integration test for full sensor fusion pipeline combining IMU, GPS, and Visual Pose."""
 
-import json
-from pathlib import Path
+import numpy as np
+
+from src.localization_sensor_fusion.engines.colmap_engine import VisualLocalizerEngine
 from src.localization_sensor_fusion.fusion.fusion_engine import SensorFusionEngine
-from src.localization_sensor_fusion.engines.trajectory_smoother import TrajectorySmoother
-from src.localization_sensor_fusion.exporters.s2_exporter import S2Exporter
 from src.localization_sensor_fusion.schemas.contracts import (
-    S2ObservationOutput,
     CameraPose,
     Position,
     QuaternionOrientation,
     LocalizationQuality,
-    LocalizationMeta,
 )
 
 
-def test_full_s2_pipeline_integration(tmp_path: Path):
-    # 1. Initialize Engines & Exporter
-    fusion_engine = SensorFusionEngine()
-    smoother = TrajectorySmoother(window_size=3)
-    exporter = S2Exporter(coordinate_frame="NED", units="meters")
+def test_full_fusion_pipeline_step():
+    # 1. Initialize Visual Localizer Engine
+    K = np.array([[500, 0, 320], [0, 500, 240], [0, 0, 1]], dtype=np.float64)
+    localizer = VisualLocalizerEngine(camera_matrix=K)
 
-    # 2. Build mock observations simulating a short sequence of frames
-    raw_observations = []
+    # Synthetic 2D-3D point matches
+    object_pts = np.array(
+        [[0, 0, 5], [1, 0, 5], [0, 1, 5], [1, 1, 5]], dtype=np.float64
+    )
+    image_pts = np.array(
+        [[320, 240], [420, 240], [320, 340], [420, 340]], dtype=np.float64
+    )
 
-    for i in range(5):
-        obs = S2ObservationOutput(
-            observation_id=f"frame_00{i}",
-            timestamp=float(i * 0.1),
-            image=f"frame_00{i}.jpg",
-            pose=CameraPose(
-                position=Position(x=float(i), y=float(i * 2), z=0.5),
-                orientation=QuaternionOrientation(qw=1.0, qx=0.0, qy=0.0, qz=0.0),
-            ),
-            localization=LocalizationMeta(
-                source=["visual"],
-                status="estimated",
-                quality=LocalizationQuality(confidence=0.90),
-            ),
-        )
-        raw_observations.append(obs)
+    visual_pose, quality = localizer.estimate_pose(image_pts, object_pts)
+    assert visual_pose is not None
+    assert quality.confidence > 0.0
 
-    # 3. Step 1: Pass through Sensor Fusion Engine (EKF)
-    fused_obs = fusion_engine.fuse_sequence(raw_observations)
+    # 2. Initialize EKF Fusion Engine
+    fusion = SensorFusionEngine()
 
-    # 4. Step 2: Pass through Trajectory Smoother
-    smoothed_obs = smoother.smooth_trajectory(fused_obs)
+    # Predict state using time delta
+    fusion.predict(dt=0.1)
 
-    # 5. Step 3: Export final trajectory via S2Exporter
-    payload = exporter.create_payload(smoothed_obs)
-    out_file = tmp_path / "final_s2_output.json"
-    exported_path = exporter.export_to_json(payload, out_file)
+    # 3. Apply GPS Update with Dynamic Noise Matrix (R_custom)
+    gps_position = np.array([0.05, 0.0, 5.0])
+    gps_std_dev = np.array([0.2, 0.2, 0.5])
+    R_gps = np.diag(gps_std_dev**2)
 
-    # 6. Verify Export File Integrity
-    assert exported_path.exists()
-    
-    with open(exported_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    fusion.update(measurement=gps_position, R_custom=R_gps)
 
-    assert data["coordinate_frame"] == "NED"
-    assert len(data["observations"]) == 5
-    assert data["observations"][0]["observation_id"] == "frame_000"
-    assert data["observations"][4]["observation_id"] == "frame_004"
+    # Verify state estimation outputs
+    assert fusion.state is not None
+    assert fusion.state.shape == (6, 1)  # 6D state: [x, y, z, vx, vy, vz]

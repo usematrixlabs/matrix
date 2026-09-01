@@ -136,8 +136,13 @@ Input Error  ──>  Processing Error  ──>  Quality Warning  ──>  Degra
                         ┌───────────────────────────┐
                         │ S2 · Localization         │
                         │    & Sensor Fusion        │
+                        │                           │
+                        │ • Visual pose estimation  │
+                        │ • EKF state filtering     │
+                        │ • Telemetry fusion        │
+                        │ • Trajectory smoothing    │
                         └─────────────┬─────────────┘
-                                      │ S1 observations + Poses
+                                      │ S1 observations + Fused Poses
                                       ▼
                         ┌───────────────────────────┐
                         │ S3 · 3D Reconstruction    │
