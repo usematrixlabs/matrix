@@ -1,7 +1,7 @@
 """S1 Visual Perception Pipeline Runner.
 
 Coordinates video decoding, frame extraction, keyframe selection,
-and metadata preservation conforming to the S1 -> S2 interface contract.
+quality assessment, and metadata preservation conforming to the S1 -> S2 interface contract.
 """
 
 import argparse
@@ -18,6 +18,7 @@ from .identifier import ObservationIdentifier
 from .keyframe_selector import KeyframeSelector
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
+from .quality_assessor import QualityAssessor
 from .timestamp_handler import TimestampHandler
 from .types import (
     Frame,
@@ -44,6 +45,7 @@ class S1Pipeline:
         self.logger = get_logger("S1Pipeline", log_level=self.config.log_level, log_file=self.config.log_file)
         self.validator = VideoValidator(log_level=self.config.log_level)
         self.metadata_extractor = MetadataExtractor(log_level=self.config.log_level)
+        self.quality_assessor = QualityAssessor(config=self.config)
         self.extractor = FrameExtractor(config=self.config)
         self.selector = KeyframeSelector(config=self.config)
 
@@ -123,8 +125,8 @@ class S1Pipeline:
         else:
             self.logger.info("No video path provided to pipeline. Proceeding in initial/empty mode.")
 
-        # Step 3: Extract & Sample Frames (Phase 4, 5, 6)
-        self.logger.info("Running frame extraction...")
+        # Step 3: Extract & Sample Frames (Phase 4, 5, 6, 7)
+        self.logger.info("Running frame extraction and quality assessment...")
         extracted_frames = self.extractor.extract(
             start_time=self.config.time_start,
             end_time=self.config.time_end,
@@ -142,7 +144,17 @@ class S1Pipeline:
         self.logger.info("Running keyframe selection...")
         selected_keyframes = self.selector.select(frames=extracted_frames)
 
-        # Step 5: Assemble S1 -> S2 Interface Output
+        # Step 5: Compute Quality Summary Distribution (Phase 7)
+        quality_summary = {
+            "GOOD": sum(1 for f in extracted_frames if f.quality and f.quality.status == "GOOD"),
+            "BLURRY": sum(1 for f in extracted_frames if f.quality and f.quality.status == "BLURRY"),
+            "OVEREXPOSED": sum(1 for f in extracted_frames if f.quality and f.quality.status == "OVEREXPOSED"),
+            "UNDEREXPOSED": sum(1 for f in extracted_frames if f.quality and f.quality.status == "UNDEREXPOSED"),
+            "LOW_FEATURE": sum(1 for f in extracted_frames if f.quality and f.quality.status == "LOW_FEATURE"),
+            "CORRUPTED": sum(1 for f in extracted_frames if f.quality and f.quality.status == "CORRUPTED"),
+        }
+
+        # Step 6: Assemble S1 -> S2 Interface Output
         frame_ordering = [f.frame_id for f in extracted_frames]
         visual_obs = VisualObservations(
             frames=extracted_frames,
@@ -157,6 +169,7 @@ class S1Pipeline:
                 "keyframe_method": self.config.keyframe_method,
                 "stable_identifiers_validated": True,
                 "capture_timestamps_validated": True,
+                "quality_summary": quality_summary,
             },
         )
 
@@ -189,10 +202,11 @@ class S1Pipeline:
         )
 
         self.logger.info(
-            "S1 Pipeline completed in %.3fs (Extracted %d frames, %d keyframes)",
+            "S1 Pipeline completed in %.3fs (Extracted %d frames, %d keyframes, Quality: %s)",
             elapsed,
             len(extracted_frames),
             len(selected_keyframes),
+            str(quality_summary),
         )
         return s1_output
 
@@ -208,6 +222,7 @@ def main() -> None:
     parser.add_argument("--sampling-interval", "-i", type=int, help="Fixed interval in frames (e.g. 10)")
     parser.add_argument("--frame-rate", "-r", type=float, help="Extraction rate (FPS)")
     parser.add_argument("--image-format", type=str, choices=["jpg", "jpeg", "png"], help="Frame image format")
+    parser.add_argument("--blur-threshold", type=float, help="Laplacian variance blur threshold")
     parser.add_argument("--log-level", "-l", type=str, default="INFO", help="Logging level")
     parser.add_argument("--save-output", "-s", type=str, help="Path to save output JSON contract")
 
@@ -235,6 +250,8 @@ def main() -> None:
         config.frame_rate = args.frame_rate
     if args.image_format:
         config.image_format = args.image_format
+    if args.blur_threshold:
+        config.blur_threshold = args.blur_threshold
     if args.log_level:
         config.log_level = args.log_level
 

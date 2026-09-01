@@ -1,8 +1,9 @@
 """S1 Frame Extractor.
 
 Extracts individual frames from UAV video input using configurable sampling intervals,
-computes precise capture timestamps, saves images with zero-padded identifiers, and creates
-structured Frame records conforming to S1 -> S2 interface specifications.
+computes precise capture timestamps, evaluates visual quality (blur, exposure, features),
+saves images with zero-padded identifiers, and creates structured Frame records
+conforming to S1 -> S2 interface specifications.
 """
 
 from pathlib import Path
@@ -15,6 +16,7 @@ from .exceptions import VideoNotFoundError, VideoUnreadableError
 from .identifier import ObservationIdentifier
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
+from .quality_assessor import QualityAssessor
 from .timestamp_handler import TimestampHandler
 from .types import Frame, VideoMetadata, VideoMetadataRecord
 from .video_validator import VideoValidator
@@ -49,6 +51,7 @@ class FrameExtractor:
         self.logger = get_logger(self.__class__.__name__, log_level=self.config.log_level)
         self.validator = VideoValidator(log_level=self.config.log_level)
         self.metadata_extractor = MetadataExtractor(log_level=self.config.log_level)
+        self.quality_assessor = QualityAssessor(config=self.config)
         self.video_metadata: Optional[VideoMetadata] = None
         self.metadata_record: Optional[VideoMetadataRecord] = None
 
@@ -92,7 +95,7 @@ class FrameExtractor:
             output_dir (Optional[str]): Directory to save extracted frame images.
 
         Returns:
-            List[Frame]: Chronologically ordered list of extracted Frame objects with validated capture timestamps.
+            List[Frame]: Chronologically ordered list of extracted Frame objects with validated capture timestamps and quality metrics.
         """
         if not self.video_path:
             self.logger.warning("No video path provided to FrameExtractor.")
@@ -201,6 +204,14 @@ class FrameExtractor:
                     else:
                         frame_to_save = frame
 
+                    # Visual Quality Assessment (Phase 7)
+                    quality_assessment = None
+                    if self.config.enable_quality_assessment:
+                        quality_assessment = self.quality_assessor.assess_frame(
+                            image=frame_to_save,
+                            frame_id=frame_id,
+                        )
+
                     # Save image to disk
                     cv2.imwrite(str(image_path), frame_to_save, encode_params)
 
@@ -212,6 +223,7 @@ class FrameExtractor:
                         image_width=width,
                         image_height=height,
                         camera_id="primary",
+                        quality=quality_assessment,
                     )
                     extracted_frames.append(frame_record)
                     frame_counter += 1
@@ -228,7 +240,7 @@ class FrameExtractor:
         TimestampHandler.validate_monotonicity(extracted_frames)
 
         self.logger.info(
-            "Frame sampling complete: Extracted %d frames from '%s' with validated timestamps",
+            "Frame sampling complete: Extracted %d frames from '%s' with validated timestamps and quality metrics",
             len(extracted_frames),
             self.video_metadata.filename,
         )

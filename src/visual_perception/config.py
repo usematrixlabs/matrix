@@ -32,6 +32,14 @@ class S1Config:
     image_format: str = "jpg"  # "jpg", "jpeg", "png"
     jpeg_quality: int = 95  # JPEG quality (1-100)
 
+    # Visual Quality Assessment Parameters (Phase 7)
+    enable_quality_assessment: bool = True
+    blur_threshold: float = 100.0  # Minimum Laplacian variance for sharpness
+    underexposure_threshold: float = 30.0  # Minimum mean grayscale brightness (0-255)
+    overexposure_threshold: float = 230.0  # Maximum mean grayscale brightness (0-255)
+    low_feature_threshold: int = 50  # Minimum number of detected FAST keypoints
+    min_entropy_threshold: float = 3.5  # Minimum Shannon entropy for texture richness
+
     # Keyframe Selection Parameters
     keyframe_method: str = "uniform"  # "uniform", "laplacian_variance", "feature_diff"
     quality_threshold: float = 50.0  # Minimum sharpness / quality score

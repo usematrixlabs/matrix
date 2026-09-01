@@ -19,6 +19,7 @@ from .keyframe_selector import KeyframeSelector
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
 from .pipeline import S1Pipeline
+from .quality_assessor import QualityAssessor
 from .timestamp_handler import TimestampHandler
 from .types import (
     CameraMetadata,
@@ -26,6 +27,7 @@ from .types import (
     Frame,
     FrameTimingInfo,
     Keyframe,
+    QualityAssessment,
     S1Output,
     SensorMetadata,
     UAVTelemetry,
@@ -47,6 +49,7 @@ __all__ = [
     "FlightMetadata",
     "SensorMetadata",
     "VideoMetadataRecord",
+    "QualityAssessment",
     "S1Output",
     # Configuration & Logging
     "S1Config",
@@ -58,6 +61,7 @@ __all__ = [
     "MetadataExtractor",
     "ObservationIdentifier",
     "TimestampHandler",
+    "QualityAssessor",
     "S1Pipeline",
     # Exceptions
     "VideoValidationError",

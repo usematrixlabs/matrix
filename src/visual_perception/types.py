@@ -2,12 +2,30 @@
 
 Data models representing visual observations, frames, keyframes,
 validated video metadata, timing information, optional camera/flight/sensor
-metadata, and UAV sensor telemetry, conforming to the S1 -> S2 contract
-(docs/architecture/contracts/perception-localization.md).
+metadata, visual quality assessment, and UAV sensor telemetry,
+conforming to the S1 -> S2 contract (docs/architecture/contracts/perception-localization.md).
 """
 
 from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional
+
+
+@dataclass
+class QualityAssessment:
+    """Represents the visual quality condition of an individual observation (Phase 7)."""
+
+    status: str = "GOOD"  # "GOOD", "BLURRY", "OVEREXPOSED", "UNDEREXPOSED", "LOW_FEATURE", "CORRUPTED"
+    blur_score: float = 0.0  # Laplacian variance (higher = sharper)
+    exposure_mean: float = 0.0  # Mean grayscale brightness (0-255)
+    entropy: float = 0.0  # Shannon entropy of pixel intensities
+    feature_count: int = 0  # Number of detected keypoints / corners
+    is_corrupted: bool = False
+    quality_score: float = 100.0  # Normalized quality metric (0-100)
+    flags: List[str] = field(default_factory=list)  # Multiple conditions if present
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize quality assessment to dictionary."""
+        return asdict(self)
 
 
 @dataclass
@@ -153,10 +171,14 @@ class Frame:
     image_height: int
     exposure_time: Optional[float] = None
     camera_id: Optional[str] = "primary"
+    quality: Optional[QualityAssessment] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Serialize frame to dictionary."""
-        return asdict(self)
+        d = asdict(self)
+        if self.quality:
+            d["quality"] = self.quality.to_dict()
+        return d
 
 
 @dataclass
