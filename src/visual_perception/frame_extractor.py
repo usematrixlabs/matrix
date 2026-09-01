@@ -12,6 +12,7 @@ import cv2
 
 from .config import S1Config
 from .exceptions import VideoNotFoundError, VideoUnreadableError
+from .identifier import ObservationIdentifier
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
 from .types import Frame, VideoMetadata, VideoMetadataRecord
@@ -174,9 +175,9 @@ class FrameExtractor:
 
                 # Sample if frame falls on the sampling step
                 if (current_frame_idx - start_frame_idx) % step == 0:
-                    # Compute capture timestamp
+                    # Deterministic stable identifier generation
+                    frame_id = ObservationIdentifier.generate_id(frame_counter)
                     timestamp = round(self.config.time_start + (current_frame_idx / fps), 6)
-                    frame_id = f"frame_{frame_counter:06d}"
                     image_filename = f"{frame_id}.{image_ext}"
                     image_path = target_frames_dir / image_filename
 
@@ -210,8 +211,11 @@ class FrameExtractor:
         finally:
             cap.release()
 
+        # Validate identifier uniqueness before returning
+        ObservationIdentifier.validate_unique_ids(extracted_frames)
+
         self.logger.info(
-            "Frame sampling complete: Extracted %d frames from '%s'",
+            "Frame sampling complete: Extracted %d frames from '%s' with stable IDs",
             len(extracted_frames),
             self.video_metadata.filename,
         )

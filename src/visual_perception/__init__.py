@@ -14,6 +14,7 @@ from .exceptions import (
     VideoValidationError,
 )
 from .frame_extractor import FrameExtractor
+from .identifier import ObservationIdentifier
 from .keyframe_selector import KeyframeSelector
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
@@ -54,6 +55,7 @@ __all__ = [
     "KeyframeSelector",
     "VideoValidator",
     "MetadataExtractor",
+    "ObservationIdentifier",
     "S1Pipeline",
     # Exceptions
     "VideoValidationError",

@@ -14,6 +14,7 @@ from typing import Optional
 from .config import S1Config
 from .exceptions import VideoValidationError
 from .frame_extractor import FrameExtractor
+from .identifier import ObservationIdentifier
 from .keyframe_selector import KeyframeSelector
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
@@ -121,7 +122,7 @@ class S1Pipeline:
         else:
             self.logger.info("No video path provided to pipeline. Proceeding in initial/empty mode.")
 
-        # Step 3: Extract & Sample Frames (Phase 4)
+        # Step 3: Extract & Sample Frames (Phase 4 & Phase 5)
         self.logger.info("Running frame extraction...")
         extracted_frames = self.extractor.extract(
             start_time=self.config.time_start,
@@ -131,7 +132,11 @@ class S1Pipeline:
             output_dir=self.config.frames_dir,
         )
 
-        # Step 4: Select Keyframes
+        # Validate unique stable IDs across extracted frames
+        if extracted_frames:
+            ObservationIdentifier.validate_unique_ids(extracted_frames)
+
+        # Step 4: Select Keyframes (preserving source observation frame_ids)
         self.logger.info("Running keyframe selection...")
         selected_keyframes = self.selector.select(frames=extracted_frames)
 
@@ -148,6 +153,7 @@ class S1Pipeline:
                 "sampling_interval": self.config.sampling_interval,
                 "extraction_fps": self.config.frame_rate,
                 "keyframe_method": self.config.keyframe_method,
+                "stable_identifiers_validated": True,
             },
         )
 
