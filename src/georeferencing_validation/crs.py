@@ -345,9 +345,6 @@ class CoordinateReference:
 
         return True
 
-    def __repr__(self) -> str:
-        """Return a concise representation of the CRS."""
-
         return (
             f"{self.__class__.__name__}("
             f"name={self.name!r}, "
