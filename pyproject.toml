@@ -15,5 +15,5 @@ package = false
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = []
-python_functions = []
+python_functions = ["test_*"]
 

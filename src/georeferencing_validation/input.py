@@ -223,3 +223,18 @@ class ReconstructionInput:
     def has_colors(self) -> bool:
         """Return True if RGB color information is available."""
         return self.colors is not None
+
+    @property
+    def points_array(self) -> np.ndarray:
+        """Return point cloud coordinates as a NumPy float64 array."""
+        return self.points
+
+    @property
+    def colors_array(self) -> Optional[np.ndarray]:
+        """Return RGB color data as a NumPy uint8 array if available."""
+        return self.colors
+
+    @property
+    def metadata_dict(self) -> Dict[str, Any]:
+        """Return metadata as a dictionary."""
+        return self.metadata
