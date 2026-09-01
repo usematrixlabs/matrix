@@ -1,0 +1,4338 @@
+{
+  "schema_version": "1.0.0",
+  "subsystem": "S1_Visual_Perception",
+  "created_at": "2026-09-01T20:45:45.327929+00:00",
+  "video_source": "benchmarks/dataset/video-1005/video.mp4",
+  "total_observations": 239,
+  "keyframe_count": 27,
+  "keyframe_density": 0.113,
+  "temporal_information": {
+    "time_unit": "seconds",
+    "time_reference": "relative_capture_time",
+    "is_monotonic": true,
+    "processing_time_seconds": 53.1581,
+    "start_time_offset": 0.0,
+    "end_time_offset": null,
+    "frame_interval_seconds": 0.016683,
+    "video_duration_seconds": 238.355
+  },
+  "camera": {
+    "width": 1920,
+    "height": 1080,
+    "intrinsics": null,
+    "distortion": null,
+    "is_calibrated": false
+  },
+  "quality_summary": {
+    "GOOD": 239,
+    "BLURRY": 0,
+    "OVEREXPOSED": 0,
+    "UNDEREXPOSED": 0,
+    "LOW_FEATURE": 0,
+    "CORRUPTED": 0
+  },
+  "observations": [
+    {
+      "observation_id": "frame_000001",
+      "timestamp": 0.0,
+      "image": "frames/frame_000001.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1051.48,
+        "quality_score": 98.36,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000002",
+      "timestamp": 1.001,
+      "image": "frames/frame_000002.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1037.152,
+        "quality_score": 98.44,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000003",
+      "timestamp": 2.002,
+      "image": "frames/frame_000003.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 976.894,
+        "quality_score": 98.48,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000004",
+      "timestamp": 3.003,
+      "image": "frames/frame_000004.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 980.198,
+        "quality_score": 98.49,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000005",
+      "timestamp": 4.004,
+      "image": "frames/frame_000005.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 963.811,
+        "quality_score": 98.47,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000006",
+      "timestamp": 5.005,
+      "image": "frames/frame_000006.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 587.118,
+        "quality_score": 98.6,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000007",
+      "timestamp": 6.006,
+      "image": "frames/frame_000007.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 799.461,
+        "quality_score": 98.6,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000008",
+      "timestamp": 7.007,
+      "image": "frames/frame_000008.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 610.529,
+        "quality_score": 98.58,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000009",
+      "timestamp": 8.008,
+      "image": "frames/frame_000009.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 549.83,
+        "quality_score": 98.84,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000010",
+      "timestamp": 9.009,
+      "image": "frames/frame_000010.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 787.331,
+        "quality_score": 99.41,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000011",
+      "timestamp": 10.01,
+      "image": "frames/frame_000011.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 746.035,
+        "quality_score": 99.72,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000012",
+      "timestamp": 11.011,
+      "image": "frames/frame_000012.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 626.875,
+        "quality_score": 99.18,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000013",
+      "timestamp": 12.012,
+      "image": "frames/frame_000013.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 541.933,
+        "quality_score": 98.86,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000014",
+      "timestamp": 13.013,
+      "image": "frames/frame_000014.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 462.197,
+        "quality_score": 99.66,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000015",
+      "timestamp": 14.014,
+      "image": "frames/frame_000015.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 439.687,
+        "quality_score": 99.66,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000016",
+      "timestamp": 15.015,
+      "image": "frames/frame_000016.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 424.054,
+        "quality_score": 99.31,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000017",
+      "timestamp": 16.016,
+      "image": "frames/frame_000017.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 413.925,
+        "quality_score": 99.22,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000018",
+      "timestamp": 17.017,
+      "image": "frames/frame_000018.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 469.319,
+        "quality_score": 98.98,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000019",
+      "timestamp": 18.018,
+      "image": "frames/frame_000019.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 484.475,
+        "quality_score": 98.84,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000020",
+      "timestamp": 19.019,
+      "image": "frames/frame_000020.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 474.701,
+        "quality_score": 98.68,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000021",
+      "timestamp": 20.02,
+      "image": "frames/frame_000021.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 431.081,
+        "quality_score": 98.49,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000022",
+      "timestamp": 21.021,
+      "image": "frames/frame_000022.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 388.462,
+        "quality_score": 98.36,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000023",
+      "timestamp": 22.022,
+      "image": "frames/frame_000023.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 359.064,
+        "quality_score": 98.37,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000024",
+      "timestamp": 23.023,
+      "image": "frames/frame_000024.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 404.82,
+        "quality_score": 98.27,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000025",
+      "timestamp": 24.024,
+      "image": "frames/frame_000025.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 359.5,
+        "quality_score": 98.79,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000026",
+      "timestamp": 25.025,
+      "image": "frames/frame_000026.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 574.735,
+        "quality_score": 99.36,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000027",
+      "timestamp": 26.026,
+      "image": "frames/frame_000027.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 372.051,
+        "quality_score": 99.55,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000028",
+      "timestamp": 27.027,
+      "image": "frames/frame_000028.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 460.482,
+        "quality_score": 99.49,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000029",
+      "timestamp": 28.028,
+      "image": "frames/frame_000029.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 446.84,
+        "quality_score": 99.51,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000030",
+      "timestamp": 29.029,
+      "image": "frames/frame_000030.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 434.758,
+        "quality_score": 99.49,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000031",
+      "timestamp": 30.03,
+      "image": "frames/frame_000031.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 465.586,
+        "quality_score": 99.44,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000032",
+      "timestamp": 31.031,
+      "image": "frames/frame_000032.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 435.05,
+        "quality_score": 99.52,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000033",
+      "timestamp": 32.032,
+      "image": "frames/frame_000033.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 336.557,
+        "quality_score": 99.61,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000034",
+      "timestamp": 33.033,
+      "image": "frames/frame_000034.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 324.879,
+        "quality_score": 99.58,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000035",
+      "timestamp": 34.034,
+      "image": "frames/frame_000035.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 493.266,
+        "quality_score": 99.05,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000036",
+      "timestamp": 35.035,
+      "image": "frames/frame_000036.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 531.796,
+        "quality_score": 99.15,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000037",
+      "timestamp": 36.036,
+      "image": "frames/frame_000037.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 572.296,
+        "quality_score": 98.91,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000038",
+      "timestamp": 37.037,
+      "image": "frames/frame_000038.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 591.252,
+        "quality_score": 98.53,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000039",
+      "timestamp": 38.038,
+      "image": "frames/frame_000039.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 390.545,
+        "quality_score": 98.37,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000040",
+      "timestamp": 39.039,
+      "image": "frames/frame_000040.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 373.899,
+        "quality_score": 98.53,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000041",
+      "timestamp": 40.04,
+      "image": "frames/frame_000041.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 412.216,
+        "quality_score": 98.88,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000042",
+      "timestamp": 41.041,
+      "image": "frames/frame_000042.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 417.014,
+        "quality_score": 98.86,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000043",
+      "timestamp": 42.042,
+      "image": "frames/frame_000043.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 422.734,
+        "quality_score": 98.6,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000044",
+      "timestamp": 43.043,
+      "image": "frames/frame_000044.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 428.223,
+        "quality_score": 98.34,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000045",
+      "timestamp": 44.044,
+      "image": "frames/frame_000045.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 414.328,
+        "quality_score": 98.1,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000046",
+      "timestamp": 45.045,
+      "image": "frames/frame_000046.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 455.412,
+        "quality_score": 97.69,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000047",
+      "timestamp": 46.046,
+      "image": "frames/frame_000047.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 403.444,
+        "quality_score": 97.36,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000048",
+      "timestamp": 47.047,
+      "image": "frames/frame_000048.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 453.33,
+        "quality_score": 97.15,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000049",
+      "timestamp": 48.048,
+      "image": "frames/frame_000049.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 465.131,
+        "quality_score": 97.04,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000050",
+      "timestamp": 49.049,
+      "image": "frames/frame_000050.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 464.551,
+        "quality_score": 97.0,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000051",
+      "timestamp": 50.05,
+      "image": "frames/frame_000051.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 677.365,
+        "quality_score": 96.6,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000052",
+      "timestamp": 51.051,
+      "image": "frames/frame_000052.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 560.836,
+        "quality_score": 96.78,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000053",
+      "timestamp": 52.052,
+      "image": "frames/frame_000053.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 611.446,
+        "quality_score": 96.91,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000054",
+      "timestamp": 53.053,
+      "image": "frames/frame_000054.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 677.265,
+        "quality_score": 97.04,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000055",
+      "timestamp": 54.054,
+      "image": "frames/frame_000055.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 735.069,
+        "quality_score": 97.43,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000056",
+      "timestamp": 55.055,
+      "image": "frames/frame_000056.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 690.114,
+        "quality_score": 97.57,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000057",
+      "timestamp": 56.056,
+      "image": "frames/frame_000057.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 784.04,
+        "quality_score": 96.55,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000058",
+      "timestamp": 57.057,
+      "image": "frames/frame_000058.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 729.177,
+        "quality_score": 96.59,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000059",
+      "timestamp": 58.058,
+      "image": "frames/frame_000059.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 807.292,
+        "quality_score": 96.32,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000060",
+      "timestamp": 59.059,
+      "image": "frames/frame_000060.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1018.902,
+        "quality_score": 96.13,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000061",
+      "timestamp": 60.06,
+      "image": "frames/frame_000061.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1037.312,
+        "quality_score": 95.4,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000062",
+      "timestamp": 61.061,
+      "image": "frames/frame_000062.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1049.047,
+        "quality_score": 94.73,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000063",
+      "timestamp": 62.062,
+      "image": "frames/frame_000063.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1084.338,
+        "quality_score": 94.88,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000064",
+      "timestamp": 63.063,
+      "image": "frames/frame_000064.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 914.992,
+        "quality_score": 95.04,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000065",
+      "timestamp": 64.064,
+      "image": "frames/frame_000065.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 947.355,
+        "quality_score": 94.77,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000066",
+      "timestamp": 65.065,
+      "image": "frames/frame_000066.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 909.309,
+        "quality_score": 95.24,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000067",
+      "timestamp": 66.066,
+      "image": "frames/frame_000067.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1052.075,
+        "quality_score": 95.52,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000068",
+      "timestamp": 67.067,
+      "image": "frames/frame_000068.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1284.488,
+        "quality_score": 94.58,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000069",
+      "timestamp": 68.068,
+      "image": "frames/frame_000069.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1299.605,
+        "quality_score": 94.03,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000070",
+      "timestamp": 69.069,
+      "image": "frames/frame_000070.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1308.453,
+        "quality_score": 94.04,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000071",
+      "timestamp": 70.07,
+      "image": "frames/frame_000071.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1347.252,
+        "quality_score": 94.89,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000072",
+      "timestamp": 71.071,
+      "image": "frames/frame_000072.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1151.356,
+        "quality_score": 95.28,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000073",
+      "timestamp": 72.072,
+      "image": "frames/frame_000073.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1132.911,
+        "quality_score": 95.94,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000074",
+      "timestamp": 73.073,
+      "image": "frames/frame_000074.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1020.753,
+        "quality_score": 96.41,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000075",
+      "timestamp": 74.074,
+      "image": "frames/frame_000075.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 916.559,
+        "quality_score": 97.13,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000076",
+      "timestamp": 75.075,
+      "image": "frames/frame_000076.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1230.006,
+        "quality_score": 96.43,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000077",
+      "timestamp": 76.076,
+      "image": "frames/frame_000077.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1105.056,
+        "quality_score": 96.43,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000078",
+      "timestamp": 77.077,
+      "image": "frames/frame_000078.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1147.289,
+        "quality_score": 95.62,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000079",
+      "timestamp": 78.078,
+      "image": "frames/frame_000079.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1166.466,
+        "quality_score": 96.07,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000080",
+      "timestamp": 79.079,
+      "image": "frames/frame_000080.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1170.431,
+        "quality_score": 96.75,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000081",
+      "timestamp": 80.08,
+      "image": "frames/frame_000081.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1014.818,
+        "quality_score": 96.26,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000082",
+      "timestamp": 81.081,
+      "image": "frames/frame_000082.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1039.311,
+        "quality_score": 96.27,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000083",
+      "timestamp": 82.082,
+      "image": "frames/frame_000083.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1088.836,
+        "quality_score": 96.47,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000084",
+      "timestamp": 83.083,
+      "image": "frames/frame_000084.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1129.92,
+        "quality_score": 96.42,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000085",
+      "timestamp": 84.084,
+      "image": "frames/frame_000085.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1041.502,
+        "quality_score": 96.49,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000086",
+      "timestamp": 85.085,
+      "image": "frames/frame_000086.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1015.937,
+        "quality_score": 96.86,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000087",
+      "timestamp": 86.086,
+      "image": "frames/frame_000087.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1271.652,
+        "quality_score": 96.76,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000088",
+      "timestamp": 87.087,
+      "image": "frames/frame_000088.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1176.281,
+        "quality_score": 97.01,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000089",
+      "timestamp": 88.088,
+      "image": "frames/frame_000089.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1087.282,
+        "quality_score": 96.99,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000090",
+      "timestamp": 89.089,
+      "image": "frames/frame_000090.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1200.622,
+        "quality_score": 96.95,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000091",
+      "timestamp": 90.09,
+      "image": "frames/frame_000091.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1063.552,
+        "quality_score": 97.02,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000092",
+      "timestamp": 91.091,
+      "image": "frames/frame_000092.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1104.525,
+        "quality_score": 97.35,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000093",
+      "timestamp": 92.092,
+      "image": "frames/frame_000093.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1155.04,
+        "quality_score": 97.37,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000094",
+      "timestamp": 93.093,
+      "image": "frames/frame_000094.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1100.18,
+        "quality_score": 96.71,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000095",
+      "timestamp": 94.094,
+      "image": "frames/frame_000095.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1163.929,
+        "quality_score": 96.74,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000096",
+      "timestamp": 95.095,
+      "image": "frames/frame_000096.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1209.313,
+        "quality_score": 96.39,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000097",
+      "timestamp": 96.096,
+      "image": "frames/frame_000097.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1091.512,
+        "quality_score": 96.1,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000098",
+      "timestamp": 97.097,
+      "image": "frames/frame_000098.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1031.955,
+        "quality_score": 96.05,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000099",
+      "timestamp": 98.098,
+      "image": "frames/frame_000099.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1264.628,
+        "quality_score": 95.65,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000100",
+      "timestamp": 99.099,
+      "image": "frames/frame_000100.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1195.823,
+        "quality_score": 95.69,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000101",
+      "timestamp": 100.1,
+      "image": "frames/frame_000101.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1420.726,
+        "quality_score": 94.97,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000102",
+      "timestamp": 101.101,
+      "image": "frames/frame_000102.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1309.625,
+        "quality_score": 94.66,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000103",
+      "timestamp": 102.102,
+      "image": "frames/frame_000103.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1170.933,
+        "quality_score": 94.63,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000104",
+      "timestamp": 103.103,
+      "image": "frames/frame_000104.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1142.009,
+        "quality_score": 95.06,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000105",
+      "timestamp": 104.104,
+      "image": "frames/frame_000105.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1057.37,
+        "quality_score": 95.42,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000106",
+      "timestamp": 105.105,
+      "image": "frames/frame_000106.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1383.313,
+        "quality_score": 95.29,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000107",
+      "timestamp": 106.106,
+      "image": "frames/frame_000107.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1321.608,
+        "quality_score": 95.33,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000108",
+      "timestamp": 107.107,
+      "image": "frames/frame_000108.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1283.964,
+        "quality_score": 95.37,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000109",
+      "timestamp": 108.108,
+      "image": "frames/frame_000109.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1363.501,
+        "quality_score": 95.3,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000110",
+      "timestamp": 109.109,
+      "image": "frames/frame_000110.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1308.201,
+        "quality_score": 95.1,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000111",
+      "timestamp": 110.11,
+      "image": "frames/frame_000111.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1327.51,
+        "quality_score": 94.87,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000112",
+      "timestamp": 111.111,
+      "image": "frames/frame_000112.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1308.134,
+        "quality_score": 94.62,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000113",
+      "timestamp": 112.112,
+      "image": "frames/frame_000113.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1245.773,
+        "quality_score": 94.77,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000114",
+      "timestamp": 113.113,
+      "image": "frames/frame_000114.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1118.266,
+        "quality_score": 94.89,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000115",
+      "timestamp": 114.114,
+      "image": "frames/frame_000115.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1250.954,
+        "quality_score": 94.77,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000116",
+      "timestamp": 115.115,
+      "image": "frames/frame_000116.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1133.243,
+        "quality_score": 94.61,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000117",
+      "timestamp": 116.116,
+      "image": "frames/frame_000117.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 998.415,
+        "quality_score": 94.44,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000118",
+      "timestamp": 117.117,
+      "image": "frames/frame_000118.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1112.164,
+        "quality_score": 94.71,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000119",
+      "timestamp": 118.118,
+      "image": "frames/frame_000119.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1054.829,
+        "quality_score": 94.59,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000120",
+      "timestamp": 119.119,
+      "image": "frames/frame_000120.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1064.806,
+        "quality_score": 94.24,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000121",
+      "timestamp": 120.12,
+      "image": "frames/frame_000121.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1240.628,
+        "quality_score": 93.78,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000122",
+      "timestamp": 121.121,
+      "image": "frames/frame_000122.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 991.869,
+        "quality_score": 94.49,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000123",
+      "timestamp": 122.122,
+      "image": "frames/frame_000123.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1016.065,
+        "quality_score": 94.6,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000124",
+      "timestamp": 123.123,
+      "image": "frames/frame_000124.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1141.056,
+        "quality_score": 95.16,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000125",
+      "timestamp": 124.124,
+      "image": "frames/frame_000125.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1323.142,
+        "quality_score": 95.05,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000126",
+      "timestamp": 125.125,
+      "image": "frames/frame_000126.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1604.937,
+        "quality_score": 94.67,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000127",
+      "timestamp": 126.126,
+      "image": "frames/frame_000127.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1585.884,
+        "quality_score": 94.24,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000128",
+      "timestamp": 127.127,
+      "image": "frames/frame_000128.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1780.008,
+        "quality_score": 94.1,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000129",
+      "timestamp": 128.128,
+      "image": "frames/frame_000129.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2040.953,
+        "quality_score": 94.54,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000130",
+      "timestamp": 129.129,
+      "image": "frames/frame_000130.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2041.746,
+        "quality_score": 94.67,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000131",
+      "timestamp": 130.13,
+      "image": "frames/frame_000131.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1637.333,
+        "quality_score": 94.69,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000132",
+      "timestamp": 131.131,
+      "image": "frames/frame_000132.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1539.598,
+        "quality_score": 94.4,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000133",
+      "timestamp": 132.132,
+      "image": "frames/frame_000133.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1447.818,
+        "quality_score": 94.32,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000134",
+      "timestamp": 133.133,
+      "image": "frames/frame_000134.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1401.47,
+        "quality_score": 94.19,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000135",
+      "timestamp": 134.134,
+      "image": "frames/frame_000135.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1712.842,
+        "quality_score": 94.31,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000136",
+      "timestamp": 135.135,
+      "image": "frames/frame_000136.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1746.899,
+        "quality_score": 93.94,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000137",
+      "timestamp": 136.136,
+      "image": "frames/frame_000137.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1858.563,
+        "quality_score": 93.67,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000138",
+      "timestamp": 137.137,
+      "image": "frames/frame_000138.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1878.46,
+        "quality_score": 94.51,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000139",
+      "timestamp": 138.138,
+      "image": "frames/frame_000139.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1503.543,
+        "quality_score": 94.7,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000140",
+      "timestamp": 139.139,
+      "image": "frames/frame_000140.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1561.011,
+        "quality_score": 95.38,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000141",
+      "timestamp": 140.14,
+      "image": "frames/frame_000141.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1503.424,
+        "quality_score": 95.76,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000142",
+      "timestamp": 141.141,
+      "image": "frames/frame_000142.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1439.599,
+        "quality_score": 95.77,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000143",
+      "timestamp": 142.142,
+      "image": "frames/frame_000143.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1714.786,
+        "quality_score": 95.54,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000144",
+      "timestamp": 143.143,
+      "image": "frames/frame_000144.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1478.376,
+        "quality_score": 95.71,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000145",
+      "timestamp": 144.144,
+      "image": "frames/frame_000145.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1278.703,
+        "quality_score": 96.09,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000146",
+      "timestamp": 145.145,
+      "image": "frames/frame_000146.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1203.998,
+        "quality_score": 95.39,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000147",
+      "timestamp": 146.146,
+      "image": "frames/frame_000147.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1308.404,
+        "quality_score": 94.63,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000148",
+      "timestamp": 147.147,
+      "image": "frames/frame_000148.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1175.471,
+        "quality_score": 94.31,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000149",
+      "timestamp": 148.148,
+      "image": "frames/frame_000149.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1173.668,
+        "quality_score": 94.33,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000150",
+      "timestamp": 149.149,
+      "image": "frames/frame_000150.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1367.194,
+        "quality_score": 94.12,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000151",
+      "timestamp": 150.15,
+      "image": "frames/frame_000151.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1588.106,
+        "quality_score": 94.16,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000152",
+      "timestamp": 151.151,
+      "image": "frames/frame_000152.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1384.608,
+        "quality_score": 94.48,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000153",
+      "timestamp": 152.152,
+      "image": "frames/frame_000153.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1415.643,
+        "quality_score": 94.56,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000154",
+      "timestamp": 153.153,
+      "image": "frames/frame_000154.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1456.213,
+        "quality_score": 94.18,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000155",
+      "timestamp": 154.154,
+      "image": "frames/frame_000155.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1432.118,
+        "quality_score": 93.84,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000156",
+      "timestamp": 155.155,
+      "image": "frames/frame_000156.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1185.324,
+        "quality_score": 94.02,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000157",
+      "timestamp": 156.156,
+      "image": "frames/frame_000157.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1170.705,
+        "quality_score": 93.41,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000158",
+      "timestamp": 157.157,
+      "image": "frames/frame_000158.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1248.651,
+        "quality_score": 93.17,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000159",
+      "timestamp": 158.158,
+      "image": "frames/frame_000159.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1321.159,
+        "quality_score": 92.86,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000160",
+      "timestamp": 159.159,
+      "image": "frames/frame_000160.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1701.035,
+        "quality_score": 92.33,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000161",
+      "timestamp": 160.16,
+      "image": "frames/frame_000161.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1797.916,
+        "quality_score": 92.42,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000162",
+      "timestamp": 161.161,
+      "image": "frames/frame_000162.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1619.615,
+        "quality_score": 92.93,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000163",
+      "timestamp": 162.162,
+      "image": "frames/frame_000163.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1731.029,
+        "quality_score": 92.94,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000164",
+      "timestamp": 163.163,
+      "image": "frames/frame_000164.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1440.823,
+        "quality_score": 92.91,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000165",
+      "timestamp": 164.164,
+      "image": "frames/frame_000165.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1576.504,
+        "quality_score": 93.25,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000166",
+      "timestamp": 165.165,
+      "image": "frames/frame_000166.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1684.801,
+        "quality_score": 93.21,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000167",
+      "timestamp": 166.166,
+      "image": "frames/frame_000167.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1617.288,
+        "quality_score": 93.14,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000168",
+      "timestamp": 167.167,
+      "image": "frames/frame_000168.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2009.211,
+        "quality_score": 93.18,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000169",
+      "timestamp": 168.168,
+      "image": "frames/frame_000169.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1708.849,
+        "quality_score": 93.4,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000170",
+      "timestamp": 169.169,
+      "image": "frames/frame_000170.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1860.296,
+        "quality_score": 94.02,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000171",
+      "timestamp": 170.17,
+      "image": "frames/frame_000171.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1958.091,
+        "quality_score": 93.75,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000172",
+      "timestamp": 171.171,
+      "image": "frames/frame_000172.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1831.958,
+        "quality_score": 94.07,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000173",
+      "timestamp": 172.172,
+      "image": "frames/frame_000173.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1874.828,
+        "quality_score": 94.48,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000174",
+      "timestamp": 173.173,
+      "image": "frames/frame_000174.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1984.821,
+        "quality_score": 94.44,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000175",
+      "timestamp": 174.174,
+      "image": "frames/frame_000175.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1916.671,
+        "quality_score": 94.34,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000176",
+      "timestamp": 175.175,
+      "image": "frames/frame_000176.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2517.011,
+        "quality_score": 93.86,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000177",
+      "timestamp": 176.176,
+      "image": "frames/frame_000177.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1870.165,
+        "quality_score": 93.45,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000178",
+      "timestamp": 177.177,
+      "image": "frames/frame_000178.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1743.185,
+        "quality_score": 93.54,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000179",
+      "timestamp": 178.178,
+      "image": "frames/frame_000179.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1807.994,
+        "quality_score": 93.85,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000180",
+      "timestamp": 179.179,
+      "image": "frames/frame_000180.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1827.668,
+        "quality_score": 94.45,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000181",
+      "timestamp": 180.18,
+      "image": "frames/frame_000181.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1684.737,
+        "quality_score": 94.43,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000182",
+      "timestamp": 181.181,
+      "image": "frames/frame_000182.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1674.852,
+        "quality_score": 94.6,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000183",
+      "timestamp": 182.182,
+      "image": "frames/frame_000183.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1652.722,
+        "quality_score": 94.92,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000184",
+      "timestamp": 183.183,
+      "image": "frames/frame_000184.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1688.805,
+        "quality_score": 94.64,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000185",
+      "timestamp": 184.184,
+      "image": "frames/frame_000185.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2191.005,
+        "quality_score": 94.69,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000186",
+      "timestamp": 185.185,
+      "image": "frames/frame_000186.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2011.276,
+        "quality_score": 94.85,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000187",
+      "timestamp": 186.186,
+      "image": "frames/frame_000187.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2003.067,
+        "quality_score": 94.38,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000188",
+      "timestamp": 187.187,
+      "image": "frames/frame_000188.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1881.445,
+        "quality_score": 94.31,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000189",
+      "timestamp": 188.188,
+      "image": "frames/frame_000189.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1528.058,
+        "quality_score": 94.29,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000190",
+      "timestamp": 189.189,
+      "image": "frames/frame_000190.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1497.163,
+        "quality_score": 94.83,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000191",
+      "timestamp": 190.19,
+      "image": "frames/frame_000191.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1382.616,
+        "quality_score": 95.03,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000192",
+      "timestamp": 191.191,
+      "image": "frames/frame_000192.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1286.644,
+        "quality_score": 95.25,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000193",
+      "timestamp": 192.192,
+      "image": "frames/frame_000193.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1534.594,
+        "quality_score": 94.87,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000194",
+      "timestamp": 193.193,
+      "image": "frames/frame_000194.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1558.493,
+        "quality_score": 95.04,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000195",
+      "timestamp": 194.194,
+      "image": "frames/frame_000195.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1538.008,
+        "quality_score": 94.63,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000196",
+      "timestamp": 195.195,
+      "image": "frames/frame_000196.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1562.686,
+        "quality_score": 94.19,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000197",
+      "timestamp": 196.196,
+      "image": "frames/frame_000197.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1342.135,
+        "quality_score": 94.09,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000198",
+      "timestamp": 197.197,
+      "image": "frames/frame_000198.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1413.427,
+        "quality_score": 94.25,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000199",
+      "timestamp": 198.198,
+      "image": "frames/frame_000199.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1465.511,
+        "quality_score": 94.95,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000200",
+      "timestamp": 199.199,
+      "image": "frames/frame_000200.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1394.89,
+        "quality_score": 95.37,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000201",
+      "timestamp": 200.2,
+      "image": "frames/frame_000201.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1744.151,
+        "quality_score": 95.49,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000202",
+      "timestamp": 201.201,
+      "image": "frames/frame_000202.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1394.989,
+        "quality_score": 95.85,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000203",
+      "timestamp": 202.202,
+      "image": "frames/frame_000203.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1258.878,
+        "quality_score": 95.85,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000204",
+      "timestamp": 203.203,
+      "image": "frames/frame_000204.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1402.665,
+        "quality_score": 95.82,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000205",
+      "timestamp": 204.204,
+      "image": "frames/frame_000205.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1561.557,
+        "quality_score": 94.39,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000206",
+      "timestamp": 205.205,
+      "image": "frames/frame_000206.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1455.482,
+        "quality_score": 93.87,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000207",
+      "timestamp": 206.206,
+      "image": "frames/frame_000207.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1706.465,
+        "quality_score": 93.72,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000208",
+      "timestamp": 207.207,
+      "image": "frames/frame_000208.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1981.292,
+        "quality_score": 93.6,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000209",
+      "timestamp": 208.208,
+      "image": "frames/frame_000209.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2051.331,
+        "quality_score": 94.5,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000210",
+      "timestamp": 209.209,
+      "image": "frames/frame_000210.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2557.982,
+        "quality_score": 94.46,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000211",
+      "timestamp": 210.21,
+      "image": "frames/frame_000211.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2532.129,
+        "quality_score": 94.44,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000212",
+      "timestamp": 211.211,
+      "image": "frames/frame_000212.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2366.356,
+        "quality_score": 94.46,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000213",
+      "timestamp": 212.212,
+      "image": "frames/frame_000213.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 2213.655,
+        "quality_score": 94.61,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000214",
+      "timestamp": 213.213,
+      "image": "frames/frame_000214.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1599.056,
+        "quality_score": 94.95,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000215",
+      "timestamp": 214.214,
+      "image": "frames/frame_000215.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1537.1,
+        "quality_score": 95.57,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000216",
+      "timestamp": 215.215,
+      "image": "frames/frame_000216.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1283.549,
+        "quality_score": 95.54,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000217",
+      "timestamp": 216.216,
+      "image": "frames/frame_000217.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1160.352,
+        "quality_score": 96.14,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000218",
+      "timestamp": 217.217,
+      "image": "frames/frame_000218.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1361.107,
+        "quality_score": 95.99,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000219",
+      "timestamp": 218.218,
+      "image": "frames/frame_000219.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1312.833,
+        "quality_score": 96.08,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000220",
+      "timestamp": 219.219,
+      "image": "frames/frame_000220.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1206.612,
+        "quality_score": 95.98,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000221",
+      "timestamp": 220.22,
+      "image": "frames/frame_000221.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1126.233,
+        "quality_score": 95.78,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000222",
+      "timestamp": 221.221,
+      "image": "frames/frame_000222.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 893.649,
+        "quality_score": 95.82,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000223",
+      "timestamp": 222.222,
+      "image": "frames/frame_000223.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 878.63,
+        "quality_score": 95.54,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000224",
+      "timestamp": 223.223,
+      "image": "frames/frame_000224.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 876.083,
+        "quality_score": 95.33,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000225",
+      "timestamp": 224.224,
+      "image": "frames/frame_000225.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 993.001,
+        "quality_score": 94.96,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000226",
+      "timestamp": 225.225,
+      "image": "frames/frame_000226.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1480.369,
+        "quality_score": 94.96,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000227",
+      "timestamp": 226.226,
+      "image": "frames/frame_000227.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1367.666,
+        "quality_score": 94.29,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000228",
+      "timestamp": 227.227,
+      "image": "frames/frame_000228.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1451.518,
+        "quality_score": 94.18,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000229",
+      "timestamp": 228.228,
+      "image": "frames/frame_000229.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1647.845,
+        "quality_score": 94.32,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000230",
+      "timestamp": 229.229,
+      "image": "frames/frame_000230.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1782.028,
+        "quality_score": 94.33,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000231",
+      "timestamp": 230.23,
+      "image": "frames/frame_000231.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1348.305,
+        "quality_score": 95.15,
+        "flags": []
+      },
+      "keyframe": true
+    },
+    {
+      "observation_id": "frame_000232",
+      "timestamp": 231.231,
+      "image": "frames/frame_000232.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1299.966,
+        "quality_score": 95.86,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000233",
+      "timestamp": 232.232,
+      "image": "frames/frame_000233.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1255.286,
+        "quality_score": 96.04,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000234",
+      "timestamp": 233.233,
+      "image": "frames/frame_000234.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1201.826,
+        "quality_score": 96.03,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000235",
+      "timestamp": 234.234,
+      "image": "frames/frame_000235.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1515.295,
+        "quality_score": 95.8,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000236",
+      "timestamp": 235.235,
+      "image": "frames/frame_000236.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1768.804,
+        "quality_score": 95.74,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000237",
+      "timestamp": 236.236,
+      "image": "frames/frame_000237.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1591.565,
+        "quality_score": 95.48,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000238",
+      "timestamp": 237.237,
+      "image": "frames/frame_000238.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1479.452,
+        "quality_score": 96.32,
+        "flags": []
+      },
+      "keyframe": false
+    },
+    {
+      "observation_id": "frame_000239",
+      "timestamp": 238.238,
+      "image": "frames/frame_000239.jpg",
+      "camera": {
+        "width": 1920,
+        "height": 1080,
+        "intrinsics": null,
+        "distortion": null
+      },
+      "quality": {
+        "status": "GOOD",
+        "blur_score": 1166.594,
+        "quality_score": 96.26,
+        "flags": []
+      },
+      "keyframe": false
+    }
+  ]
+}

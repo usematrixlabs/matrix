@@ -280,6 +280,9 @@ def run_s4(s3_output_dir: Path, output_dir: Path) -> Path:
                 indent=2,
             )
         return out_ply
+    ply_path = s3_output_dir / "scene.ply"
+    if not ply_path.exists():
+        raise RuntimeError(f"S3 output PLY not found: {ply_path}")
 
     point_cloud = PlyIO.read_ply(ply_path)
     points = np.asarray(point_cloud.points, dtype=np.float64)
@@ -312,6 +315,9 @@ def run_s4(s3_output_dir: Path, output_dir: Path) -> Path:
                 indent=2,
             )
         return out_ply
+        raise RuntimeError(
+            f"S3 produced only {points.shape[0]} points; S4 needs ≥3 for Helmert fit."
+        )
 
     reconstruction = ReconstructionInput(
         points=points,
@@ -335,6 +341,7 @@ def run_s4(s3_output_dir: Path, output_dir: Path) -> Path:
     )
     result = georeferencer.georeference()
 
+    output_dir.mkdir(parents=True, exist_ok=True)
     out_ply = output_dir / "georeferenced.ply"
 
     from src.reconstruction.models.s3_output import PointCloudData as _PCD

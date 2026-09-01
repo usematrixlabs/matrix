@@ -1,0 +1,6702 @@
+{
+  "observations": [
+    {
+      "observation_id": "frame_000001",
+      "timestamp": 0.0,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000001.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000002",
+      "timestamp": 1.001,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000002.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 0.06345151784087807,
+          "y": 0.0,
+          "z": -0.03300526612266042
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000003",
+      "timestamp": 2.002,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000003.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 0.10097445945564859,
+          "y": 0.031112402759885145,
+          "z": -0.06649770091689962
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000004",
+      "timestamp": 3.003,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000004.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 0.11061601468224246,
+          "y": 0.06746922888025607,
+          "z": -0.0999006180136941
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000005",
+      "timestamp": 4.004,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000005.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 0.13270901395593762,
+          "y": 0.1052999163404455,
+          "z": -0.11159004521826635
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000006",
+      "timestamp": 5.005,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000006.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 0.1601327116485337,
+          "y": 0.1210463036847608,
+          "z": -0.11429066613467134
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000007",
+      "timestamp": 6.006,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000007.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 0.22806430385031645,
+          "y": 0.16951482935424264,
+          "z": -0.09319299915154822
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000008",
+      "timestamp": 7.007,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000008.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 0.6531919659514438,
+          "y": 0.6891391151176394,
+          "z": -0.040480664615258906
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000009",
+      "timestamp": 8.008,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000009.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 2.149074476124909,
+          "y": 2.2886919431806954,
+          "z": -0.010152211991520985
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000010",
+      "timestamp": 9.009,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000010.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 5.551807068035423,
+          "y": 5.46680281160293,
+          "z": -0.014571402222480948
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000011",
+      "timestamp": 10.01,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000011.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 11.328142564560594,
+          "y": 10.161001936292472,
+          "z": -0.05884705912617952
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000012",
+      "timestamp": 11.011,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000012.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 19.352376676043068,
+          "y": 16.04076651940933,
+          "z": -0.0666994025537758
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000013",
+      "timestamp": 12.012,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000013.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 29.125621172369634,
+          "y": 22.77546414318634,
+          "z": -0.05072563721068258
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000014",
+      "timestamp": 13.013,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000014.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 40.04372583845173,
+          "y": 30.129080658723936,
+          "z": -0.0018601202851090543
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000015",
+      "timestamp": 14.014,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000015.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 51.0945792050486,
+          "y": 37.509643992710174,
+          "z": 0.0645337507884608
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000016",
+      "timestamp": 15.015,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000016.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 60.657260631647624,
+          "y": 43.78557706520869,
+          "z": 0.11909900760275338
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000017",
+      "timestamp": 16.016,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000017.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 67.4352141089435,
+          "y": 48.098385191539336,
+          "z": 0.16431198186038687
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000018",
+      "timestamp": 17.017,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000018.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 71.26648278681134,
+          "y": 50.39049012389311,
+          "z": 0.145310080017939
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000019",
+      "timestamp": 18.018,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000019.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 73.12218346689058,
+          "y": 51.41928822766075,
+          "z": 0.08943014466167916
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000020",
+      "timestamp": 19.019,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000020.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 74.14821372306628,
+          "y": 51.945092167896085,
+          "z": -0.04204797875042014
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000021",
+      "timestamp": 20.02,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000021.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 74.90694402093544,
+          "y": 52.34281039022902,
+          "z": -0.17408734214842317
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000022",
+      "timestamp": 21.021,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000022.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 75.70777715519591,
+          "y": 52.810705826269434,
+          "z": -0.26122466685511575
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000023",
+      "timestamp": 22.022,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000023.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.38801440782186,
+          "y": 53.22483644937301,
+          "z": -0.26053734223994096
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000024",
+      "timestamp": 23.023,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000024.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.79845140573464,
+          "y": 53.45387900038747,
+          "z": -0.2092506983422241
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000025",
+      "timestamp": 24.024,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000025.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.86330322014899,
+          "y": 53.44714000609361,
+          "z": -0.15274061457302796
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000026",
+      "timestamp": 25.025,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000026.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.71473030489271,
+          "y": 53.29943802318745,
+          "z": -0.11806832659804768
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000027",
+      "timestamp": 26.026,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000027.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.53716656320492,
+          "y": 53.17177219274812,
+          "z": -0.08045619685284591
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000028",
+      "timestamp": 27.027,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000028.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.39046371230408,
+          "y": 53.0864266306531,
+          "z": -0.04248386072343627
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000029",
+      "timestamp": 28.028,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000029.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.27498896755894,
+          "y": 53.04409936876766,
+          "z": -0.005313220677911499
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000030",
+      "timestamp": 29.029,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000030.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.19642054780876,
+          "y": 53.01478346866149,
+          "z": 0.011454201429646666
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000031",
+      "timestamp": 30.03,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000031.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.14956650833233,
+          "y": 52.99698079979234,
+          "z": 0.016170652166585177
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000032",
+      "timestamp": 31.031,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000032.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.12571810988749,
+          "y": 52.98769291256317,
+          "z": -0.004440764698567919
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000033",
+      "timestamp": 32.032,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000033.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.11647372423108,
+          "y": 52.98390502256474,
+          "z": -0.038348328151048675
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000034",
+      "timestamp": 33.033,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000034.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.11528828320371,
+          "y": 52.98321517936384,
+          "z": -0.07774497010180403
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000035",
+      "timestamp": 34.034,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000035.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.11774506028048,
+          "y": 52.98397361841641,
+          "z": -0.09893369713038334
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000036",
+      "timestamp": 35.035,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000036.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.12123277922787,
+          "y": 52.98518690697079,
+          "z": -0.1080883855159562
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000037",
+      "timestamp": 36.036,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000037.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.1429673694613,
+          "y": 53.07217626308824,
+          "z": -0.11028635132749959
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000038",
+      "timestamp": 37.037,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000038.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 76.15598641487239,
+          "y": 53.851719802558534,
+          "z": -0.08982244780675737
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000039",
+      "timestamp": 38.038,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000039.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 75.90324708548756,
+          "y": 56.288464376078124,
+          "z": -0.037880019268911595
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000040",
+      "timestamp": 39.039,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000040.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 74.75701639149223,
+          "y": 61.156089676417814,
+          "z": 0.04964028262006518
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000041",
+      "timestamp": 40.04,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000041.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 72.11337716227875,
+          "y": 68.4794008155258,
+          "z": 0.0969004696805866
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000042",
+      "timestamp": 41.041,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000042.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 67.92920127151484,
+          "y": 77.81879460737625,
+          "z": 0.1174677058794808
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000043",
+      "timestamp": 42.042,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000043.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 62.999210511994804,
+          "y": 88.77847625749483,
+          "z": 0.08399776628079152
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000044",
+      "timestamp": 43.043,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000044.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 58.02226354545885,
+          "y": 100.90322419591405,
+          "z": 0.04019218596640963
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000045",
+      "timestamp": 44.044,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000045.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 53.08530046900086,
+          "y": 113.64422130794122,
+          "z": -0.04437201733630612
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000046",
+      "timestamp": 45.045,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000046.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 47.745722772958835,
+          "y": 126.46212496106214,
+          "z": -0.13002120577838291
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000047",
+      "timestamp": 46.046,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000047.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 41.696695723712466,
+          "y": 139.07696618842508,
+          "z": -0.15439687382422113
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000048",
+      "timestamp": 47.047,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000048.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 35.02306020542949,
+          "y": 151.43245478550284,
+          "z": -0.14107015765596664
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000049",
+      "timestamp": 48.048,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000049.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 28.142245591552083,
+          "y": 163.20720311303214,
+          "z": -0.0884550526385245
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000050",
+      "timestamp": 49.049,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000050.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 21.55862635213266,
+          "y": 173.97642632694306,
+          "z": -0.07421218691521034
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000051",
+      "timestamp": 50.05,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000051.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 15.375604270600238,
+          "y": 183.83927244334097,
+          "z": -0.02810209526351546
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000052",
+      "timestamp": 51.051,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000052.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 9.40989578765736,
+          "y": 193.2022438655477,
+          "z": -0.04143297702561052
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000053",
+      "timestamp": 52.052,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000053.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 3.304015721190441,
+          "y": 202.68905920180168,
+          "z": -0.09079447624701412
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000054",
+      "timestamp": 53.053,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000054.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -3.0450125516926687,
+          "y": 212.4585789280128,
+          "z": -0.1781840504768533
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000055",
+      "timestamp": 54.054,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000055.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -9.757440942135084,
+          "y": 222.7371165057886,
+          "z": -0.2456499904638638
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000056",
+      "timestamp": 55.055,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000056.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -16.83272966257223,
+          "y": 233.60080552124762,
+          "z": -0.2784212635985534
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000057",
+      "timestamp": 56.056,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000057.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -24.144164441615956,
+          "y": 245.01771099573207,
+          "z": -0.2898249486140016
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000058",
+      "timestamp": 57.057,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000058.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -31.46129295196513,
+          "y": 256.90163356984414,
+          "z": -0.27059722011103415
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000059",
+      "timestamp": 58.058,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000059.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -38.56018343925769,
+          "y": 269.1030370847676,
+          "z": -0.2355523541422988
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000060",
+      "timestamp": 59.059,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000060.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -45.25128262541185,
+          "y": 281.44590368892835,
+          "z": -0.19418906783235723
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000061",
+      "timestamp": 60.06,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000061.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -51.35362508915043,
+          "y": 293.705802782694,
+          "z": -0.17108822036363633
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000062",
+      "timestamp": 61.061,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000062.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -56.69413441934035,
+          "y": 305.8313814349401,
+          "z": -0.16043746248303634
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000063",
+      "timestamp": 62.062,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000063.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -61.12423588288766,
+          "y": 317.877714530725,
+          "z": -0.1572264137736766
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000064",
+      "timestamp": 63.063,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000064.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -64.56547007141282,
+          "y": 329.9777788534642,
+          "z": -0.13853649808563068
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000065",
+      "timestamp": 64.064,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000065.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -66.94142960383697,
+          "y": 342.19328701885695,
+          "z": -0.11030887182561136
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000066",
+      "timestamp": 65.065,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000066.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -68.22810678503923,
+          "y": 354.5785022551482,
+          "z": -0.11556222977921454
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000067",
+      "timestamp": 66.066,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000067.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -68.63234601611867,
+          "y": 367.1595611725799,
+          "z": -0.14070700522437354
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000068",
+      "timestamp": 67.067,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000068.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -68.50680468919565,
+          "y": 379.9668248485151,
+          "z": -0.17592343954140896
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000069",
+      "timestamp": 68.068,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000069.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -68.23511711088034,
+          "y": 392.96944724792303,
+          "z": -0.1764474336057342
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000070",
+      "timestamp": 69.069,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000070.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -68.03422315208037,
+          "y": 406.1233144678778,
+          "z": -0.17465786150659757
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000071",
+      "timestamp": 70.07,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000071.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -68.06834512949649,
+          "y": 419.4874499007998,
+          "z": -0.17226050192092346
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000072",
+      "timestamp": 71.071,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000072.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -68.49059079299616,
+          "y": 433.1612903921136,
+          "z": -0.17009963625490096
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000073",
+      "timestamp": 72.072,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000073.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -69.35819453616043,
+          "y": 447.2637582591033,
+          "z": -0.16848269245482328
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000074",
+      "timestamp": 73.073,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000074.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -70.58354957097887,
+          "y": 461.7487629803108,
+          "z": -0.2252565073544121
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000075",
+      "timestamp": 74.074,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000075.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -72.02157370606459,
+          "y": 476.450504032854,
+          "z": -0.33481624631224316
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000076",
+      "timestamp": 75.075,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000076.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -73.58054064122155,
+          "y": 491.11955558734377,
+          "z": -0.41369426362934547
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000077",
+      "timestamp": 76.076,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000077.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -75.24713825694718,
+          "y": 505.55493828186343,
+          "z": -0.39316594086321305
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000078",
+      "timestamp": 77.077,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000078.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -77.0199736405656,
+          "y": 519.6803672527777,
+          "z": -0.29510434866141444
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000079",
+      "timestamp": 78.078,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000079.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -78.77326329020751,
+          "y": 533.066283155403,
+          "z": -0.11854303537621794
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000080",
+      "timestamp": 79.079,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000080.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -80.30851830324671,
+          "y": 544.7341872564356,
+          "z": 0.018835143924367456
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000081",
+      "timestamp": 80.08,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000081.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -81.50246025497236,
+          "y": 554.3738884576538,
+          "z": 0.10587753112302689
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000082",
+      "timestamp": 81.081,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000082.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -82.37492784039001,
+          "y": 562.440402426549,
+          "z": 0.10282331662791339
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000083",
+      "timestamp": 82.082,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000083.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -83.0654393406882,
+          "y": 569.3226830063444,
+          "z": 0.06797454991564465
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000084",
+      "timestamp": 83.083,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000084.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -83.55247338955189,
+          "y": 574.2732920687454,
+          "z": 0.02002921699539323
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000085",
+      "timestamp": 84.084,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000085.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -83.85973452682506,
+          "y": 577.0914638101713,
+          "z": -0.04971174297575888
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000086",
+      "timestamp": 85.085,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000086.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -84.05682864235078,
+          "y": 579.0694398027524,
+          "z": -0.0894595143898281
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000087",
+      "timestamp": 86.086,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000087.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -84.29375679521767,
+          "y": 581.8795300609283,
+          "z": -0.12766459463927854
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000088",
+      "timestamp": 87.087,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000088.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -84.6148751232228,
+          "y": 585.8073768032128,
+          "z": -0.1642176647416927
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000089",
+      "timestamp": 88.088,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000089.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -84.96063942813733,
+          "y": 590.2524722489778,
+          "z": -0.18013587935167805
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000090",
+      "timestamp": 89.089,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000090.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -85.30622931035249,
+          "y": 595.0150157021371,
+          "z": -0.14552733571840867
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000091",
+      "timestamp": 90.09,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000091.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -85.67168531170593,
+          "y": 600.5110407024024,
+          "z": -0.10229758228227273
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000092",
+      "timestamp": 91.091,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000092.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -86.10501953835971,
+          "y": 607.0784571166377,
+          "z": -0.03819016440875888
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000093",
+      "timestamp": 92.092,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000093.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -86.57669811279179,
+          "y": 613.8321522012302,
+          "z": -0.003305011747025327
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000094",
+      "timestamp": 93.093,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000094.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -86.99226798630356,
+          "y": 619.1579819756527,
+          "z": -0.007190545765713152
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000095",
+      "timestamp": 94.094,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000095.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -87.2785564538084,
+          "y": 622.4581220688743,
+          "z": -0.03347938912334607
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000096",
+      "timestamp": 95.095,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000096.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -87.49099431600368,
+          "y": 624.8444796607964,
+          "z": -0.03211133827631816
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000097",
+      "timestamp": 96.096,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000097.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -87.74225431952944,
+          "y": 628.0800760809052,
+          "z": -0.012509278730336994
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000098",
+      "timestamp": 97.097,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000098.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -88.0611588864332,
+          "y": 632.2320602531645,
+          "z": -0.04022413974499467
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000099",
+      "timestamp": 98.098,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000099.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -88.366485177888,
+          "y": 636.3673684854544,
+          "z": -0.0958999967444224
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000100",
+      "timestamp": 99.099,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000100.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -88.60701265717157,
+          "y": 639.8041651629654,
+          "z": -0.10779756799616436
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000101",
+      "timestamp": 100.1,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000101.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -88.81028916628783,
+          "y": 642.9989200379606,
+          "z": -0.07265934864206619
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000102",
+      "timestamp": 101.101,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000102.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -89.03264736254745,
+          "y": 646.7269919859301,
+          "z": -0.049757309705600425
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000103",
+      "timestamp": 102.102,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000103.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -89.30709365007431,
+          "y": 651.3058085039584,
+          "z": -0.07527582670883329
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000104",
+      "timestamp": 103.103,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000104.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -89.61295458102364,
+          "y": 656.4482481556173,
+          "z": -0.11039590321940083
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000105",
+      "timestamp": 104.104,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000105.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -89.91652527309188,
+          "y": 660.9822520491945,
+          "z": -0.12992143483018134
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000106",
+      "timestamp": 105.105,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000106.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -90.1233602089965,
+          "y": 663.9683857711038,
+          "z": -0.10030423334125937
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000107",
+      "timestamp": 106.106,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000107.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -90.21764195364204,
+          "y": 665.1389790397709,
+          "z": -0.02307078622287713
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000108",
+      "timestamp": 107.107,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000108.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -90.21460653158702,
+          "y": 665.2203279102621,
+          "z": 0.07892282619161581
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000109",
+      "timestamp": 108.108,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000109.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -90.22015620273994,
+          "y": 665.3191528984889,
+          "z": 0.17167190498613458
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000110",
+      "timestamp": 109.109,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000110.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -90.29694546728572,
+          "y": 666.5890154864741,
+          "z": 0.1973319405129852
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000111",
+      "timestamp": 110.11,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000111.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -90.49504053435302,
+          "y": 669.9345834294845,
+          "z": 0.18257311166272305
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000112",
+      "timestamp": 111.111,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000112.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -90.81843563960031,
+          "y": 675.6043014976376,
+          "z": 0.1276747138499721
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000113",
+      "timestamp": 112.112,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000113.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -91.22575948856036,
+          "y": 682.7282004756795,
+          "z": 0.05342995985113075
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000114",
+      "timestamp": 113.113,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000114.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -91.65184120651061,
+          "y": 690.080634703292,
+          "z": -0.04669191913687419
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000115",
+      "timestamp": 114.114,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000115.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -92.05875528856761,
+          "y": 697.0172083451437,
+          "z": -0.0998723861686371
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000116",
+      "timestamp": 115.115,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000116.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -92.46491998931802,
+          "y": 703.9162842573176,
+          "z": -0.1030490195159492
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000117",
+      "timestamp": 116.116,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000117.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -92.92190102575177,
+          "y": 711.4963412245554,
+          "z": -0.07763350597142649
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000118",
+      "timestamp": 117.117,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000118.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -93.33105416609233,
+          "y": 719.9160230958611,
+          "z": -0.05780913577705592
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000119",
+      "timestamp": 118.118,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000119.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -93.56014987271682,
+          "y": 728.0004861152743,
+          "z": -0.08297039387545849
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000120",
+      "timestamp": 119.119,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000120.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -93.59333434318228,
+          "y": 734.0476803103189,
+          "z": -0.077805439648012
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000121",
+      "timestamp": 120.12,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000121.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -93.50537778404193,
+          "y": 737.0902301935741,
+          "z": -0.11189029498883306
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000122",
+      "timestamp": 121.121,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000122.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -93.04966218279296,
+          "y": 737.5554326923127,
+          "z": -0.1499484081381554
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000123",
+      "timestamp": 122.122,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000123.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -91.41876842992238,
+          "y": 736.3112108910349,
+          "z": -0.2272635197386615
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000124",
+      "timestamp": 123.123,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000124.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -87.64587776042765,
+          "y": 733.6358269882461,
+          "z": -0.26796783091644927
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000125",
+      "timestamp": 124.124,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000125.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -81.1189111154388,
+          "y": 729.466892686863,
+          "z": -0.2463131098650882
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000126",
+      "timestamp": 125.125,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000126.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -71.90638520192854,
+          "y": 723.9640799826989,
+          "z": -0.18910825470850867
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000127",
+      "timestamp": 126.126,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000127.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -60.57947602567279,
+          "y": 717.5099941044672,
+          "z": -0.13424290545262052
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000128",
+      "timestamp": 127.127,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000128.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -48.128759682243725,
+          "y": 710.3304329401406,
+          "z": -0.10406662855579286
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000129",
+      "timestamp": 128.128,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000129.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -35.92069546692945,
+          "y": 702.4819043282871,
+          "z": -0.09050505019105062
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000130",
+      "timestamp": 129.129,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000130.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -25.074941779563503,
+          "y": 694.0084872661696,
+          "z": -0.12529045686125784
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000131",
+      "timestamp": 130.13,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000131.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -15.82965995948125,
+          "y": 685.1697979779674,
+          "z": -0.12918881795503173
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000132",
+      "timestamp": 131.131,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000132.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": -7.47076779795446,
+          "y": 676.2472200760731,
+          "z": -0.13168474710758374
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000133",
+      "timestamp": 132.132,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000133.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 0.9495340568587793,
+          "y": 667.2908264234288,
+          "z": -0.11379985711246027
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000134",
+      "timestamp": 133.133,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000134.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 9.940564441463877,
+          "y": 658.2767152813103,
+          "z": -0.14197357292060647
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000135",
+      "timestamp": 134.134,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000135.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 19.776391404091626,
+          "y": 649.3616588070738,
+          "z": -0.1203779839596571
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000136",
+      "timestamp": 135.135,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000136.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 30.526536892820545,
+          "y": 640.9652529825579,
+          "z": -0.04925298599313453
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000137",
+      "timestamp": 136.136,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000137.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 42.14679989600545,
+          "y": 633.7824701014387,
+          "z": 0.04869463717594685
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000138",
+      "timestamp": 137.137,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000138.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 54.466818281596716,
+          "y": 627.9626919914433,
+          "z": 0.10054651778977103
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000139",
+      "timestamp": 138.138,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000139.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 67.29558601067511,
+          "y": 623.0392761523013,
+          "z": 0.10302429770003071
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000140",
+      "timestamp": 139.139,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000140.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 80.14984425856166,
+          "y": 618.1848247765805,
+          "z": 0.09659548605376983
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000141",
+      "timestamp": 140.14,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000141.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 91.7977697068999,
+          "y": 613.3080756544257,
+          "z": 0.0491795225418897
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000142",
+      "timestamp": 141.141,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000142.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 101.28815870611717,
+          "y": 608.7842606773645,
+          "z": 0.01907433797904856
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000143",
+      "timestamp": 142.142,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000143.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 108.77427664611919,
+          "y": 604.7090419015825,
+          "z": -0.016818595475340765
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000144",
+      "timestamp": 143.143,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000144.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 115.59834307967293,
+          "y": 600.6867079634783,
+          "z": -0.05462612615334916
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000145",
+      "timestamp": 144.144,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000145.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 122.93967119300363,
+          "y": 596.2500759774675,
+          "z": -0.13087400755883788
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000146",
+      "timestamp": 145.145,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000146.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 131.12454980619228,
+          "y": 591.3216627492586,
+          "z": -0.22821508169068436
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000147",
+      "timestamp": 146.146,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000147.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 139.99608477879127,
+          "y": 586.0438159688869,
+          "z": -0.2771689372453985
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000148",
+      "timestamp": 147.147,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000148.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 149.07807337485917,
+          "y": 580.7830129477957,
+          "z": -0.2763780751010628
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000149",
+      "timestamp": 148.148,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000149.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 157.80116425426792,
+          "y": 576.273948443183,
+          "z": -0.2286435672419605
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000150",
+      "timestamp": 149.149,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000150.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 165.7483126687814,
+          "y": 573.0094697369626,
+          "z": -0.15722073862191022
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000151",
+      "timestamp": 150.15,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000151.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 172.8789059763002,
+          "y": 570.8375499994073,
+          "z": -0.07678599048329189
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000152",
+      "timestamp": 151.151,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000152.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 179.67516759518114,
+          "y": 568.884830321456,
+          "z": -0.03393367544921704
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000153",
+      "timestamp": 152.152,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000153.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 186.77563654027412,
+          "y": 566.2801975438822,
+          "z": -0.015739018920348416
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000154",
+      "timestamp": 153.153,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000154.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 194.7238357677312,
+          "y": 562.6396778480935,
+          "z": -0.01168285780782222
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000155",
+      "timestamp": 154.154,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000155.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 203.6067748322131,
+          "y": 558.0229202832047,
+          "z": -0.0336991641603124
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000156",
+      "timestamp": 155.155,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000156.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 213.14255191257007,
+          "y": 552.7406694566816,
+          "z": -0.06903683161509123
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000157",
+      "timestamp": 156.156,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000157.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 222.9084306903469,
+          "y": 547.1790425249031,
+          "z": -0.09030390343525731
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000158",
+      "timestamp": 157.157,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000158.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 232.65249344087968,
+          "y": 541.5873839264062,
+          "z": -0.0434365802626703
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000159",
+      "timestamp": 158.158,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000159.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 242.2281137899782,
+          "y": 536.1351902532654,
+          "z": 0.023809378470581892
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000160",
+      "timestamp": 159.159,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000160.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 251.2786862718294,
+          "y": 531.0030741705037,
+          "z": 0.06097746448048512
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000161",
+      "timestamp": 160.16,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000161.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 258.7340471840084,
+          "y": 526.6777654033036,
+          "z": 0.05854476318258608
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000162",
+      "timestamp": 161.161,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000162.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 263.70135535877415,
+          "y": 523.6053755243613,
+          "z": 0.05233637839252257
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000163",
+      "timestamp": 162.162,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000163.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 266.49026883331106,
+          "y": 521.6982894869055,
+          "z": 0.06508828634636112
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000164",
+      "timestamp": 163.163,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000164.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 268.1729413427719,
+          "y": 520.4477449278427,
+          "z": 0.1093430141010063
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000165",
+      "timestamp": 164.164,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000165.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 269.3720936650138,
+          "y": 519.556201427034,
+          "z": 0.1329371525241912
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000166",
+      "timestamp": 165.165,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000166.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 269.9165098914972,
+          "y": 519.0771091366537,
+          "z": 0.12369214234553662
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000167",
+      "timestamp": 166.166,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000167.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 269.78751321416587,
+          "y": 519.0197230810619,
+          "z": 0.07637057822948776
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000168",
+      "timestamp": 167.167,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000168.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 269.6550987834293,
+          "y": 519.0141682746612,
+          "z": 0.009015149385119478
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000169",
+      "timestamp": 168.168,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000169.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 270.6107691359032,
+          "y": 518.4694203438175,
+          "z": -0.02809451062906628
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000170",
+      "timestamp": 169.169,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000170.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 273.7524604626086,
+          "y": 516.7497624983288,
+          "z": -0.044820923515998146
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000171",
+      "timestamp": 170.17,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000171.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 279.6948512044713,
+          "y": 513.4958534354993,
+          "z": -0.030236883292439787
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000172",
+      "timestamp": 171.171,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000172.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 288.19294523314545,
+          "y": 508.7810143628994,
+          "z": -0.03714745301422782
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000173",
+      "timestamp": 172.172,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000173.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 298.61097343431226,
+          "y": 502.98660473331336,
+          "z": -0.058554008060930966
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000174",
+      "timestamp": 173.173,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000174.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 310.27045207102583,
+          "y": 496.47298675954096,
+          "z": -0.06924901363888264
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000175",
+      "timestamp": 174.174,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000175.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 322.7630221021306,
+          "y": 489.4698962262604,
+          "z": -0.05395204064941783
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000176",
+      "timestamp": 175.175,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000176.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 335.7233626960909,
+          "y": 482.17676062968656,
+          "z": -0.023986415682884628
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000177",
+      "timestamp": 176.176,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000177.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 348.9312950860125,
+          "y": 474.7268255401237,
+          "z": -0.025695270661560066
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000178",
+      "timestamp": 177.177,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000178.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 362.2162912382912,
+          "y": 467.25620904306436,
+          "z": -0.02798600077867453
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000179",
+      "timestamp": 178.178,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000179.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 375.46794133827143,
+          "y": 459.79747868595996,
+          "z": -0.030051228355426073
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000180",
+      "timestamp": 179.179,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000180.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 388.64118287741496,
+          "y": 452.3895866519026,
+          "z": -0.031596828715686164
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000181",
+      "timestamp": 180.18,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000181.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 401.7582457581672,
+          "y": 445.01705066755636,
+          "z": -0.07115824877325225
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000182",
+      "timestamp": 181.181,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000182.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 414.92734172444887,
+          "y": 437.65844618465377,
+          "z": -0.13232310540677927
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000183",
+      "timestamp": 182.182,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000183.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 428.1488110004742,
+          "y": 430.31570520739433,
+          "z": -0.16517663844503416
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000184",
+      "timestamp": 183.183,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000184.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 440.85080333587507,
+          "y": 423.2224241202863,
+          "z": -0.1407849265064873
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000185",
+      "timestamp": 184.184,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000185.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 451.9853092028083,
+          "y": 416.8745312163577,
+          "z": -0.10283856816223677
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000186",
+      "timestamp": 185.185,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000186.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 461.0032402156659,
+          "y": 411.54151685299644,
+          "z": -0.07940067219005187
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000187",
+      "timestamp": 186.186,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000187.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 468.5377020704298,
+          "y": 406.9771904548026,
+          "z": -0.04762272695496647
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000188",
+      "timestamp": 187.187,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000188.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 476.0665241792469,
+          "y": 402.4671628336844,
+          "z": 0.026544694825092426
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000189",
+      "timestamp": 188.188,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000189.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 484.69206960922156,
+          "y": 397.44201066582946,
+          "z": 0.12389835681530978
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000190",
+      "timestamp": 189.189,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000190.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 494.77268653707426,
+          "y": 391.67168581378365,
+          "z": 0.15446853816345585
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000191",
+      "timestamp": 190.19,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000191.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 506.188322636641,
+          "y": 385.2038053158784,
+          "z": 0.10518671169486954
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000192",
+      "timestamp": 191.191,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000192.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 518.5442914694023,
+          "y": 378.2390583100627,
+          "z": -0.007471523775358424
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000193",
+      "timestamp": 192.192,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000193.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 531.4553029214418,
+          "y": 370.9828229694617,
+          "z": -0.07400088692970275
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000194",
+      "timestamp": 193.193,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000194.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 544.6167697436422,
+          "y": 363.6231201744778,
+          "z": -0.10740139167202944
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000195",
+      "timestamp": 194.194,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000195.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 557.9055778815725,
+          "y": 356.21759226884615,
+          "z": -0.10068894626226799
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000196",
+      "timestamp": 195.195,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000196.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 571.1839192535265,
+          "y": 348.84908733283226,
+          "z": -0.11014091579464658
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000197",
+      "timestamp": 196.196,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000197.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 584.3958303745688,
+          "y": 341.5096436058444,
+          "z": -0.11204232756639818
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000198",
+      "timestamp": 197.197,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000198.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 597.5128373098294,
+          "y": 334.20376040408087,
+          "z": -0.11036873729258366
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000199",
+      "timestamp": 198.198,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000199.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 610.5914416794913,
+          "y": 326.8835195653238,
+          "z": -0.10753155805732086
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000200",
+      "timestamp": 199.199,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000200.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 623.6950667227036,
+          "y": 319.5593263452624,
+          "z": -0.1047868955349915
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000201",
+      "timestamp": 200.2,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000201.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 636.8465455426538,
+          "y": 312.2363812002303,
+          "z": -0.12192177773305983
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000202",
+      "timestamp": 201.201,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000202.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 650.0588430237652,
+          "y": 304.93807907341716,
+          "z": -0.1507698347491283
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000203",
+      "timestamp": 202.202,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000203.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 663.3195683945355,
+          "y": 297.6553894734965,
+          "z": -0.20475578670719577
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000204",
+      "timestamp": 203.203,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000204.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 676.5830697529838,
+          "y": 290.4027532375833,
+          "z": -0.2141203018057933
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000205",
+      "timestamp": 204.204,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000205.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 689.841467245754,
+          "y": 283.1662516815155,
+          "z": -0.1766141589667349
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000206",
+      "timestamp": 205.205,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000206.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 703.0739579642775,
+          "y": 275.9152400793347,
+          "z": -0.09407158710340928
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000207",
+      "timestamp": 206.206,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000207.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 716.2890371858248,
+          "y": 268.6536086712661,
+          "z": -0.02750080120542784
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000208",
+      "timestamp": 207.207,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000208.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 729.4938665809456,
+          "y": 261.3851810298809,
+          "z": 0.006225860651584101
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000209",
+      "timestamp": 208.208,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000209.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 742.6194570545623,
+          "y": 254.13442504994543,
+          "z": 0.019168935989370722
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000210",
+      "timestamp": 209.209,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000210.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 755.6637161366024,
+          "y": 246.76544526761754,
+          "z": 0.0014104382855910855
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000211",
+      "timestamp": 210.21,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000211.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 768.5737200149862,
+          "y": 239.19946929476427,
+          "z": -0.032496800618675104
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000212",
+      "timestamp": 211.211,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000212.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 781.3774029659115,
+          "y": 231.37654824276285,
+          "z": -0.07309615239299008
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000213",
+      "timestamp": 212.212,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000213.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 794.0396406336819,
+          "y": 223.42103407003546,
+          "z": -0.09574769045662657
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000214",
+      "timestamp": 213.213,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000214.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 806.6529386612344,
+          "y": 215.39116481918575,
+          "z": -0.10617418004900278
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000215",
+      "timestamp": 214.214,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000215.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 819.2544250450658,
+          "y": 207.36207370986475,
+          "z": -0.10930196340388593
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000216",
+      "timestamp": 215.215,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000216.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 831.8992431520918,
+          "y": 199.35145449033678,
+          "z": -0.10870885867296595
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000217",
+      "timestamp": 216.216,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000217.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 844.5407967769332,
+          "y": 191.38443010280508,
+          "z": -0.08739220400379691
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000218",
+      "timestamp": 217.217,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000218.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 857.1284050190964,
+          "y": 183.4702614283257,
+          "z": -0.07414239254308536
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000219",
+      "timestamp": 218.218,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000219.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 869.3355602533394,
+          "y": 175.759825382491,
+          "z": -0.02846542880946512
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000220",
+      "timestamp": 219.219,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000220.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 879.9955958043485,
+          "y": 168.76505855673645,
+          "z": -0.003351610619677586
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000221",
+      "timestamp": 220.22,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000221.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 887.86739340804,
+          "y": 163.197479521651,
+          "z": 0.007928098409613605
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000222",
+      "timestamp": 221.221,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000222.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 892.9827740539703,
+          "y": 159.17239650511766,
+          "z": -0.02749751159962982
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000223",
+      "timestamp": 222.222,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000223.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 897.0673920364002,
+          "y": 155.94491118465675,
+          "z": -0.06976483520925182
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000224",
+      "timestamp": 223.223,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000224.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 902.2355690729281,
+          "y": 152.3149789952542,
+          "z": -0.05525189596950464
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000225",
+      "timestamp": 224.224,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000225.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 909.539004314387,
+          "y": 147.56462602897972,
+          "z": -0.006073372593070343
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000226",
+      "timestamp": 225.225,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000226.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 919.0105775458776,
+          "y": 141.69775601223972,
+          "z": 0.042042523256750786
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000227",
+      "timestamp": 226.226,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000227.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 930.1879213444392,
+          "y": 135.4014372249013,
+          "z": 0.048118910944518964
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000228",
+      "timestamp": 227.227,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000228.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 942.4874813592559,
+          "y": 129.5729671109377,
+          "z": 0.028365710591888665
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000229",
+      "timestamp": 228.228,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000229.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 955.4266910337411,
+          "y": 124.55173681066378,
+          "z": -0.024347966371013337
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000230",
+      "timestamp": 229.229,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000230.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 968.6437789181575,
+          "y": 119.92482419822272,
+          "z": -0.09382959824235995
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000231",
+      "timestamp": 230.23,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000231.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 981.5172961918639,
+          "y": 115.08465251908281,
+          "z": -0.15052746328037298
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000232",
+      "timestamp": 231.231,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000232.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 993.137725041464,
+          "y": 109.99578849111435,
+          "z": -0.2548604468339103
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000233",
+      "timestamp": 232.232,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000233.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 1002.6355531102275,
+          "y": 104.89994283261989,
+          "z": -0.32741398038791214
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000234",
+      "timestamp": 233.233,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000234.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 1009.6737311094133,
+          "y": 99.91095951403513,
+          "z": -0.3785036530803747
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000235",
+      "timestamp": 234.234,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000235.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 1014.3095008203869,
+          "y": 94.9428104732617,
+          "z": -0.2819574529941853
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000236",
+      "timestamp": 235.235,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000236.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 1016.7331888685562,
+          "y": 90.04697079360412,
+          "z": -0.12116198203855191
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000237",
+      "timestamp": 236.236,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000237.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 1017.2525831648777,
+          "y": 85.74671063685703,
+          "z": 0.029382271189378598
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000238",
+      "timestamp": 237.237,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000238.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 1016.5108930750687,
+          "y": 82.74630003684146,
+          "z": 0.06883188131592963
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    },
+    {
+      "observation_id": "frame_000239",
+      "timestamp": 238.238,
+      "image": "/Users/jishnupsamal/Jishnu/Dev/Projects/matrix/benchmarks/results/video-1005/s1/frames/frame_000239.jpg",
+      "camera": null,
+      "pose": {
+        "position": {
+          "x": 1015.2074591387824,
+          "y": 81.31149206894561,
+          "z": -0.05676328066254133
+        },
+        "orientation": {
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        }
+      },
+      "localization": {
+        "status": "estimated",
+        "source": [
+          "gps"
+        ],
+        "quality": {
+          "confidence": 0.5
+        }
+      }
+    }
+  ],
+  "schema_version": "1.0.0",
+  "coordinate_frame": "NED",
+  "units": {
+    "position": "meters",
+    "rotation": "quaternion"
+  }
+}
