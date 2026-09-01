@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Matrix S1 Observations Package Schema",
+  "description": "Standardized observation package exported by Subsystem 1 (Visual Perception) and consumed by Subsystem 2 (Localization & Sensor Fusion).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "subsystem",
+    "total_observations",
+    "observations"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Semantic version of the observation schema format (e.g. '1.0.0')."
+    },
+    "subsystem": {
+      "type": "string",
+      "description": "Producing subsystem identifier ('S1_Visual_Perception')."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC ISO-8601 creation timestamp."
+    },
+    "video_source": {
+      "type": ["string", "null"],
+      "description": "Source video file path or identifier."
+    },
+    "total_observations": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of candidate observations extracted."
+    },
+    "keyframe_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of observations marked as keyframes."
+    },
+    "keyframe_density": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Ratio of keyframes to total candidate observations."
+    },
+    "temporal_information": {
+      "type": "object",
+      "properties": {
+        "time_unit": {"type": "string", "enum": ["seconds"]},
+        "time_reference": {"type": "string"},
+        "is_monotonic": {"type": "boolean"},
+        "processing_time_seconds": {"type": "number"},
+        "video_duration_seconds": {"type": "number"}
+      }
+    },
+    "camera": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": {"type": "integer"},
+        "height": {"type": "integer"},
+        "intrinsics": {
+          "type": ["object", "null"],
+          "properties": {
+            "fx": {"type": "number"},
+            "fy": {"type": "number"},
+            "cx": {"type": "number"},
+            "cy": {"type": "number"},
+            "camera_matrix": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {"type": "number"}
+              }
+            }
+          }
+        },
+        "distortion": {
+          "type": ["object", "null"],
+          "properties": {
+            "coefficients": {
+              "type": "array",
+              "items": {"type": "number"}
+            },
+            "model": {"type": "string"}
+          }
+        },
+        "is_calibrated": {"type": "boolean"}
+      }
+    },
+    "quality_summary": {
+      "type": "object",
+      "properties": {
+        "GOOD": {"type": "integer"},
+        "BLURRY": {"type": "integer"},
+        "OVEREXPOSED": {"type": "integer"},
+        "UNDEREXPOSED": {"type": "integer"},
+        "LOW_FEATURE": {"type": "integer"},
+        "CORRUPTED": {"type": "integer"}
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "observation_id",
+          "timestamp",
+          "image",
+          "camera",
+          "quality",
+          "keyframe"
+        ],
+        "properties": {
+          "observation_id": {
+            "type": "string",
+            "pattern": "^frame_[0-9]{6}$",
+            "description": "Stable deterministic observation identifier."
+          },
+          "timestamp": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "Monotonic video capture timestamp in seconds."
+          },
+          "image": {
+            "type": "string",
+            "description": "Portable relative image path from package root (e.g. 'frames/frame_000001.jpg')."
+          },
+          "camera": {
+            "type": "object",
+            "required": ["width", "height"],
+            "properties": {
+              "width": {"type": "integer"},
+              "height": {"type": "integer"},
+              "intrinsics": {"type": ["object", "null"]},
+              "distortion": {"type": ["object", "null"]}
+            }
+          },
+          "quality": {
+            "type": "object",
+            "required": ["status"],
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": ["GOOD", "BLURRY", "OVEREXPOSED", "UNDEREXPOSED", "LOW_FEATURE", "CORRUPTED"]
+              },
+              "blur_score": {"type": "number"},
+              "quality_score": {"type": "number"},
+              "flags": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
+            }
+          },
+          "keyframe": {
+            "type": "boolean",
+            "description": "True if observation is designated as a keyframe, False otherwise."
+          }
+        }
+      }
+    }
+  }
+}
+

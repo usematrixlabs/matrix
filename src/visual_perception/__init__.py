@@ -19,6 +19,7 @@ from .identifier import ObservationIdentifier
 from .keyframe_selector import KeyframeSelector
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
+from .packager import ObservationPackager
 from .pipeline import S1Pipeline
 from .quality_assessor import QualityAssessor
 from .timestamp_handler import TimestampHandler
@@ -66,6 +67,7 @@ __all__ = [
     "ObservationIdentifier",
     "TimestampHandler",
     "QualityAssessor",
+    "ObservationPackager",
     "S1Pipeline",
     # Exceptions
     "VideoValidationError",

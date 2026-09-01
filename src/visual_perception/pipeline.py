@@ -2,7 +2,7 @@
 
 Coordinates video decoding, frame extraction, keyframe selection,
 quality assessment, camera calibration, and metadata preservation conforming
-to the S1 -> S2 interface contract.
+to the S1 -> S2 interface contract. Packages final output to observations.json.
 """
 
 import argparse
@@ -19,6 +19,7 @@ from .identifier import ObservationIdentifier
 from .keyframe_selector import KeyframeSelector
 from .logger import get_logger
 from .metadata_extractor import MetadataExtractor
+from .packager import ObservationPackager
 from .quality_assessor import QualityAssessor
 from .timestamp_handler import TimestampHandler
 from .types import (
@@ -50,6 +51,7 @@ class S1Pipeline:
         self.quality_assessor = QualityAssessor(config=self.config)
         self.extractor = FrameExtractor(config=self.config)
         self.selector = KeyframeSelector(config=self.config)
+        self.packager = ObservationPackager(config=self.config)
 
     def run(
         self,
@@ -57,6 +59,7 @@ class S1Pipeline:
         telemetry_path: Optional[str] = None,
         calibration_path: Optional[str] = None,
         output_dir: Optional[str] = None,
+        package_output: bool = True,
         strict_validation: bool = True,
     ) -> S1Output:
         """Execute the Visual Perception pipeline.
@@ -66,6 +69,7 @@ class S1Pipeline:
             telemetry_path (Optional[str]): Path to optional UAV telemetry file.
             calibration_path (Optional[str]): Path to optional camera calibration file.
             output_dir (Optional[str]): Destination directory for outputs.
+            package_output (bool): If True, writes standard observations.json package.
             strict_validation (bool): If True, raises validation exceptions immediately.
 
         Returns:
@@ -217,6 +221,15 @@ class S1Pipeline:
                 "output_dir": self.config.output_dir,
             },
         )
+
+        # Step 7: Package into canonical observations.json artifact (Phase 10)
+        if package_output and extracted_frames:
+            package_json_path = self.packager.package(
+                output_dir=self.config.output_dir,
+                s1_output=s1_output,
+                video_metadata_record=video_metadata_record,
+            )
+            s1_output.metadata["observations_json"] = package_json_path
 
         self.logger.info(
             "S1 Pipeline completed in %.3fs (Extracted %d frames, %d keyframes, Calibrated=%s, Quality: %s)",
