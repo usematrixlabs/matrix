@@ -4,6 +4,7 @@ import pytest
 from src.georeferencing_validation.control_points import ControlPoints
 from src.georeferencing_validation.crs import CoordinateReference
 from src.georeferencing_validation.georeferencer import Georeferencer
+from src.georeferencing_validation.helmert import HelmertTransform
 from src.georeferencing_validation.input import ReconstructionInput
 
 
@@ -107,3 +108,31 @@ def test_georeferencer_accepts_explicit_local_to_world_policy():
 
     assert result.metadata["coordinate_frame_mode"] == "explicit_local_to_world"
     assert result.points.shape == reconstruction.points_array.shape
+
+
+def test_helmert_rejects_large_control_point_outlier():
+    source = np.array([
+        [0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0],
+        [1.0, 1.0, 1.0],
+        [5.0, 6.0, 7.0],
+    ], dtype=np.float64)
+
+    target = np.array([
+        [10.0, 20.0, 30.0],
+        [12.0, 20.0, 30.0],
+        [10.0, 22.0, 30.0],
+        [10.0, 20.0, 32.0],
+        [12.0, 22.0, 32.0],
+        [5000.0, 5000.0, 5000.0],
+    ], dtype=np.float64)
+
+    transform = HelmertTransform.from_control_points(
+        ControlPoints(source=source, target=target)
+    )
+
+    assert transform.inlier_mask is not None
+    assert transform.inlier_mask.sum() == 5
+    assert np.count_nonzero(transform.inlier_mask) == 5
