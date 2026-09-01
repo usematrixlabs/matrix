@@ -226,9 +226,6 @@ class CoordinateReference:
 
         return True
 
-    def __repr__(self) -> str:
-        """Return a concise representation of the CRS."""
-
         return (
             f"{self.__class__.__name__}("
             f"name={self.name!r}, "
@@ -236,3 +233,8 @@ class CoordinateReference:
             f"units={self.units!r}, "
             f"dimension={self.dimension})"
         )
+
+    @property
+    def metadata_dict(self) -> Dict[str, Any]:
+        """Return metadata as a dictionary."""
+        return self.metadata if self.metadata is not None else {}
