@@ -86,12 +86,12 @@ class S1DiagnosticsEvaluator:
             self.logger.warning("S1 Degraded: %s", reason)
         elif max_deg_ratio < 1.0:
             # Check degradation ratio among observations when threshold is configured (< 1.0)
-            degraded_count = blurry_count + corrupted_count + low_feature_count
+            degraded_count = blurry_count + corrupted_count + low_feature_count + overexposed_count + underexposed_count
             degraded_ratio = (degraded_count / total_frames) if total_frames > 0 else 0.0
 
             if total_frames > 0 and degraded_ratio >= max_deg_ratio:
                 status = "degraded"
-                reason = f"high_visual_degradation_ratio: {degraded_ratio * 100.0:.1f}% of observations are blurry or low-feature (threshold: {max_deg_ratio * 100.0:.1f}%)"
+                reason = f"high_visual_degradation_ratio: {degraded_ratio * 100.0:.1f}% of observations are degraded (threshold: {max_deg_ratio * 100.0:.1f}%)"
                 warnings.append(reason)
                 degraded_reasons.append(reason)
                 self.logger.warning("S1 Degraded: %s", reason)

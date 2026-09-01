@@ -28,13 +28,16 @@ from src.visual_perception import (
 )
 
 
-def create_solid_color_video(file_path: str, width: int = 320, height: int = 240, fps: float = 10.0, num_frames: int = 10, color=(128, 128, 128)) -> str:
-    """Helper to synthesize a video with uniform flat color (inducing blur/low features)."""
+def create_blurry_video(file_path: str, width: int = 320, height: int = 240, fps: float = 10.0, num_frames: int = 15) -> str:
+    """Helper to synthesize a video with extreme Gaussian blur."""
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     out = cv2.VideoWriter(file_path, fourcc, fps, (width, height))
-    for _ in range(num_frames):
-        frame = np.full((height, width, 3), color, dtype=np.uint8)
-        out.write(frame)
+    for i in range(num_frames):
+        frame = np.random.randint(50, 200, (height, width, 3), dtype=np.uint8)
+        cv2.circle(frame, (100 + i * 2, 100), 20, (0, 255, 0), -1)
+        # Apply heavy Gaussian blur (low Laplacian variance)
+        blurred = cv2.GaussianBlur(frame, (45, 45), 0)
+        out.write(blurred)
     out.release()
     return file_path
 
@@ -178,14 +181,14 @@ class TestS1FailureAndDegradation(unittest.TestCase):
     def test_high_blur_ratio_produces_degraded_status(self):
         """Verify pipeline returns status=degraded when observations are predominantly blurry."""
         video_path = str(self.temp_path / "test_blurred.mp4")
-        create_solid_color_video(video_path, num_frames=20, color=(120, 120, 120))
+        create_blurry_video(video_path, num_frames=20)
 
         config = S1Config(
             video_path=video_path,
             output_dir=str(self.temp_path / "out_blur"),
             sampling_mode="fixed",
             sampling_interval=2,
-            min_valid_observations=5,
+            min_valid_observations=1,
             max_degraded_ratio=0.5,
         )
         pipeline = S1Pipeline(config=config)
@@ -193,7 +196,7 @@ class TestS1FailureAndDegradation(unittest.TestCase):
 
         self.assertEqual(out.status, "degraded")
         self.assertTrue(out.diagnostics["is_degraded"])
-        self.assertTrue(any("high_visual_degradation_ratio" in w or "insufficient" in w for w in out.warnings))
+        self.assertTrue(any("high_visual_degradation_ratio" in w for w in out.warnings))
 
     def test_diagnostics_evaluator_standalone(self):
         """Verify S1DiagnosticsEvaluator directly."""

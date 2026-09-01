@@ -4,9 +4,11 @@ Transforms UAV video into usable visual observations and preserves
 input information required by downstream subsystems.
 """
 
+from .benchmark import S1BenchmarkRunner
 from .camera_calibrator import CameraCalibrationLoader
 from .config import S1Config
 from .diagnostics import S1DiagnosticsEvaluator
+from .downstream_validator import DownstreamValidator
 from .exceptions import (
     VideoCorruptError,
     VideoFormatError,
@@ -70,6 +72,8 @@ __all__ = [
     "QualityAssessor",
     "ObservationPackager",
     "S1DiagnosticsEvaluator",
+    "S1BenchmarkRunner",
+    "DownstreamValidator",
     "S1Pipeline",
     # Exceptions
     "VideoValidationError",

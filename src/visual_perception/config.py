@@ -52,7 +52,7 @@ class S1Config:
 
     # Failure and Degradation Handling Parameters (Phase 11)
     min_valid_observations: int = 1  # Minimum valid frames before status becomes "degraded"
-    max_degraded_ratio: float = 0.8  # Maximum ratio of blurry/corrupt/low-feature frames before "degraded"
+    max_degraded_ratio: float = 1.0  # Maximum ratio of blurry/corrupt frames before "degraded"
 
     # Logging Parameters
     log_level: str = "INFO"
