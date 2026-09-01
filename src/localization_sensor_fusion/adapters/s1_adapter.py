@@ -1,63 +1,60 @@
-"""Adapter for transforming S1 perception outputs into S2 engine formats."""
+"""S1 Input Adapter implementation."""
 
-from __future__ import annotations
-
-from pyexpat import features
-from typing import Any, Dict
-from src.localization_sensor_fusion.schemas.contracts import (
-    QualityStatus,
-    S1ObservationInput,
-)
+from typing import Any, Dict, Optional
+from src.localization_sensor_fusion.schemas.contracts import S1ObservationInput
 
 
 class S1AdapterValidationError(Exception):
-    """Raised when an S1 observation fails adapter validation rules."""
+    """Custom exception raised for validation errors in S1InputAdapter."""
+    pass
 
 
 class S1InputAdapter:
-    """Parses and normalizes raw S1 perception observations for the S2 localization engine."""
-
     def __init__(self, min_blur_score: float = 0.5):
         self.min_blur_score = min_blur_score
 
-    def parse_observation(self, raw_data: dict[str, Any]) -> S1ObservationInput:
-        """Validates raw dictionary payload into an S1ObservationInput model."""
+    def parse_observation(self, payload: Dict[str, Any]) -> S1ObservationInput:
+        """Parses raw payload dictionary into a validated S1ObservationInput contract."""
         try:
-            return S1ObservationInput(**raw_data)
+            return S1ObservationInput(**payload)
         except Exception as e:
-            raise S1AdapterValidationError(f"Failed to parse S1 input schema: {e}") from e
-
-    def validate_quality(self, observation: S1ObservationInput) -> bool:
-        """Verifies observation frame quality meets minimum localized threshold."""
-        if observation.quality is None:
-            return True
-
-        # Reject explicitly bad quality statuses
-        if observation.quality.status in (QualityStatus.BLURRY, QualityStatus.CORRUPTED):
-            return False
-
-        if observation.quality.blur_score is not None and observation.quality.blur_score < self.min_blur_score:
-            return False
-
-        return True
+            raise S1AdapterValidationError(f"Invalid observation payload: {e}") from e
 
     def transform_for_engine(
-        self, observation: S1ObservationInput
-    ) -> dict[str, Any] | None:
-        """Transforms validated S1 observation into COLMAP/Engine feature format.
-
-        Returns None if frame fails quality checks.
+        self, raw_input: S1ObservationInput | Dict[str, Any]
+    ) -> Optional[Dict[str, Any]]:
+        """Transforms S1 input into the dictionary structure expected by COLMAP engine.
+        
+        Returns None if quality metrics (e.g., blur score) fail validation thresholds.
         """
-        if not self.validate_quality(observation):
+        # Safely extract dictionary representation if input is a Pydantic model
+        if isinstance(raw_input, S1ObservationInput):
+            data = raw_input.model_dump()
+        elif isinstance(raw_input, dict):
+            data = raw_input
+        else:
             return None
 
+        # Validate quality threshold
+        quality = data.get("quality") or {}
+        if isinstance(quality, dict):
+            blur_score = quality.get("blur_score", 1.0)
+        else:
+            blur_score = getattr(quality, "blur_score", 1.0)
+
+        if blur_score < self.min_blur_score:
+            return None
+
+        # Extract features dictionary safely
+        features = data.get("features") or {}
+        if isinstance(features, dict):
+            keypoints_count = features.get("keypoints_count", 0)
+        else:
+            keypoints_count = getattr(features, "keypoints_count", 0)
+
         return {
-            "frame_id": observation.observation_id,
-            "timestamp": observation.timestamp,
-            "image_path": str(observation.image),
-            "camera_intrinsics": (
-                observation.camera.intrinsics.model_dump()
-                if observation.camera and observation.camera.intrinsics
-                else None
-            ),
+            "frame_id": data.get("observation_id"),
+            "image_path": data.get("image"),
+            "keypoints_count": keypoints_count,
+            "timestamp": data.get("timestamp"),
         }
