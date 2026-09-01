@@ -226,15 +226,15 @@ class ReconstructionInput:
 
     @property
     def points_array(self) -> np.ndarray:
-        """Return point cloud coordinates as a NumPy float64 array."""
+        """Return the validated point cloud as an ``(N, 3)`` float64 array."""
         return self.points
 
     @property
     def colors_array(self) -> Optional[np.ndarray]:
-        """Return RGB color data as a NumPy uint8 array if available."""
+        """Return the validated RGB colors as an ``(N, 3)`` uint8 array."""
         return self.colors
 
     @property
     def metadata_dict(self) -> Dict[str, Any]:
-        """Return metadata as a dictionary."""
-        return self.metadata
+        """Return a copy of the reconstruction metadata."""
+        return dict(self.metadata)

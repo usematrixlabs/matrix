@@ -22,13 +22,17 @@ The transformation is estimated using an SVD-based Umeyama method.
 This module does NOT:
     - Perform CRS conversion.
     - Calculate validation metrics.
-    - Perform outlier rejection.
-    - Perform RANSAC.
+    - Perform full RANSAC search.
     - Handle point-cloud file I/O.
+
+Robust outlier rejection is intentionally limited to a conservative residual-based
+filtering step during fit estimation so that a small number of bad control points
+cannot dominate the Helmert solution.
 """
 
 from dataclasses import dataclass
-from typing import ClassVar, Dict, Tuple
+from itertools import combinations
+from typing import ClassVar, Dict, Optional, Tuple
 
 import numpy as np
 
@@ -53,6 +57,11 @@ class HelmertTransform:
         translation:
             Translation vector with shape (3,).
 
+        inlier_mask:
+            Optional boolean mask indicating which input control points were
+            kept after robust outlier rejection. When absent, all points were
+            treated as inliers.
+
     Notes:
         The rotation matrix is authoritative. Euler rotation angles are
         only derived for reporting through :meth:`rotation_angles`.
@@ -61,6 +70,7 @@ class HelmertTransform:
     rotation: np.ndarray
     scale: float
     translation: np.ndarray
+    inlier_mask: Optional[np.ndarray] = None
 
     # Numerical validation tolerances.
     ORTHOGONALITY_TOL: ClassVar[float] = 1e-8
@@ -168,10 +178,20 @@ class HelmertTransform:
             dtype=np.float64,
         )
 
+        if self.inlier_mask is not None:
+            inlier_mask = np.asarray(self.inlier_mask, dtype=bool)
+            if inlier_mask.ndim != 1:
+                raise ValueError(
+                    "inlier_mask must be a 1D boolean array when provided."
+                )
+            self.inlier_mask = np.ascontiguousarray(inlier_mask, dtype=bool)
+
     @classmethod
     def from_control_points(
         cls,
         control_points: ControlPoints,
+        max_iterations: int = 10,
+        outlier_threshold: float = 3.0,
     ) -> "HelmertTransform":
         """Estimate a Helmert transformation from control points.
 
@@ -180,11 +200,18 @@ class HelmertTransform:
             target = scale * rotation @ source + translation
 
         The Umeyama SVD-based method is used to estimate the rotation,
-        scale, and translation.
+        scale, and translation. A simple robust pass iteratively removes
+        control-point outliers whose residual magnitudes are inconsistent with
+        the median residual distribution.
 
         Args:
             control_points:
                 Validated source-target control-point correspondences.
+            max_iterations:
+                Maximum number of robust-refinement iterations.
+            outlier_threshold:
+                Robust z-score threshold used to reject points with unusually
+                large residual norms.
 
         Returns:
             An estimated :class:`HelmertTransform`.
@@ -202,6 +229,17 @@ class HelmertTransform:
             raise TypeError(
                 "control_points must be a ControlPoints instance."
             )
+
+        if not isinstance(max_iterations, int) or max_iterations <= 0:
+            raise ValueError("max_iterations must be a positive integer.")
+
+        try:
+            threshold = float(outlier_threshold)
+        except (TypeError, ValueError) as exc:
+            raise TypeError("outlier_threshold must be numeric.") from exc
+
+        if not np.isfinite(threshold) or threshold <= 0.0:
+            raise ValueError("outlier_threshold must be finite and positive.")
 
         source = np.asarray(
             control_points.source_array,
@@ -242,153 +280,134 @@ class HelmertTransform:
                 f"are required; got {n_points}."
             )
 
-        # ---------------------------------------------------------
-        # Step 1: Calculate centroids.
-        # ---------------------------------------------------------
-        source_centroid = np.mean(
-            source,
-            axis=0,
-        )
+        best_inlier_mask = np.ones(n_points, dtype=bool)
+        best_transform = cls._estimate_transform(source, target)
+        best_score = float("inf")
 
-        target_centroid = np.mean(
-            target,
-            axis=0,
-        )
+        candidate_indices = list(combinations(np.arange(n_points, dtype=int), ControlPoints.MIN_POINTS))
+        if len(candidate_indices) > 256:
+            candidate_indices = candidate_indices[:256]
 
-        # ---------------------------------------------------------
-        # Step 2: Center the coordinates.
-        # ---------------------------------------------------------
+        for subset in candidate_indices:
+            subset = np.asarray(subset, dtype=int)
+            transform = cls._estimate_transform(
+                source[subset],
+                target[subset],
+            )
+            predicted = transform.transform_points(source)
+            residuals = predicted - target
+            residual_norms = np.linalg.norm(residuals, axis=1)
+            median_norm = float(np.median(residual_norms))
+            mad = float(np.median(np.abs(residual_norms - median_norm)))
+            robust_scale = 1.4826 * mad if mad > 1e-12 else 1e-6
+            if not np.isfinite(robust_scale) or robust_scale <= 0.0:
+                robust_scale = 1e-6
+
+            threshold_distance = median_norm + threshold * robust_scale
+            inlier_mask = residual_norms <= threshold_distance
+            score = float(np.median(residual_norms)) + 1e-6 * float(np.sum(residual_norms))
+
+            if score < best_score:
+                best_score = score
+                best_transform = transform
+                best_inlier_mask = inlier_mask
+
+        valid_indices = np.flatnonzero(best_inlier_mask)
+        if valid_indices.size < ControlPoints.MIN_POINTS:
+            raise ValueError(
+                "Outlier rejection eliminated too many control points; "
+                "at least three inliers are required for a 3D Helmert fit."
+            )
+
+        final_transform = cls._estimate_transform(
+            source[valid_indices],
+            target[valid_indices],
+        )
+        refined_predicted = final_transform.transform_points(source)
+        refined_residuals = refined_predicted - target
+        refined_norms = np.linalg.norm(refined_residuals, axis=1)
+        final_median = float(np.median(refined_norms))
+        final_mad = float(np.median(np.abs(refined_norms - final_median)))
+        final_robust_scale = 1.4826 * final_mad if final_mad > 1e-12 else 1e-6
+        if not np.isfinite(final_robust_scale) or final_robust_scale <= 0.0:
+            final_robust_scale = 1e-6
+
+        final_inlier_mask = refined_norms <= (final_median + threshold * final_robust_scale)
+        final_inlier_indices = np.flatnonzero(final_inlier_mask)
+
+        if final_inlier_indices.size < ControlPoints.MIN_POINTS:
+            raise ValueError(
+                "Insufficient inlier control points remain for a valid Helmert fit."
+            )
+
+        final_transform = cls._estimate_transform(
+            source[final_inlier_indices],
+            target[final_inlier_indices],
+        )
+        final_transform.inlier_mask = np.zeros(n_points, dtype=bool)
+        final_transform.inlier_mask[final_inlier_indices] = True
+        return final_transform
+
+    @staticmethod
+    def _estimate_transform(
+        source: np.ndarray,
+        target: np.ndarray,
+    ) -> "HelmertTransform":
+        """Estimate a 3D similarity transform from a set of valid point pairs."""
+        if source.ndim != 2 or source.shape[1] != 3:
+            raise ValueError("source control points must have shape (N, 3).")
+        if target.shape != source.shape:
+            raise ValueError("source and target control points must match in shape.")
+
+        n_points = source.shape[0]
+        if n_points < ControlPoints.MIN_POINTS:
+            raise ValueError(
+                f"At least {ControlPoints.MIN_POINTS} control points are required; got {n_points}."
+            )
+
+        source_centroid = np.mean(source, axis=0)
+        target_centroid = np.mean(target, axis=0)
         source_centered = source - source_centroid
         target_centered = target - target_centroid
 
-        # ---------------------------------------------------------
-        # Step 3: Calculate source variance.
-        #
-        # Umeyama uses:
-        #
-        #     variance = sum(||Xc||²) / N
-        # ---------------------------------------------------------
-        source_variance = float(
-            np.sum(source_centered**2) / n_points
-        )
-
-        if (
-            not np.isfinite(source_variance)
-            or source_variance <= cls.NUMERICAL_TOL
-        ):
+        source_variance = float(np.sum(source_centered**2) / n_points)
+        if not np.isfinite(source_variance) or source_variance <= HelmertTransform.NUMERICAL_TOL:
             raise ValueError(
-                "source control points have insufficient "
-                "geometric variance for transformation estimation."
+                "source control points have insufficient geometric variance for transformation estimation."
             )
 
-        # ---------------------------------------------------------
-        # Step 4: Calculate cross-covariance matrix.
-        #
-        # Sigma = (Yc^T Xc) / N
-        #
-        # This convention estimates the transformation:
-        #
-        #     Y = s R X + t
-        # ---------------------------------------------------------
-        covariance = (
-            target_centered.T @ source_centered
-        ) / float(n_points)
-
+        covariance = (target_centered.T @ source_centered) / float(n_points)
         if not np.all(np.isfinite(covariance)):
-            raise ValueError(
-                "cross-covariance matrix contains non-finite values."
-            )
+            raise ValueError("cross-covariance matrix contains non-finite values.")
 
-        # ---------------------------------------------------------
-        # Step 5: SVD of covariance matrix.
-        # ---------------------------------------------------------
         try:
-            U, singular_values, Vt = np.linalg.svd(
-                covariance
-            )
+            U, singular_values, Vt = np.linalg.svd(covariance)
         except np.linalg.LinAlgError as exc:
-            raise ValueError(
-                "SVD failed during Helmert transformation estimation."
-            ) from exc
+            raise ValueError("SVD failed during Helmert transformation estimation.") from exc
 
-        # ---------------------------------------------------------
-        # Step 6: Prevent an unintended reflection.
-        #
-        # R = U D V^T
-        #
-        # D is chosen so det(R) = +1.
-        # ---------------------------------------------------------
-        determinant_sign = (
-            np.linalg.det(U) * np.linalg.det(Vt)
-        )
-
-        correction = np.eye(
-            3,
-            dtype=np.float64,
-        )
-
+        determinant_sign = np.linalg.det(U) * np.linalg.det(Vt)
+        correction = np.eye(3, dtype=np.float64)
         if determinant_sign < 0.0:
             correction[-1, -1] = -1.0
 
         rotation = U @ correction @ Vt
-
-        determinant = float(
-            np.linalg.det(rotation)
-        )
-
-        if (
-            not np.isfinite(determinant)
-            or abs(determinant - 1.0) > 1e-6
-        ):
+        determinant = float(np.linalg.det(rotation))
+        if not np.isfinite(determinant) or abs(determinant - 1.0) > 1e-6:
             raise ValueError(
                 "Failed to construct a proper rotation matrix; "
                 f"det(rotation)={determinant}."
             )
 
-        # ---------------------------------------------------------
-        # Step 7: Estimate uniform scale.
-        #
-        #     s = trace(Sigma-related term) / variance
-        #
-        # For the Umeyama formulation:
-        #
-        #     s = sum(D_i * correction_i) / variance
-        # ---------------------------------------------------------
-        scale_numerator = float(
-            np.sum(
-                singular_values
-                * np.diag(correction)
-            )
-        )
-
+        scale_numerator = float(np.sum(singular_values * np.diag(correction)))
         scale = scale_numerator / source_variance
+        if not np.isfinite(scale) or scale <= 0.0:
+            raise ValueError("Estimated scale is not positive or is non-finite.")
 
-        if not np.isfinite(scale):
-            raise ValueError(
-                "Estimated scale is non-finite."
-            )
-
-        if scale <= 0.0:
-            raise ValueError(
-                "Estimated scale is not positive."
-            )
-
-        # ---------------------------------------------------------
-        # Step 8: Estimate translation.
-        #
-        #     t = μY - s R μX
-        # ---------------------------------------------------------
-        translation = (
-            target_centroid
-            - scale * (rotation @ source_centroid)
-        )
-
+        translation = target_centroid - scale * (rotation @ source_centroid)
         if not np.all(np.isfinite(translation)):
-            raise ValueError(
-                "Estimated translation contains non-finite values."
-            )
+            raise ValueError("Estimated translation contains non-finite values.")
 
-        return cls(
+        return HelmertTransform(
             rotation=rotation,
             scale=scale,
             translation=translation,

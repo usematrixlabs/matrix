@@ -1,4 +1,4 @@
-"""
+﻿"""
 S4 — Georeferencing & Validation
 
 High-level orchestration of the georeferencing pipeline.
@@ -123,61 +123,64 @@ class Georeferencer:
         self._control_points = control_points
         self._source_crs = source_crs
         self._target_crs = target_crs
+        self._validate_crs_contract()
 
         # None until fit() is called.
         self._transform: Optional[HelmertTransform] = None
 
     @property
     def transformation(self) -> Optional[HelmertTransform]:
-        """
-        Return the fitted Helmert transformation.
-
-        Returns
-        -------
-        Optional[HelmertTransform]
-            The fitted transformation, or None if fit() has not
-            been called yet.
-        """
+        """Return the fitted Helmert transformation."""
         return self._transform
 
+    def _validate_crs_contract(self) -> None:
+        """Guard against silently labeling a local reconstruction as a world CRS.
+
+        A local point cloud transformed into a geographic or projected world
+        frame is only valid when this is explicitly declared through the CRS
+        metadata. This prevents false claims of real geodetic georeferencing.
+        """
+
+        source = self._source_crs
+        target = self._target_crs
+
+        if source.is_local and target.is_geodetic:
+            if not source.allow_local_to_world and not target.allow_local_to_world:
+                raise ValueError(
+                    "Cannot georeference a local source CRS into a geographic or "
+                    "projected target CRS without explicit local-to-world metadata. "
+                    "Set allow_local_to_world=True on the participating CRS objects."
+                )
+
+        if source.is_geodetic and target.is_local:
+            if not source.allow_local_to_world and not target.allow_local_to_world:
+                raise ValueError(
+                    "Cannot map a geodetic source CRS into a local target frame "
+                    "without explicit local-to-world metadata. "
+                    "Set allow_local_to_world=True explicitly."
+                )
+
+        if source.is_geodetic and target.is_geodetic:
+            if source.epsg is not None and target.epsg is not None and source.epsg != target.epsg:
+                self._geodetic_warning = (
+                    "Source and target CRS codes differ; this implementation only "
+                    "fits a local 3D similarity transform and does not perform a "
+                    "full CRS conversion."
+                )
+            else:
+                self._geodetic_warning = None
+        else:
+            self._geodetic_warning = None
+
     def fit(self) -> HelmertTransform:
-        """
-        Estimate the 7-parameter Helmert transformation.
-
-        The actual transformation estimation is delegated to
-        HelmertTransform.from_control_points().
-
-        Returns
-        -------
-        HelmertTransform
-            The fitted source-to-target transformation.
-
-        Raises
-        ------
-        ValueError
-            If the control points are unsuitable for estimating
-            the transformation.
-        """
+        """Estimate the 7-parameter Helmert transformation."""
         self._transform = HelmertTransform.from_control_points(
             self._control_points
         )
-
         return self._transform
 
     def transform(self) -> np.ndarray:
-        """
-        Apply the fitted Helmert transformation to the reconstruction.
-
-        Returns
-        -------
-        np.ndarray
-            Transformed Nx3 point cloud with dtype float64.
-
-        Raises
-        ------
-        ValueError
-            If the transformation has not been fitted.
-        """
+        """Apply the fitted Helmert transformation to the reconstruction."""
         if self._transform is None:
             raise ValueError(
                 "Helmert transformation has not been fitted. "
@@ -185,23 +188,10 @@ class Georeferencer:
             )
 
         points = self._reconstruction.points_array
-
         return self._transform.transform_points(points)
 
     def georeference(self) -> GeoreferencedResult:
-        """
-        Execute the complete S4 georeferencing pipeline.
-
-        If the transformation has not already been fitted, it is
-        automatically estimated from the control points.
-
-        Returns
-        -------
-        GeoreferencedResult
-            Complete georeferenced reconstruction containing transformed
-            points, CRS information, transformation parameters, optional
-            colors, and metadata.
-        """
+        """Execute the complete S4 georeferencing pipeline."""
         if self._transform is None:
             self.fit()
 
@@ -222,18 +212,17 @@ class Georeferencer:
             self._reconstruction.metadata_dict
         )
 
-        # Add S4 georeferencing information.
-        metadata["georeferencing_method"] = (
-            "3D Similarity / Helmert"
-        )
-
+        metadata["georeferencing_method"] = "3D Similarity / Helmert"
         metadata["source_crs"] = self._crs_metadata(
             self._source_crs
         )
-
         metadata["target_crs"] = self._crs_metadata(
             self._target_crs
         )
+        metadata["coordinate_frame_mode"] = self._coordinate_frame_mode()
+        if self._geodetic_warning is not None:
+            metadata["warnings"] = metadata.get("warnings", [])
+            metadata["warnings"].append(self._geodetic_warning)
 
         return GeoreferencedResult(
             points=transformed_points,
@@ -244,31 +233,35 @@ class Georeferencer:
             metadata=metadata,
         )
 
+    def _coordinate_frame_mode(self) -> str:
+        """Describe the transformation mode being used.
+
+        The implementation is intentionally conservative: a local-to-world map is
+        only allowed when the CRS metadata explicitly declares the permission.
+        """
+
+        if self._source_crs.is_local and self._target_crs.is_geodetic:
+            return "explicit_local_to_world"
+        if self._source_crs.is_geodetic and self._target_crs.is_local:
+            return "explicit_world_to_local"
+        if self._source_crs.is_geodetic and self._target_crs.is_geodetic:
+            return "world_similarity"
+        return "local_similarity"
+
     @staticmethod
     def _crs_metadata(
         crs: CoordinateReference,
     ) -> Dict[str, Any]:
-        """
-        Convert CRS information into a simple metadata dictionary.
-
-        This method intentionally does not perform CRS conversion or
-        external EPSG validation.
-
-        Parameters
-        ----------
-        crs : CoordinateReference
-            CRS descriptor.
-
-        Returns
-        -------
-        Dict[str, Any]
-            Serializable CRS metadata.
-        """
+        """Convert CRS information into a simple metadata dictionary."""
         return {
             "name": crs.name,
             "epsg": crs.epsg,
             "units": crs.units,
             "dimension": crs.dimension,
             "description": crs.description,
+            "frame_type": crs.frame_type,
+            "datum": crs.datum,
+            "projection": crs.projection,
+            "allow_local_to_world": crs.allow_local_to_world,
             "metadata": crs.metadata_dict,
         }
