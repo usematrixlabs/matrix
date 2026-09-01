@@ -244,7 +244,7 @@ data/output/
 *.onnx
 *.safetensors
 
-models/
+# models/
 checkpoints/
 weights/
 
