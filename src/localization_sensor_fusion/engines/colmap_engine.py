@@ -1,65 +1,42 @@
-"""COLMAP Localization Engine implementation."""
+"""Visual Localization Engine utilizing OpenCV PnP and Feature Matching."""
 
-from typing import Any, Dict, List, Optional
-from src.localization_sensor_fusion.schemas.contracts import (
-    CameraPose,
-    Position,
-    S2ObservationOutput,
-)
+from typing import Optional, Tuple
+
+import numpy as np
+
+try:
+    import cv2
+except ModuleNotFoundError as exc:  # pragma: no cover - depends on optional runtime package
+    raise ModuleNotFoundError(
+        "OpenCV is required for the visual localization engine. "
+        "Install it with: pip install opencv-python-headless"
+    ) from exc
 
 
-class ColmapLocalizationEngine:
-    def __init__(self, min_keypoints_threshold: int = 10):
-        self.min_keypoints_threshold = min_keypoints_threshold
+class VisualLocalizerEngine:
+    """Estimates 3D camera pose (R, t) from 2D-3D point correspondences using PnP."""
 
-    def estimate_pose(self, engine_input: Dict[str, Any]) -> Optional[CameraPose]:
-        """Estimates camera pose from COLMAP feature alignment."""
-        keypoints_count = engine_input.get("keypoints_count", 0)
+    def __init__(self, camera_matrix: np.ndarray, dist_coeffs: Optional[np.ndarray] = None):
+        self.K = camera_matrix
+        self.dist_coeffs = dist_coeffs if dist_coeffs is not None else np.zeros((4, 1))
 
-        # Check keypoint threshold
-        if keypoints_count < self.min_keypoints_threshold:
-            return None
+    def estimate_pose_pnp(
+        self, object_points: np.ndarray, image_points: np.ndarray
+    ) -> Tuple[bool, np.ndarray, np.ndarray]:
+        """Solves Perspective-n-Point problem using RANSAC.
+        
+        Args:
+            object_points: (N, 3) matrix of 3D world coordinates.
+            image_points: (N, 2) matrix of 2D image coordinates.
+        """
+        if len(object_points) < 4 or len(image_points) < 4:
+            return False, np.zeros((3, 1)), np.zeros((3, 1))
 
-        # Extract actual computed pose; return None if no real pose was solved
-        raw_pose = engine_input.get("computed_pose")
-        if not raw_pose:
-            return None
-
-        pos = raw_pose.get("position")
-        ori = raw_pose.get("orientation")
-
-        if not pos or not ori:
-            return None
-
-        return CameraPose(
-            position=Position(**pos) if isinstance(pos, dict) else pos,
-            orientation=ori,
+        success, rvec, tvec, _ = cv2.solvePnPRansac(
+            object_points.astype(np.float32),
+            image_points.astype(np.float32),
+            self.K.astype(np.float32),
+            self.dist_coeffs.astype(np.float32),
         )
 
-    def process_batch(self, batch_inputs: List[Dict[str, Any]]) -> List[S2ObservationOutput]:
-        """Processes a batch of engine inputs into standardized S2ObservationOutput contracts."""
-        results = []
-        for item in batch_inputs:
-            pose = self.estimate_pose(item)
-            if pose is None:
-                continue
-
-            frame_id = str(item.get("frame_id", "unknown"))
-            image_path = str(item.get("image_path", frame_id))
-            timestamp = float(item.get("timestamp", 0.0))
-
-            obs = S2ObservationOutput(
-                observation_id=frame_id,
-                timestamp=timestamp,
-                image=image_path,
-                pose=pose,
-                localization={
-                    "status": "estimated",
-                    "source": ["visual"],
-                    "quality": {
-                        "confidence": min(1.0, item.get("keypoints_count", 0) / 100.0),
-                    },
-                },
-            )
-            results.append(obs)
-        return results
+        return success, rvec, tvec

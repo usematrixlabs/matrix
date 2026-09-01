@@ -1,88 +1,107 @@
-"""Fusion Engine Layer for ingesting S2 payload observations and computing unified pose states."""
+"""Extended Kalman Filter (EKF) Sensor Fusion Engine for UAV Localization."""
 
-from __future__ import annotations
-
-from typing import List, Optional
+import numpy as np
+from typing import List, Dict, Any, Optional
 from src.localization_sensor_fusion.schemas.contracts import (
+    S2ObservationOutput,
     CameraPose,
     Position,
-    S2ObservationOutput,
-    S2PayloadOutput,
+    QuaternionOrientation,
+    LocalizationQuality,
+    LocalizationMeta,
 )
 
 
 class SensorFusionEngine:
-    """Ingests S2 payloads and blends visual/sensor observations into a single trajectory estimate."""
+    """Fuses visual localization data (e.g., COLMAP) with telemetry/IMU inputs using an EKF."""
 
-    def __init__(self, min_confidence_threshold: float = 0.5):
-        self.min_confidence_threshold = min_confidence_threshold
+    def __init__(self, process_noise: float = 1e-3, measurement_noise: float = 1e-2):
+        # State vector: [x, y, z, vx, vy, vz]
+        self.state = np.zeros((6, 1))
+        
+        # Covariance matrix
+        self.covariance = np.eye(6) * 1.0
+        
+        # Process noise covariance (Q)
+        self.Q = np.eye(6) * process_noise
+        
+        # Measurement noise covariance (R) for position [x, y, z]
+        self.R = np.eye(3) * measurement_noise
+        
+        # Transition matrix (constant velocity model placeholder)
+        self.F = np.eye(6)
+        
+        # Measurement matrix (mapping state to position measurement)
+        self.H = np.zeros((3, 6))
+        self.H[0, 0] = 1.0
+        self.H[1, 1] = 1.0
+        self.H[2, 2] = 1.0
 
-    def _get_confidence(self, obs: S2ObservationOutput) -> float:
-        """Safely extracts confidence score from observation metadata."""
-        loc = getattr(obs, "localization", None)
-        if loc is None:
-            return 1.0
-        quality = getattr(loc, "quality", None)
-        if quality is None:
-            return 1.0
-        return float(getattr(quality, "confidence", 1.0))
+        self.last_timestamp: Optional[float] = None
 
-    def _get_pose(self, obs: S2ObservationOutput) -> CameraPose:
-        """Safely extracts CameraPose from observation."""
-        if hasattr(obs, "pose") and obs.pose is not None:
-            return obs.pose
-        loc = getattr(obs, "localization", None)
-        if loc is not None and hasattr(loc, "pose"):
-            return loc.pose
-        raise AttributeError("S2ObservationOutput object missing 'pose' attribute.")
+    def predict(self, dt: float) -> None:
+        """Prediction step using constant velocity motion model."""
+        # Update transition matrix with dt for velocity terms
+        self.F[0, 3] = dt
+        self.F[1, 4] = dt
+        self.F[2, 5] = dt
 
-    def filter_observations(
-        self, observations: List[S2ObservationOutput]
-    ) -> List[S2ObservationOutput]:
-        """Filters out observations that fail minimum quality or confidence thresholds."""
-        return [
-            obs for obs in observations if self._get_confidence(obs) >= self.min_confidence_threshold
-        ]
+        # State prediction: x = F * x
+        self.state = np.dot(self.F, self.state)
 
-    def process_payload(self, payload: S2PayloadOutput) -> Optional[CameraPose]:
-        """Processes an S2PayloadOutput and computes the fused camera pose."""
-        valid_observations = self.filter_observations(payload.observations)
+        # Covariance prediction: P = F * P * F^T + Q
+        self.covariance = np.dot(np.dot(self.F, self.covariance), self.F.T) + self.Q
 
-        if not valid_observations:
-            return None
+    def update(self, measurement: np.ndarray) -> None:
+        """Update step using visual position measurements."""
+        # Innovation / Residual: y = z - H * x
+        z = measurement.reshape(3, 1)
+        y = z - np.dot(self.H, self.state)
 
-        total_weight = 0.0
-        avg_x = 0.0
-        avg_y = 0.0
-        avg_z = 0.0
+        # Innovation covariance: S = H * P * H^T + R
+        S = np.dot(np.dot(self.H, self.covariance), self.H.T) + self.R
 
-        for obs in valid_observations:
-            confidence = self._get_confidence(obs)
-            pose = self._get_pose(obs)
+        # Kalman gain: K = P * H^T * S^(-1)
+        K = np.dot(np.dot(self.covariance, self.H.T), np.linalg.inv(S))
 
-            pos = pose.position
-            x_val = pos.x if hasattr(pos, "x") else pos["x"]
-            y_val = pos.y if hasattr(pos, "y") else pos["y"]
-            z_val = pos.z if hasattr(pos, "z") else pos["z"]
+        # State update: x = x + K * y
+        self.state = self.state + np.dot(K, y)
 
-            avg_x += x_val * confidence
-            avg_y += y_val * confidence
-            avg_z += z_val * confidence
-            total_weight += confidence
+        # Covariance update: P = (I - K * H) * P
+        I = np.eye(self.covariance.shape[0])
+        self.covariance = np.dot(I - np.dot(K, self.H), self.covariance)
 
-        if total_weight == 0.0:
-            return None
+    def process_observation(self, observation: S2ObservationOutput) -> S2ObservationOutput:
+        """Processes a single observation through the EKF pipeline."""
+        current_time = observation.timestamp
+        
+        if self.last_timestamp is not None:
+            dt = max(current_time - self.last_timestamp, 1e-3)
+        else:
+            dt = 0.1  # Default time step for the first frame
 
-        fused_position = Position(
-            x=avg_x / total_weight,
-            y=avg_y / total_weight,
-            z=avg_z / total_weight,
+        self.last_timestamp = current_time
+
+        # 1. Predict state
+        self.predict(dt)
+
+        # 2. Extract position measurement from observation
+        pos = observation.pose.position
+        meas = np.array([pos.x, pos.y, pos.z])
+
+        # 3. Update state with measurement
+        self.update(meas)
+
+        # 4. Return updated observation with fused state values
+        fused_pos = Position(
+            x=float(self.state[0, 0]),
+            y=float(self.state[1, 0]),
+            z=float(self.state[2, 0]),
         )
 
-        best_obs = max(valid_observations, key=self._get_confidence)
-        best_pose = self._get_pose(best_obs)
+        observation.pose.position = fused_pos
+        return observation
 
-        return CameraPose(
-            position=fused_position,
-            orientation=best_pose.orientation,
-        )
+    def fuse_sequence(self, observations: List[S2ObservationOutput]) -> List[S2ObservationOutput]:
+        """Runs the EKF sequentially across an entire list of observation outputs."""
+        return [self.process_observation(obs) for obs in observations]
