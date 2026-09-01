@@ -28,8 +28,12 @@ overexposure_threshold: 230.0
 low_feature_threshold: 50
 min_entropy_threshold: 3.5
 
-# Keyframe Selection
-keyframe_method: "uniform"
+# Keyframe Detection (Phase 8)
+keyframe_method: "content_change"
+keyframe_change_threshold: 0.15
+min_keyframe_interval_frames: 2
+max_keyframe_interval_frames: 15
+skip_poor_quality_keyframes: true
 quality_threshold: 50.0
 max_keyframes: null
 

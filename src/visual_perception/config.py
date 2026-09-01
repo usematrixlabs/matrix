@@ -40,8 +40,12 @@ class S1Config:
     low_feature_threshold: int = 50  # Minimum number of detected FAST keypoints
     min_entropy_threshold: float = 3.5  # Minimum Shannon entropy for texture richness
 
-    # Keyframe Selection Parameters
-    keyframe_method: str = "uniform"  # "uniform", "laplacian_variance", "feature_diff"
+    # Keyframe Detection Parameters (Phase 8)
+    keyframe_method: str = "content_change"  # "content_change", "uniform", "quality_maxima"
+    keyframe_change_threshold: float = 0.15  # Histogram Bhattacharyya distance threshold
+    min_keyframe_interval_frames: int = 2  # Minimum gap between keyframes
+    max_keyframe_interval_frames: int = 15  # Maximum gap before forcing a keyframe
+    skip_poor_quality_keyframes: bool = True  # Avoid promoting corrupted frames as keyframes
     quality_threshold: float = 50.0  # Minimum sharpness / quality score
     max_keyframes: Optional[int] = None
 

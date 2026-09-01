@@ -140,9 +140,10 @@ class S1Pipeline:
             ObservationIdentifier.validate_unique_ids(extracted_frames)
             TimestampHandler.validate_monotonicity(extracted_frames)
 
-        # Step 4: Select Keyframes (preserving source observation frame_ids and timestamps)
-        self.logger.info("Running keyframe selection...")
+        # Step 4: Detect and Select Keyframes (Phase 8)
+        self.logger.info("Running keyframe selection (marking observations)...")
         selected_keyframes = self.selector.select(frames=extracted_frames)
+        keyframe_density = self.selector.calculate_keyframe_density(extracted_frames, selected_keyframes)
 
         # Step 5: Compute Quality Summary Distribution (Phase 7)
         quality_summary = {
@@ -163,6 +164,7 @@ class S1Pipeline:
             visual_metadata={
                 "total_frames_extracted": len(extracted_frames),
                 "total_keyframes_selected": len(selected_keyframes),
+                "keyframe_density": keyframe_density,
                 "sampling_mode": self.config.sampling_mode,
                 "sampling_interval": self.config.sampling_interval,
                 "extraction_fps": self.config.frame_rate,
@@ -202,10 +204,11 @@ class S1Pipeline:
         )
 
         self.logger.info(
-            "S1 Pipeline completed in %.3fs (Extracted %d frames, %d keyframes, Quality: %s)",
+            "S1 Pipeline completed in %.3fs (Extracted %d frames, %d keyframes, Density: %.1f%%, Quality: %s)",
             elapsed,
             len(extracted_frames),
             len(selected_keyframes),
+            keyframe_density * 100.0,
             str(quality_summary),
         )
         return s1_output
@@ -222,6 +225,8 @@ def main() -> None:
     parser.add_argument("--sampling-interval", "-i", type=int, help="Fixed interval in frames (e.g. 10)")
     parser.add_argument("--frame-rate", "-r", type=float, help="Extraction rate (FPS)")
     parser.add_argument("--image-format", type=str, choices=["jpg", "jpeg", "png"], help="Frame image format")
+    parser.add_argument("--keyframe-method", type=str, choices=["content_change", "uniform", "quality_maxima"], help="Keyframe method")
+    parser.add_argument("--keyframe-change-threshold", type=float, help="Bhattacharyya threshold for keyframing")
     parser.add_argument("--blur-threshold", type=float, help="Laplacian variance blur threshold")
     parser.add_argument("--log-level", "-l", type=str, default="INFO", help="Logging level")
     parser.add_argument("--save-output", "-s", type=str, help="Path to save output JSON contract")
@@ -250,6 +255,10 @@ def main() -> None:
         config.frame_rate = args.frame_rate
     if args.image_format:
         config.image_format = args.image_format
+    if args.keyframe_method:
+        config.keyframe_method = args.keyframe_method
+    if args.keyframe_change_threshold:
+        config.keyframe_change_threshold = args.keyframe_change_threshold
     if args.blur_threshold:
         config.blur_threshold = args.blur_threshold
     if args.log_level:

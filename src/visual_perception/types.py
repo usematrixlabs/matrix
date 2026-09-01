@@ -172,6 +172,7 @@ class Frame:
     exposure_time: Optional[float] = None
     camera_id: Optional[str] = "primary"
     quality: Optional[QualityAssessment] = None
+    is_keyframe: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
         """Serialize frame to dictionary."""
