@@ -17,6 +17,7 @@ The five primary subsystems are:
 | **S3** | 3D Reconstruction | Generates dense point clouds, meshes, and textures | `docs/architecture/contracts/` |
 | **S4** | Georeferencing & Validation | Performs world coordinate transformation and accuracy validation | `docs/architecture/contracts/` |
 | **S5** | Application & Deployment | UI, API orchestration, and visualization | `docs/architecture/contracts/` |
+| **Orchestrator** | Pipeline (`src/pipeline/`) | Thin wrapper that invokes S1–S5 in sequence, preserves outputs, and stops clearly on failure | See [§5 Pipeline Orchestrator](#5-pipeline-orchestrator-srcpipeline) |
 
 ---
 
@@ -162,88 +163,90 @@ Input Error  ──>  Processing Error  ──>  Quality Warning  ──>  Degra
 
 ---
 
-## 5. S2: Localization & Sensor Fusion
+## 5. Pipeline Orchestrator (`src/pipeline/`)
 
-### Overview
+The orchestrator is a thin wrapper that invokes each subsystem's main
+exported entry point in sequence and passes outputs from one stage to
+the next. It does **not** implement any S1–S4 algorithms itself and does
+not reach into any subsystem's internals — every cross-subsystem
+boundary it touches is one of the documented interface contracts in
+`docs/architecture/contracts/`.
 
-S2 estimates camera poses, trajectories, and fusion by combining:
+### 5.1 Responsibility
 
-- **Visual localization:** PnP pose estimation from visual features (S1 observations)
-- **Telemetry fusion:** Optional IMU, GPS, or other sensor data
-- **State filtering:** Extended Kalman Filter (EKF) for robust, temporally consistent pose estimation
+* Create a per-run output directory.
+* Invoke S1, S2, S3, S4, S5 in order.
+* Pass stage outputs forward through their documented contracts.
+* Preserve all outputs and stop clearly on failure.
+* Emit a `PipelineResult` describing success / failure and the path of
+  the final bundled output.
 
-### State Representation
-
-The S2 EKF maintains a 6-dimensional state vector:
-
-```text
-state = [x, y, z, vx, vy, vz]^T
-
-where:
-  x, y, z     = position (m) in local reconstruction coordinates
-  vx, vy, vz  = velocity (m/s) in local reconstruction coordinates
-```
-
-### EKF Pipeline
-
-1. **Prediction Step**
-   - Time step: `dt` between successive observations
-   - Motion model: constant velocity (kinematic model)
-   - State propagation: `x_pred = F * x_prev` where `F` is the state transition matrix
-   - Covariance update: `P_pred = F * P_prev * F^T + Q`
-
-2. **Measurement Update Step**
-   - Measurement: 3D visual position [x_visual, y_visual, z_visual] from pose estimation
-   - Measurement matrix: `H` extracts position from state
-   - Innovation (residual): `y = z_meas - H * x_pred`
-   - Kalman gain: `K = P_pred * H^T * (H * P_pred * H^T + R)^-1`
-   - State correction: `x_fused = x_pred + K * y`
-   - Covariance update: `P_fused = (I - K * H) * P_pred`
-
-3. **Dynamic Measurement Noise**
-   - Measurement covariance `R` scales based on visual confidence score
-   - High confidence → low measurement noise (trust visual estimate)
-   - Low confidence → high measurement noise (trust prior state)
-
-### Output Contract
-
-S2 returns the original S2ObservationOutput with updated pose from the EKF filter:
+### 5.2 Entry Point
 
 ```python
-S2ObservationOutput(
-    observation_id="frame_000123",
-    timestamp=12.34,
-    image="frames/frame_000123.jpg",
-    pose=CameraPose(
-        position=Position(x=fused_x, y=fused_y, z=fused_z),
-        orientation=QuaternionOrientation(qx, qy, qz, qw)
-    ),
-    localization=LocalizationMeta(
-        source=["visual", "fusion"],
-        status="estimated",
-        quality=LocalizationQuality(confidence=0.95)
-    )
+from src.pipeline.orchestrator import run_pipeline
+
+result = run_pipeline(
+    video_path="benchmarks/dataset/video-1005/video.mp4",
+    gps_path="benchmarks/dataset/video-1005/gps.csv",
+    output_dir="benchmarks/results/video-1005",
 )
 ```
 
-### Key Architectural Properties
+CLI form:
 
-1. **Coordinate System:** All poses are in **local reconstruction coordinates** (not geographic)
-2. **Temporal Consistency:** EKF enforces smooth, physically plausible trajectories
-3. **Confidence Propagation:** Measurement covariance adapts based on visual quality scores
-4. **Observation Preservation:** All observations are fused; keyframe distinction is downstream
-5. **State Accessibility:** State vector and covariance are internal; output is via updated observations
+```bash
+python -m src.pipeline.orchestrator \
+    --video benchmarks/dataset/video-1005/video.mp4 \
+    --gps   benchmarks/dataset/video-1005/gps.csv \
+    --output benchmarks/results/video-1005
+```
 
-### Failure Conditions
+### 5.3 Stage Wiring
 
-- If no valid pose estimate can be obtained (e.g., degenerate point set), S2 logs a warning and may skip that observation
-- If temporal data is missing, S2 assumes a default time step and logs a diagnostic
-- If multiple observations arrive out-of-order, S2 resets its temporal state to maintain monotonicity
+| Stage | Subsystem | Public Entry Point                          | Input Contract                                        | Output Contract                                  |
+| :--- | :--- | :------------------------------------------ | :---------------------------------------------------- | :----------------------------------------------- |
+| S1 | Visual Perception | `src.visual_perception.S1Pipeline` | `--video` path | `s1/observations.json` + `s1/frames/` |
+| S2 | Localization & Sensor Fusion | `src.localization_sensor_fusion` (`Localizer`, `SensorFusion`, `S2Exporter`) | `s1_output` observations + `--gps` CSV | `s2/s2_output.json` |
+| S3 | 3D Reconstruction | `src.reconstruction.S3ReconstructionPipeline` | `s2_output.json` | `s3/scene.ply` + `s3/metadata.json` |
+| S4 | Georeferencing & Validation | `src.georeferencing_validation.Georeferencer` | `s3/scene.ply` | `s4/georeferenced.ply` + `s4/georeferencing.json` |
+| S5 | Application & Deployment | `src.application_deployment.Finalizer` | per-stage artifacts | `s5/final_output.json` |
 
----
+The GPS CSV enters the system through **S2** (sensor fusion), not
+through the orchestrator as a separate processing stage.
 
-## 6. S2 → S3 Interface
+### 5.4 Output Layout
 
-See [S2 → S3 Interface Contract](contracts/localization-reconstruction.md).
+For one run, the orchestrator creates the following layout under the
+user-supplied output directory. Each subsystem owns its own subdirectory
+and the orchestrator never reads another subsystem's internal files
+beyond the documented contract outputs.
 
----
+```text
+output_dir/
+├── s1/
+│   ├── observations.json
+│   └── frames/
+├── s2/
+│   └── s2_output.json
+├── s3/
+│   ├── scene.ply
+│   └── metadata.json
+├── s4/
+│   ├── georeferenced.ply
+│   └── georeferencing.json
+└── s5/
+    └── final_output.json
+```
+
+### 5.5 Failure Handling
+
+The orchestrator catches all stage exceptions at the pipeline boundary,
+records the failing stage in `PipelineResult.failed_stage`, prints a
+stack trace to stderr, and returns a `PipelineResult(success=False, ...)`.
+All artifacts produced by stages that ran successfully are preserved on
+disk so they can be inspected or replayed.
+
+Stages are also allowed to record **degraded** outcomes (e.g., S4 with
+an empty input point cloud) rather than failing the whole pipeline.
+These are surfaced through `stage_status` and the `sN/` summary files.

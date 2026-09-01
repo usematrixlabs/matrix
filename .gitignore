@@ -221,7 +221,7 @@ data/output/
 
 # Video
 
-*.mp4
+# *.mp4
 *.mov
 *.avi
 *.mkv
@@ -244,7 +244,7 @@ data/output/
 *.onnx
 *.safetensors
 
-models/
+# models/
 checkpoints/
 weights/
 
@@ -283,3 +283,7 @@ bin
 Scripts/
 Lib/
 Bin/
+
+# Results
+benchmarks/results/**/s1/frames/*.jpg
+benchmarks/results/*
