@@ -250,3 +250,63 @@ disk so they can be inspected or replayed.
 Stages are also allowed to record **degraded** outcomes (e.g., S4 with
 an empty input point cloud) rather than failing the whole pipeline.
 These are surfaced through `stage_status` and the `sN/` summary files.
+---
+
+## 7. S3: 3D Reconstruction
+
+### Overview
+
+S3 generates the 3D dense/sparse representation of the observed scene from multi-view feature tracks and localized camera poses.
+
+### Key Architectural Properties
+
+1. **Multi-View Triangulation:** Linear DLT / SVD triangulation with cheirality checks.
+2. **Quality Evaluation:** Mean and median reprojection error computation with statistical outlier filtering.
+3. **Local Spatial Frame:** Coordinates remain in `S3_LOCAL` meters with bounding box metadata.
+4. **Standard Artifacts:** Outputs standard binary/ASCII `scene.ply` and structured `metadata.json`.
+
+---
+
+## 8. S3 → S4 Interface
+
+See [S3 → S4 Interface Contract](contracts/reconstruction-georeferencing.md).
+
+S3 provides the local 3D reconstruction (`PointCloudData` / `ReconstructionInput`), color arrays, and reconstruction quality metadata to S4.
+
+---
+
+## 9. S4: Georeferencing & Validation
+
+### Overview
+
+S4 transforms the local 3D reconstruction into real-world geographic coordinates (e.g. WGS 84 / UTM) and evaluates spatial accuracy.
+
+### Core Capabilities
+
+1. **7-Parameter Similarity (Helmert) Transformation:** Scale, rotation matrix, and translation vector estimation.
+2. **MSAC Robust Outlier Rejection:** Discards erroneous GCP correspondences.
+3. **Horizontal & Vertical Error Split:** Computes independent $\text{RMSE}_{\text{3D}}$, $\text{RMSE}_{\text{Horizontal}}$, and $\text{RMSE}_{\text{Vertical}}$ with tolerance checks.
+4. **Spatial Consistency Analysis:** $k$-NN neighbor distances, terrain plane fit residual RMSE, and relative scale preservation.
+5. **Quality & Limitations Detection:** Auto-detects GCP geometry caveats and assigns confidence levels.
+
+---
+
+## 10. S4 → S5 Interface
+
+See [S4 → S5 Interface Contract](contracts/georeferencing-application.md).
+
+S4 delivers the georeferenced 3D scene, validation metrics, CRS metadata, quality status, and known limitations to S5.
+
+---
+
+## 11. S5: Application & Deployment
+
+### Overview
+
+S5 is the system-facing orchestration layer. It manages the complete end-to-end execution lifecycle ($S1 \to S2 \to S3 \to S4 \to S5$), job dispatch, deliverables packaging, and user interaction.
+
+### Core Capabilities
+
+1. **Pipeline Orchestrator:** `Orchestrator.run_pipeline()` coordinates execution from raw UAV video or intermediate representations.
+2. **Deliverables Packaging:** Assembles deliverables (`scene.ply`, `s2_output.json`, `georeferencing_report.html`, `pipeline_manifest.json`).
+3. **Stage Metrics & Telemetry:** Monitors per-stage execution times, status, points reconstructed, and accuracy metrics.
