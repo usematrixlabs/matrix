@@ -686,3 +686,134 @@ Or, more explicitly:
 > **S5 turns the pipeline into a usable product.**
 
 This is the canonical responsibility boundary for Matrix.
+
+---
+
+# 15. Architectural Principle — Independent Subsystems & Pipeline-Owned Integration
+
+> **Status: Adopted** — see [ADR-002](../../decisions/ADR-002-independent-subsystems-pipeline-owned-integration.md)
+
+## 15.1 Principle
+
+> **Subsystems own computation. The pipeline owns composition. Contracts own boundaries.**
+
+Each subsystem is an **independent module with an explicit contract**. The pipeline owns all integration — execution order, data movement, adaptation, artifact management, and status propagation. This separation is normative for Matrix.
+
+## 15.2 Responsibility Boundary
+
+```
+┌─────────────────┐
+│ S1              │
+│ Visual          │
+│ Perception      │
+└────────┬────────┘
+         │
+         │ S1 contract
+         ▼
+┌─────────────────────────────────────┐
+│             PIPELINE                │
+│  • orchestration                    │
+│  • adaptation                       │
+│  • data movement                    │
+│  • execution order                  │
+│  • artifact management              │
+│  • status propagation               │
+└────────┬────────────────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│ S2              │
+│ Localization &  │
+│ Sensor Fusion   │
+└────────┬────────┘
+         │
+         │ S2 contract
+         ▼
+       PIPELINE → S3 → PIPELINE → S4 → PIPELINE → S5
+```
+
+The pipeline is **not part of the internal implementation of any subsystem** (`src/pipeline/`).
+
+Subsystem responsibilities under this principle:
+
+* **Subsystem:** owns algorithms, honors its input/output contract, validates inputs, produces outputs/metrics/diagnostics/status, handles invalid/degraded inputs per contract.
+* **Pipeline:** owns execution order, invocation, obtaining/adapting/passing data between contracts, artifact locations, status/failure propagation, orchestration, cross-subsystem validation.
+
+## 15.3 Data Ownership — Pipeline-Mediated Only
+
+Subsystems do **not** obtain data directly from other subsystems:
+
+```
+S1 output → Pipeline obtains → Pipeline adapts → S2 input
+S2 output → Pipeline obtains → Pipeline adapts → S3 input
+S3 output → Pipeline obtains → Pipeline adapts → S4 input
+S4 output → Pipeline obtains → Pipeline adapts → S5 input
+```
+
+This prevents hidden coupling. See contracts in `docs/architecture/contracts/`.
+
+## 15.4 What a Subsystem Must NOT Do
+
+* Reach into another subsystem's internal code or private artifacts.
+* Assume how upstream data was generated.
+* Perform another subsystem's algorithmic responsibilities.
+* Implement pipeline orchestration.
+* Make assumptions about input source beyond its contract.
+
+Example: **S3 does not care whether camera poses came from** GPS, visual odometry, EKF, COLMAP, or synthetic data — only that the **S3 input contract** is satisfied. S4 likewise does not care how S3 generated its point cloud.
+
+## 15.5 Contract-First Integration
+
+Every boundary in `docs/architecture/contracts/` must define:
+
+* **Input:** required/optional fields, types, units, coordinate frames, valid ranges, quality requirements.
+* **Output:** artifacts, schemas, metrics, status, diagnostics, failure/degradation semantics.
+
+The pipeline converts the output of one contract into the input expected by the next.
+
+## 15.6 Status Classification
+
+Three statuses must not be conflated:
+
+| # | Status | Question |
+|---|--------|----------|
+| 1 | **Module status** | Is the subsystem itself implemented correctly? |
+| 2 | **Integration status** | Is the pipeline correctly connecting the subsystem? |
+| 3 | **End-to-end status** | Does the complete system process real benchmark data? |
+
+Example — all three can be simultaneously true:
+
+```
+S3 module:             ✅ Implemented
+S2 → S3 integration:   ❌ Invalid/incomplete
+End-to-end pipeline:   ❌ Fails
+```
+
+A downstream failure such as S3 producing 0 points does **not automatically imply an S3 defect** if the pipeline failed to provide valid camera geometry. That is a pipeline integration issue if S3 correctly handled invalid input per its contract.
+
+## 15.7 Engineering Rule — Trace to the Contract Boundary
+
+When a downstream subsystem fails, trace to the contract boundary before assigning ownership:
+
+```
+Did upstream produce valid output? ──NO→ upstream issue
+        │ YES
+Did pipeline correctly adapt/pass it? ──NO→ pipeline integration issue
+        │ YES
+Did downstream correctly process it? ──NO→ downstream issue
+        │ YES
+Investigate subsequent boundary
+```
+
+## 15.8 Current Assessment (under this principle)
+
+| Component | Assessment |
+|-----------|------------|
+| **S1** | Mostly implemented; calibration strategy for uncalibrated inputs remains |
+| **S2** | Core components exist; visual localization execution/fusion remains incomplete |
+| **S3** | Core reconstruction substantially complete; real-data validation & interface formalization remain |
+| **S4** | Core georeferencing exists; real control-point/CRS/Helmert workflow remains |
+| **S5** | Largely incomplete; primarily a bundling stub |
+| **Pipeline** | Significant integration work remains (adaptation, S2 invocation, status propagation, multi-flight) |
+
+The current zero-point S3 benchmark result is a **pipeline integration signal**, not by itself evidence of an S3 algorithmic defect.

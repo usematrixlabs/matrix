@@ -17,6 +17,9 @@ The five primary subsystems are:
 | **S3** | 3D Reconstruction | Generates dense point clouds, meshes, and textures | `docs/architecture/contracts/` |
 | **S4** | Georeferencing & Validation | Performs world coordinate transformation and accuracy validation | `docs/architecture/contracts/` |
 | **S5** | Application & Deployment | UI, API orchestration, and visualization | `docs/architecture/contracts/` |
+| **Orchestrator** | Pipeline (`src/pipeline/`) | Owns composition — invokes S1–S5, adapts between contracts, manages artifacts, propagates status | See [§5 Pipeline Orchestrator](#5-pipeline-orchestrator-srcpipeline) and [§6 ADR-002](#6-independent-subsystems--pipeline-owned-integration-adr-002) |
+
+> **Adopted principle:** *Subsystems own computation. The pipeline owns composition. Contracts own boundaries.* — Full rationale in [ADR-002](../../decisions/ADR-002-independent-subsystems-pipeline-owned-integration.md) and `docs/architecture/system.md` §15.
 
 ---
 
@@ -162,88 +165,285 @@ Input Error  ──>  Processing Error  ──>  Quality Warning  ──>  Degra
 
 ---
 
-## 5. S2: Localization & Sensor Fusion
+## 5. Pipeline Orchestrator (`src/pipeline/`)
 
-### Overview
+The orchestrator is a thin wrapper that invokes each subsystem's main
+exported entry point in sequence and passes outputs from one stage to
+the next. It does **not** implement any S1–S4 algorithms itself and does
+not reach into any subsystem's internals — every cross-subsystem
+boundary it touches is one of the documented interface contracts in
+`docs/architecture/contracts/`.
 
-S2 estimates camera poses, trajectories, and fusion by combining:
+### 5.1 Responsibility
 
-- **Visual localization:** PnP pose estimation from visual features (S1 observations)
-- **Telemetry fusion:** Optional IMU, GPS, or other sensor data
-- **State filtering:** Extended Kalman Filter (EKF) for robust, temporally consistent pose estimation
+* Create a per-run output directory.
+* Invoke S1, S2, S3, S4, S5 in order.
+* Pass stage outputs forward through their documented contracts.
+* Preserve all outputs and stop clearly on failure.
+* Emit a `PipelineResult` describing success / failure and the path of
+  the final bundled output.
 
-### State Representation
-
-The S2 EKF maintains a 6-dimensional state vector:
-
-```text
-state = [x, y, z, vx, vy, vz]^T
-
-where:
-  x, y, z     = position (m) in local reconstruction coordinates
-  vx, vy, vz  = velocity (m/s) in local reconstruction coordinates
-```
-
-### EKF Pipeline
-
-1. **Prediction Step**
-   - Time step: `dt` between successive observations
-   - Motion model: constant velocity (kinematic model)
-   - State propagation: `x_pred = F * x_prev` where `F` is the state transition matrix
-   - Covariance update: `P_pred = F * P_prev * F^T + Q`
-
-2. **Measurement Update Step**
-   - Measurement: 3D visual position [x_visual, y_visual, z_visual] from pose estimation
-   - Measurement matrix: `H` extracts position from state
-   - Innovation (residual): `y = z_meas - H * x_pred`
-   - Kalman gain: `K = P_pred * H^T * (H * P_pred * H^T + R)^-1`
-   - State correction: `x_fused = x_pred + K * y`
-   - Covariance update: `P_fused = (I - K * H) * P_pred`
-
-3. **Dynamic Measurement Noise**
-   - Measurement covariance `R` scales based on visual confidence score
-   - High confidence → low measurement noise (trust visual estimate)
-   - Low confidence → high measurement noise (trust prior state)
-
-### Output Contract
-
-S2 returns the original S2ObservationOutput with updated pose from the EKF filter:
+### 5.2 Entry Point
 
 ```python
-S2ObservationOutput(
-    observation_id="frame_000123",
-    timestamp=12.34,
-    image="frames/frame_000123.jpg",
-    pose=CameraPose(
-        position=Position(x=fused_x, y=fused_y, z=fused_z),
-        orientation=QuaternionOrientation(qx, qy, qz, qw)
-    ),
-    localization=LocalizationMeta(
-        source=["visual", "fusion"],
-        status="estimated",
-        quality=LocalizationQuality(confidence=0.95)
-    )
+from src.pipeline.orchestrator import run_pipeline
+
+result = run_pipeline(
+    video_path="benchmarks/dataset/video-1005/video.mp4",
+    gps_path="benchmarks/dataset/video-1005/gps.csv",
+    output_dir="benchmarks/results/video-1005",
 )
 ```
 
+CLI form:
+
+```bash
+python -m src.pipeline.orchestrator \
+    --video benchmarks/dataset/video-1005/video.mp4 \
+    --gps   benchmarks/dataset/video-1005/gps.csv \
+    --output benchmarks/results/video-1005
+```
+
+### 5.3 Stage Wiring
+
+| Stage | Subsystem | Public Entry Point                          | Input Contract                                        | Output Contract                                  |
+| :--- | :--- | :------------------------------------------ | :---------------------------------------------------- | :----------------------------------------------- |
+| S1 | Visual Perception | `src.visual_perception.S1Pipeline` | `--video` path | `s1/observations.json` + `s1/frames/` |
+| S2 | Localization & Sensor Fusion | `src.localization_sensor_fusion` (`Localizer`, `SensorFusion`, `S2Exporter`) | `s1_output` observations + `--gps` CSV | `s2/s2_output.json` |
+| S3 | 3D Reconstruction | `src.reconstruction.S3ReconstructionPipeline` | `s2_output.json` | `s3/scene.ply` + `s3/metadata.json` |
+| S4 | Georeferencing & Validation | `src.georeferencing_validation.Georeferencer` | `s3/scene.ply` | `s4/georeferenced.ply` + `s4/georeferencing.json` |
+| S5 | Application & Deployment | `src.application_deployment.Finalizer` | per-stage artifacts | `s5/final_output.json` |
+
+The GPS CSV enters the system through **S2** (sensor fusion), not
+through the orchestrator as a separate processing stage.
+
+### 5.4 Output Layout
+
+For one run, the orchestrator creates the following layout under the
+user-supplied output directory. Each subsystem owns its own subdirectory
+and the orchestrator never reads another subsystem's internal files
+beyond the documented contract outputs.
+
+```text
+output_dir/
+├── s1/
+│   ├── observations.json
+│   └── frames/
+├── s2/
+│   └── s2_output.json
+├── s3/
+│   ├── scene.ply
+│   └── metadata.json
+├── s4/
+│   ├── georeferenced.ply
+│   └── georeferencing.json
+└── s5/
+    └── final_output.json
+```
+
+### 5.5 Failure Handling
+
+The orchestrator catches all stage exceptions at the pipeline boundary,
+records the failing stage in `PipelineResult.failed_stage`, prints a
+stack trace to stderr, and returns a `PipelineResult(success=False, ...)`.
+All artifacts produced by stages that ran successfully are preserved on
+disk so they can be inspected or replayed.
+
+Stages are also allowed to record **degraded** outcomes (e.g., S4 with
+an empty input point cloud) rather than failing the whole pipeline.
+These are surfaced through `stage_status` and the `sN/` summary files.
+---
+
+## 7. S3: 3D Reconstruction
+
+### Overview
+
+S3 generates the 3D dense/sparse representation of the observed scene from multi-view feature tracks and localized camera poses.
+
 ### Key Architectural Properties
 
-1. **Coordinate System:** All poses are in **local reconstruction coordinates** (not geographic)
-2. **Temporal Consistency:** EKF enforces smooth, physically plausible trajectories
-3. **Confidence Propagation:** Measurement covariance adapts based on visual quality scores
-4. **Observation Preservation:** All observations are fused; keyframe distinction is downstream
-5. **State Accessibility:** State vector and covariance are internal; output is via updated observations
-
-### Failure Conditions
-
-- If no valid pose estimate can be obtained (e.g., degenerate point set), S2 logs a warning and may skip that observation
-- If temporal data is missing, S2 assumes a default time step and logs a diagnostic
-- If multiple observations arrive out-of-order, S2 resets its temporal state to maintain monotonicity
+1. **Multi-View Triangulation:** Linear DLT / SVD triangulation with cheirality checks.
+2. **Quality Evaluation:** Mean and median reprojection error computation with statistical outlier filtering.
+3. **Local Spatial Frame:** Coordinates remain in `S3_LOCAL` meters with bounding box metadata.
+4. **Standard Artifacts:** Outputs standard binary/ASCII `scene.ply` and structured `metadata.json`.
 
 ---
 
-## 6. S2 → S3 Interface
+## 8. S3 → S4 Interface
 
-See [S2 → S3 Interface Contract](contracts/localization-reconstruction.md).
+See [S3 → S4 Interface Contract](contracts/reconstruction-georeferencing.md).
+
+S3 provides the local 3D reconstruction (`PointCloudData` / `ReconstructionInput`), color arrays, and reconstruction quality metadata to S4.
 
 ---
+
+## 7. S3: 3D Reconstruction
+
+### Overview
+
+S3 generates the 3D dense/sparse representation of the observed scene from multi-view feature tracks and localized camera poses.
+
+### Key Architectural Properties
+
+1. **Multi-View Triangulation:** Linear DLT / SVD triangulation with cheirality checks.
+2. **Quality Evaluation:** Mean and median reprojection error computation with statistical outlier filtering.
+3. **Local Spatial Frame:** Coordinates remain in `S3_LOCAL` meters with bounding box metadata.
+4. **Standard Artifacts:** Outputs standard binary/ASCII `scene.ply` and structured `metadata.json`.
+
+---
+
+## 8. S3 → S4 Interface
+
+See [S3 → S4 Interface Contract](contracts/reconstruction-georeferencing.md).
+
+S3 provides the local 3D reconstruction (`PointCloudData` / `ReconstructionInput`), color arrays, and reconstruction quality metadata to S4.
+
+---
+
+## 9. S4: Georeferencing & Validation
+
+### Overview
+
+S4 transforms the local 3D reconstruction into real-world geographic coordinates (e.g. WGS 84 / UTM) and evaluates spatial accuracy.
+
+### Core Capabilities
+
+1. **7-Parameter Similarity (Helmert) Transformation:** Scale, rotation matrix, and translation vector estimation.
+2. **MSAC Robust Outlier Rejection:** Discards erroneous GCP correspondences.
+3. **Horizontal & Vertical Error Split:** Computes independent $\text{RMSE}_{\text{3D}}$, $\text{RMSE}_{\text{Horizontal}}$, and $\text{RMSE}_{\text{Vertical}}$ with tolerance checks.
+4. **Spatial Consistency Analysis:** $k$-NN neighbor distances, terrain plane fit residual RMSE, and relative scale preservation.
+5. **Quality & Limitations Detection:** Auto-detects GCP geometry caveats and assigns confidence levels.
+
+---
+
+## 10. S4 → S5 Interface
+
+See [S4 → S5 Interface Contract](contracts/georeferencing-application.md).
+
+S4 delivers the georeferenced 3D scene, validation metrics, CRS metadata, quality status, and known limitations to S5.
+
+---
+
+## 11. S5: Application & Deployment
+
+### Overview
+
+S5 is the system-facing orchestration layer. It manages the complete end-to-end execution lifecycle ($S1 \to S2 \to S3 \to S4 \to S5$), job dispatch, deliverables packaging, and user interaction.
+
+### Core Capabilities
+
+1. **Pipeline Orchestrator:** `Orchestrator.run_pipeline()` coordinates execution from raw UAV video or intermediate representations.
+2. **Deliverables Packaging:** Assembles deliverables (`scene.ply`, `s2_output.json`, `georeferencing_report.html`, `pipeline_manifest.json`).
+3. **Stage Metrics & Telemetry:** Monitors per-stage execution times, status, points reconstructed, and accuracy metrics.
+
+### 5.6 Pipeline as Integration Owner (ADR-002)
+
+Per [ADR-002](../../decisions/ADR-002-independent-subsystems-pipeline-owned-integration.md), the pipeline is the **sole integration owner**. Subsystems do not read each other's private artifacts or internal code; the pipeline obtains upstream outputs, adapts between documented contracts in `docs/architecture/contracts/`, and passes validated inputs downstream. This prevents hidden coupling and makes integration failures attributable to the pipeline adapter rather than to downstream algorithms.
+
+---
+
+## 6. Independent Subsystems & Pipeline-Owned Integration (ADR-002)
+
+**Status: Adopted** — See [ADR-002](../../decisions/ADR-002-independent-subsystems-pipeline-owned-integration.md) and `system.md` §15.
+
+> **Subsystems own computation. The pipeline owns composition. Contracts own boundaries.**
+
+### 6.1 Responsibility Boundary
+
+```text
+┌─────────────────┐
+│ S1              │
+│ Visual          │
+│ Perception      │
+└────────┬────────┘
+         │
+         │ S1 contract
+         ▼
+┌─────────────────────────────────────┐
+│             PIPELINE                │
+│  • orchestration • adaptation       │
+│  • data movement • execution order  │
+│  • artifact management              │
+│  • status propagation               │
+└────────┬────────────────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│ S2              │
+│ Localization &  │
+│ Sensor Fusion   │
+└────────┬────────┘
+         │ S2 contract
+         ▼
+       PIPELINE → S3 → PIPELINE → S4 → PIPELINE → S5
+```
+
+* **Subsystem** owns: algorithms, contract compliance, input validation, outputs/metrics/diagnostics/status, degraded-input handling.
+* **Pipeline** (`src/pipeline/`) owns: execution order, invocation, obtaining/adapting/passing data between contracts, artifact locations, status/failure propagation, orchestration, cross-subsystem validation. It is not part of any subsystem's internals.
+
+### 6.2 Data Ownership — Pipeline-Mediated Only
+
+```text
+S1 output → Pipeline obtains → Pipeline adapts → S2 input
+S2 output → Pipeline obtains → Pipeline adapts → S3 input
+S3 output → Pipeline obtains → Pipeline adapts → S4 input
+S4 output → Pipeline obtains → Pipeline adapts → S5 input
+```
+
+No subsystem reads another subsystem's private artifacts directly. Adapters live in `src/pipeline/`.
+
+### 6.3 What a Subsystem Must NOT Do
+
+* Reach into another subsystem's internal code or private artifacts.
+* Assume how upstream data was generated.
+* Perform another subsystem's algorithmic responsibilities.
+* Implement pipeline orchestration.
+* Make assumptions about input source beyond its contract.
+
+Example: S3 does not care whether camera poses came from GPS, visual odometry, EKF, COLMAP, or synthetic data — only that the S3 input contract is satisfied.
+
+### 6.4 Contract-First Integration
+
+Every boundary in `docs/architecture/contracts/` must define input (required/optional fields, types, units, coordinate frames, valid ranges, quality requirements) and output (artifacts, schemas, metrics, status, diagnostics, failure/degradation semantics). The pipeline converts one contract's output into the next contract's input.
+
+### 6.5 Status Classification
+
+Three statuses must not be conflated:
+
+| # | Status | Question |
+|---|--------|----------|
+| 1 | **Module status** | Is the subsystem itself implemented correctly? |
+| 2 | **Integration status** | Is the pipeline correctly connecting the subsystem? |
+| 3 | **End-to-end status** | Does the complete system process real benchmark data? |
+
+Example:
+
+```text
+S3 module:             ✅ Implemented
+S2 → S3 integration:   ❌ Invalid/incomplete
+End-to-end pipeline:   ❌ Fails
+```
+
+A zero-point S3 result does not automatically imply an S3 defect if the pipeline failed to provide valid camera geometry — that is a pipeline integration issue if S3 correctly handled invalid input per its contract.
+
+### 6.6 Engineering Rule — Trace to the Contract Boundary
+
+```text
+Did upstream produce valid output? ──NO→ upstream issue
+        │ YES
+Did pipeline correctly adapt/pass it? ──NO→ pipeline integration issue
+        │ YES
+Did downstream correctly process it? ──NO→ downstream issue
+        │ YES → investigate subsequent boundary
+```
+
+### 6.7 Current Assessment (under this principle)
+
+| Component | Assessment |
+|-----------|------------|
+| **S1** | Mostly implemented; calibration strategy for uncalibrated inputs remains |
+| **S2** | Core components exist; visual localization execution/fusion remains incomplete |
+| **S3** | Core reconstruction substantially complete; real-data validation & interface formalization remain |
+| **S4** | Core georeferencing exists; real control-point/CRS/Helmert workflow remains |
+| **S5** | Largely incomplete; primarily a bundling stub |
+| **Pipeline** | Significant integration work remains (adaptation, S2 invocation, status propagation, multi-flight) |
