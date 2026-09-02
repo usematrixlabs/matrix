@@ -220,15 +220,6 @@ data/output/
 *.fbx
 *.stl
 
-# Video
-
-# Benchmark videos are local test assets. Keeping them outside Git prevents
-# Windows file watchers/codecs from blocking checkout, reset, and pull.
-benchmarks/dataset/**/*.mp4
-*.mov
-*.avi
-*.mkv
-*.webm
 
 # Images generated during processing
 
