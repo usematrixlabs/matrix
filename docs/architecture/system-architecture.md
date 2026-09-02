@@ -17,7 +17,9 @@ The five primary subsystems are:
 | **S3** | 3D Reconstruction | Generates dense point clouds, meshes, and textures | `docs/architecture/contracts/` |
 | **S4** | Georeferencing & Validation | Performs world coordinate transformation and accuracy validation | `docs/architecture/contracts/` |
 | **S5** | Application & Deployment | UI, API orchestration, and visualization | `docs/architecture/contracts/` |
-| **Orchestrator** | Pipeline (`src/pipeline/`) | Thin wrapper that invokes S1–S5 in sequence, preserves outputs, and stops clearly on failure | See [§5 Pipeline Orchestrator](#5-pipeline-orchestrator-srcpipeline) |
+| **Orchestrator** | Pipeline (`src/pipeline/`) | Owns composition — invokes S1–S5, adapts between contracts, manages artifacts, propagates status | See [§5 Pipeline Orchestrator](#5-pipeline-orchestrator-srcpipeline) and [§6 ADR-002](#6-independent-subsystems--pipeline-owned-integration-adr-002) |
+
+> **Adopted principle:** *Subsystems own computation. The pipeline owns composition. Contracts own boundaries.* — Full rationale in [ADR-002](../../decisions/ADR-002-independent-subsystems-pipeline-owned-integration.md) and `docs/architecture/system.md` §15.
 
 ---
 
@@ -333,3 +335,115 @@ S5 is the system-facing orchestration layer. It manages the complete end-to-end 
 1. **Pipeline Orchestrator:** `Orchestrator.run_pipeline()` coordinates execution from raw UAV video or intermediate representations.
 2. **Deliverables Packaging:** Assembles deliverables (`scene.ply`, `s2_output.json`, `georeferencing_report.html`, `pipeline_manifest.json`).
 3. **Stage Metrics & Telemetry:** Monitors per-stage execution times, status, points reconstructed, and accuracy metrics.
+
+### 5.6 Pipeline as Integration Owner (ADR-002)
+
+Per [ADR-002](../../decisions/ADR-002-independent-subsystems-pipeline-owned-integration.md), the pipeline is the **sole integration owner**. Subsystems do not read each other's private artifacts or internal code; the pipeline obtains upstream outputs, adapts between documented contracts in `docs/architecture/contracts/`, and passes validated inputs downstream. This prevents hidden coupling and makes integration failures attributable to the pipeline adapter rather than to downstream algorithms.
+
+---
+
+## 6. Independent Subsystems & Pipeline-Owned Integration (ADR-002)
+
+**Status: Adopted** — See [ADR-002](../../decisions/ADR-002-independent-subsystems-pipeline-owned-integration.md) and `system.md` §15.
+
+> **Subsystems own computation. The pipeline owns composition. Contracts own boundaries.**
+
+### 6.1 Responsibility Boundary
+
+```text
+┌─────────────────┐
+│ S1              │
+│ Visual          │
+│ Perception      │
+└────────┬────────┘
+         │
+         │ S1 contract
+         ▼
+┌─────────────────────────────────────┐
+│             PIPELINE                │
+│  • orchestration • adaptation       │
+│  • data movement • execution order  │
+│  • artifact management              │
+│  • status propagation               │
+└────────┬────────────────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│ S2              │
+│ Localization &  │
+│ Sensor Fusion   │
+└────────┬────────┘
+         │ S2 contract
+         ▼
+       PIPELINE → S3 → PIPELINE → S4 → PIPELINE → S5
+```
+
+* **Subsystem** owns: algorithms, contract compliance, input validation, outputs/metrics/diagnostics/status, degraded-input handling.
+* **Pipeline** (`src/pipeline/`) owns: execution order, invocation, obtaining/adapting/passing data between contracts, artifact locations, status/failure propagation, orchestration, cross-subsystem validation. It is not part of any subsystem's internals.
+
+### 6.2 Data Ownership — Pipeline-Mediated Only
+
+```text
+S1 output → Pipeline obtains → Pipeline adapts → S2 input
+S2 output → Pipeline obtains → Pipeline adapts → S3 input
+S3 output → Pipeline obtains → Pipeline adapts → S4 input
+S4 output → Pipeline obtains → Pipeline adapts → S5 input
+```
+
+No subsystem reads another subsystem's private artifacts directly. Adapters live in `src/pipeline/`.
+
+### 6.3 What a Subsystem Must NOT Do
+
+* Reach into another subsystem's internal code or private artifacts.
+* Assume how upstream data was generated.
+* Perform another subsystem's algorithmic responsibilities.
+* Implement pipeline orchestration.
+* Make assumptions about input source beyond its contract.
+
+Example: S3 does not care whether camera poses came from GPS, visual odometry, EKF, COLMAP, or synthetic data — only that the S3 input contract is satisfied.
+
+### 6.4 Contract-First Integration
+
+Every boundary in `docs/architecture/contracts/` must define input (required/optional fields, types, units, coordinate frames, valid ranges, quality requirements) and output (artifacts, schemas, metrics, status, diagnostics, failure/degradation semantics). The pipeline converts one contract's output into the next contract's input.
+
+### 6.5 Status Classification
+
+Three statuses must not be conflated:
+
+| # | Status | Question |
+|---|--------|----------|
+| 1 | **Module status** | Is the subsystem itself implemented correctly? |
+| 2 | **Integration status** | Is the pipeline correctly connecting the subsystem? |
+| 3 | **End-to-end status** | Does the complete system process real benchmark data? |
+
+Example:
+
+```text
+S3 module:             ✅ Implemented
+S2 → S3 integration:   ❌ Invalid/incomplete
+End-to-end pipeline:   ❌ Fails
+```
+
+A zero-point S3 result does not automatically imply an S3 defect if the pipeline failed to provide valid camera geometry — that is a pipeline integration issue if S3 correctly handled invalid input per its contract.
+
+### 6.6 Engineering Rule — Trace to the Contract Boundary
+
+```text
+Did upstream produce valid output? ──NO→ upstream issue
+        │ YES
+Did pipeline correctly adapt/pass it? ──NO→ pipeline integration issue
+        │ YES
+Did downstream correctly process it? ──NO→ downstream issue
+        │ YES → investigate subsequent boundary
+```
+
+### 6.7 Current Assessment (under this principle)
+
+| Component | Assessment |
+|-----------|------------|
+| **S1** | Mostly implemented; calibration strategy for uncalibrated inputs remains |
+| **S2** | Core components exist; visual localization execution/fusion remains incomplete |
+| **S3** | Core reconstruction substantially complete; real-data validation & interface formalization remain |
+| **S4** | Core georeferencing exists; real control-point/CRS/Helmert workflow remains |
+| **S5** | Largely incomplete; primarily a bundling stub |
+| **Pipeline** | Significant integration work remains (adaptation, S2 invocation, status propagation, multi-flight) |
