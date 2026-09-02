@@ -7,7 +7,7 @@ from src.localization_sensor_fusion.schemas.contracts import (
     Position,
     QuaternionOrientation,
     CameraPose,
-    LocalizationMeta,
+    LocalizationQuality,
 )
 
 
@@ -17,24 +17,13 @@ class SensorFusionEngine:
     def __init__(self, process_noise: float = 1e-3, measurement_noise: float = 1e-2):
         # 6-DOF Kinematic State vector: [x, y, z, vx, vy, vz]^T as (6, 1) column matrix
         self.state = np.zeros((6, 1), dtype=np.float64)
-
-        # State Covariance matrix (P)
         self.covariance = np.eye(6, dtype=np.float64) * 1.0
-
-        # Process noise covariance (Q)
         self.Q = np.eye(6, dtype=np.float64) * process_noise
-
-        # Default Measurement noise covariance (R) for position [x, y, z]
         self.default_R = np.eye(3, dtype=np.float64) * measurement_noise
 
-        # State Transition matrix (F)
         self.F = np.eye(6, dtype=np.float64)
-
-        # Measurement matrix (H) - maps 6D state to 3D position [x, y, z]
         self.H = np.zeros((3, 6), dtype=np.float64)
-        self.H[0, 0] = 1.0
-        self.H[1, 1] = 1.0
-        self.H[2, 2] = 1.0
+        self.H[0, 0], self.H[1, 1], self.H[2, 2] = 1.0, 1.0, 1.0
 
         self.last_timestamp: Optional[float] = None
         
@@ -89,10 +78,7 @@ class SensorFusionEngine:
         z = np.ascontiguousarray(measurement, dtype=np.float64).reshape(3, 1)
         R = R_custom if R_custom is not None else self.default_R
 
-        # Residual / Innovation: y = z - H * x
         y = z - (self.H @ self.state)
-
-        # Innovation covariance: S = H * P * H^T + R
         S = (self.H @ self.covariance @ self.H.T) + R
 
         try:
@@ -100,10 +86,7 @@ class SensorFusionEngine:
         except np.linalg.LinAlgError:
             return
 
-        # Update state estimate
         self.state = self.state + (K @ y)
-
-        # Update covariance matrix P = (I - K*H) * P
         I = np.eye(6, dtype=np.float64)
         self.covariance = (I - (K @ self.H)) @ self.covariance
 
@@ -138,6 +121,9 @@ class SensorFusionEngine:
         gyro_rates: Optional[tuple] = None,
         gps_std_dev: Optional[tuple] = None
     ) -> S2ObservationOutput:
+        # Graceful handling of null/missing observations (Item 10)
+        if observation is None:
+            return None
         """
         Processes a single observation through the EKF pipeline, updating state and pose.
         """
@@ -148,6 +134,8 @@ class SensorFusionEngine:
         else:
             dt = 0.1  # Default time step for the first frame
 
+        current_time = observation.timestamp if observation.timestamp else 0.0
+        dt = max(current_time - self.last_timestamp, 1e-3) if self.last_timestamp is not None else 0.1
         self.last_timestamp = current_time
 
         # 1. Kinematic State Prediction
@@ -196,9 +184,5 @@ class SensorFusionEngine:
 
         return observation
 
-    def fuse_sequence(
-        self, 
-        observations: List[S2ObservationOutput]
-    ) -> List[S2ObservationOutput]:
-        """Runs the EKF sequentially across an entire list of observation outputs."""
-        return [self.process_observation(obs) for obs in observations]
+    def fuse_sequence(self, observations: List[S2ObservationOutput]) -> List[S2ObservationOutput]:
+        return [self.process_observation(obs) for obs in observations if obs is not None]
