@@ -1,0 +1,6 @@
+{
+  "files.watcherExclude": {
+    "**/benchmarks/dataset/**/*.mp4": true,
+    "**/.tmp_debug/**": true
+  }
+}

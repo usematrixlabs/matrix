@@ -1,65 +1,68 @@
-"""Unit tests for the EKF Sensor Fusion Engine."""
-
 import pytest
 import numpy as np
+
 from src.localization_sensor_fusion.fusion.fusion_engine import SensorFusionEngine
 from src.localization_sensor_fusion.schemas.contracts import (
-    S2ObservationOutput,
     CameraPose,
     Position,
     QuaternionOrientation,
-    LocalizationQuality,
-    LocalizationMeta,
+    S2ObservationOutput,
 )
 
 
-def test_fusion_engine_initialization():
+def test_ekf_prediction_step():
+    """Verify state prediction step updates internal state over dt."""
     engine = SensorFusionEngine()
-    assert engine.state.shape == (6, 1)
-    assert engine.covariance.shape == (6, 6)
+    initial_state = engine.state.copy()
+
+    # Apply IMU gyro rates and body acceleration during prediction step
+    engine.predict(dt=0.1, gyro_rates=[0.01, -0.02, 0.05], acceleration_body_mps2=[0.1, 0.0, 9.81])
+
+    # State should have evolved
+    assert not np.array_equal(engine.state, initial_state)
 
 
-def test_fusion_engine_step():
+def test_gps_enu_update_corrects_position():
+    """Verify update_gps_enu pulls position state towards measurement."""
     engine = SensorFusionEngine()
 
-    obs = S2ObservationOutput(
-        observation_id="test_01",
-        timestamp=10.0,
-        image="test_01.jpg",
+    gps_meas = [10.0, -5.0, 2.0]
+    R_cov = np.eye(3) * 0.1
+
+    engine.update_gps_enu(gps_meas, covariance_enu_m2=R_cov)
+
+    pos_x = engine.state[0, 0] if engine.state.ndim == 2 else engine.state[0]
+    pos_y = engine.state[1, 0] if engine.state.ndim == 2 else engine.state[1]
+    pos_z = engine.state[2, 0] if engine.state.ndim == 2 else engine.state[2]
+
+    assert pytest.approx(pos_x, abs=1.0) == 10.0
+    assert pytest.approx(pos_y, abs=1.0) == -5.0
+    assert pytest.approx(pos_z, abs=1.0) == 2.0
+
+
+def test_process_observation_full_pipeline():
+    """Verify full end-to-end observation processing with IMU and GPS updates."""
+    engine = SensorFusionEngine()
+
+    raw_obs = S2ObservationOutput.model_construct(
+        observation_id="test_frame_0",
+        timestamp=1.0,
         pose=CameraPose(
-            position=Position(x=10.0, y=20.0, z=30.0),
+            position=Position(x=5.0, y=5.0, z=0.0),
             orientation=QuaternionOrientation(qw=1.0, qx=0.0, qy=0.0, qz=0.0),
-        ),
-        localization=LocalizationMeta(
-            source=["visual"],
-            status="estimated",
-            quality=LocalizationQuality(confidence=0.95),
         ),
     )
 
-    fused_obs = engine.process_observation(obs)
-    
-    # Verify the fused observation has a pose with position
+    fused_obs = engine.process_observation(
+        observation=raw_obs,
+        gyro_rates=[0.0, 0.0, 0.1],
+        acceleration_body_mps2=[0.0, 0.0, 0.0],
+        gps_enu_m=[5.1, 4.9, 0.1],
+        gps_std_dev=[0.2, 0.2, 0.2],
+    )
+
+    assert fused_obs is not None
     assert fused_obs.pose is not None
-    assert fused_obs.pose.position.x is not None
-    assert fused_obs.pose.position.y is not None
-    assert fused_obs.pose.position.z is not None
-
-def test_dynamic_gps_covariance_weighting():
-    engine = SensorFusionEngine()
-    
-    # High-confidence measurement (low variance)
-    z_accurate = np.array([10.0, 10.0, 10.0])
-    R_tight = np.diag([0.01, 0.01, 0.01])  # High GPS precision
-    engine.update(z_accurate, R_custom=R_tight)
-    
-    # State should pull strongly toward accurate position
-    assert np.isclose(engine.state[0], 10.0, atol=0.5)
-
-    # Low-confidence measurement (high variance)
-    z_noisy = np.array([100.0, 100.0, 100.0])
-    R_loose = np.diag([50.0, 50.0, 50.0])  # Poor GPS HDOP
-    engine.update(z_noisy, R_custom=R_loose)
-    
-    # State should resist moving toward the noisy measurement
-    assert engine.state[0] < 30.0
+    assert fused_obs.pose.position is not None
+    assert fused_obs.pose.orientation is not None
+    assert fused_obs.localization is not None

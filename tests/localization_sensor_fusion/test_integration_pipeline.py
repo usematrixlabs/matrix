@@ -44,4 +44,4 @@ def test_full_fusion_pipeline_step():
 
     # Verify state estimation outputs
     assert fusion.state is not None
-    assert fusion.state.shape == (6, 1)  # 6D state: [x, y, z, vx, vy, vz]
+    assert fusion.state.shape == (16, 1)
