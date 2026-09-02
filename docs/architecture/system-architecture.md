@@ -275,6 +275,29 @@ S3 provides the local 3D reconstruction (`PointCloudData` / `ReconstructionInput
 
 ---
 
+## 7. S3: 3D Reconstruction
+
+### Overview
+
+S3 generates the 3D dense/sparse representation of the observed scene from multi-view feature tracks and localized camera poses.
+
+### Key Architectural Properties
+
+1. **Multi-View Triangulation:** Linear DLT / SVD triangulation with cheirality checks.
+2. **Quality Evaluation:** Mean and median reprojection error computation with statistical outlier filtering.
+3. **Local Spatial Frame:** Coordinates remain in `S3_LOCAL` meters with bounding box metadata.
+4. **Standard Artifacts:** Outputs standard binary/ASCII `scene.ply` and structured `metadata.json`.
+
+---
+
+## 8. S3 → S4 Interface
+
+See [S3 → S4 Interface Contract](contracts/reconstruction-georeferencing.md).
+
+S3 provides the local 3D reconstruction (`PointCloudData` / `ReconstructionInput`), color arrays, and reconstruction quality metadata to S4.
+
+---
+
 ## 9. S4: Georeferencing & Validation
 
 ### Overview
