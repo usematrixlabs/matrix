@@ -179,6 +179,7 @@ logs/
 tmp/
 temp/
 .tmp/
+.tmp_debug/
 
 *.tmp
 *.temp
@@ -221,7 +222,9 @@ data/output/
 
 # Video
 
-# *.mp4
+# Benchmark videos are local test assets. Keeping them outside Git prevents
+# Windows file watchers/codecs from blocking checkout, reset, and pull.
+benchmarks/dataset/**/*.mp4
 *.mov
 *.avi
 *.mkv
