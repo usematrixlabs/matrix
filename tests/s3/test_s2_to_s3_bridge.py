@@ -1,8 +1,13 @@
-"""Integration tests for the S2 -> S3 bridge adapter.
+"""Integration tests for the S2 → S3 bridge adapter.
 
-These tests cover the critical S2 → S3 wiring that the orchestrator
-relies on: turning S2's ``S2PayloadOutput`` (poses only) into S3's
-``S2Payload`` (poses + per-frame 2D feature tracks).
+These tests cover the critical S2 → S3 wiring that S3's :func:`run_s3`
+relies on: turning S2's wire-format ``S2Contract`` (poses only) into
+S3's internal ``S2Payload`` (poses + per-frame 2D feature tracks).
+
+The bridge lives in ``src.reconstruction._internal`` because it is an
+S3 input concern: S3 needs 2D feature tracks for triangulation, and the
+bridge produces them. It accepts the upstream contract via duck-typed
+attribute access — S3 must not import S2's types.
 
 The tests use synthetic grayscale images with deterministic ORB
 features so we don't depend on any external dataset.
@@ -16,11 +21,11 @@ import cv2
 import numpy as np
 import pytest
 
-from src.localization_sensor_fusion.adapters.s2_bridge import (
+from src.reconstruction._internal.s2_to_s3_bridge import (
     build_s2_payload,
-    build_s2_payload_from_s2,
+    build_s2_payload_from_contract,
 )
-from src.localization_sensor_fusion.schemas.contracts import (
+from src.localization_sensor_fusion._internal.schemas.contracts import (
     CameraInfo,
     CameraIntrinsics,
     CameraPose,
@@ -102,7 +107,7 @@ def _make_s2_observation(
 
 def test_s2_bridge_requires_opencv() -> None:
     """Sanity check that the bridge module imports cleanly."""
-    from src.localization_sensor_fusion.adapters.s2_bridge import _require_cv2
+    from src.reconstruction._internal.s2_to_s3_bridge import _require_cv2
 
     _require_cv2()
 
@@ -127,7 +132,7 @@ def test_bridge_produces_features_with_track_ids(tmp_path: Path) -> None:
         )
 
     s2_payload = S2PayloadOutput(observations=s2_observations)
-    s3_payload = build_s2_payload_from_s2(s2_payload, image_root=tmp_path)
+    s3_payload = build_s2_payload_from_contract(s2_payload, image_root=tmp_path)
 
     assert len(s3_payload.observations) == 4
 
@@ -161,7 +166,7 @@ def test_bridge_preserves_pose_and_intrinsics(tmp_path: Path) -> None:
     )
     s2_payload = S2PayloadOutput(observations=[obs])
 
-    s3_payload = build_s2_payload_from_s2(s2_payload, image_root=tmp_path)
+    s3_payload = build_s2_payload_from_contract(s2_payload, image_root=tmp_path)
 
     assert len(s3_payload.observations) == 1
     out = s3_payload.observations[0]
@@ -191,7 +196,7 @@ def test_bridge_handles_missing_images_gracefully(tmp_path: Path) -> None:
         ]
     )
 
-    s3_payload = build_s2_payload_from_s2(s2_payload, image_root=tmp_path)
+    s3_payload = build_s2_payload_from_contract(s2_payload, image_root=tmp_path)
 
     # The lone observation had no resolvable image, so the bridge
     # should return an empty-but-valid payload instead of crashing.
@@ -218,7 +223,7 @@ def test_bridge_observation_without_intrinsics_is_dropped(tmp_path: Path) -> Non
     )
 
     s2_payload = S2PayloadOutput(observations=[obs_no_intr])
-    s3_payload = build_s2_payload_from_s2(s2_payload, image_root=tmp_path)
+    s3_payload = build_s2_payload_from_contract(s2_payload, image_root=tmp_path)
     assert s3_payload.observations == []
 
 

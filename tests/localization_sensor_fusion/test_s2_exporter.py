@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-from src.localization_sensor_fusion.exporters.s2_exporter import S2Exporter
-from src.localization_sensor_fusion.schemas.contracts import (
+from src.localization_sensor_fusion._internal.exporters.s2_exporter import S2Exporter
+from src.localization_sensor_fusion._internal.schemas.contracts import (
     CameraPose,
     LocalizationMeta,
     LocalizationQuality,

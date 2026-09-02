@@ -3,9 +3,9 @@
 import numpy as np
 import pytest
 
-from src.georeferencing_validation.control_points import ControlPoints
-from src.georeferencing_validation.helmert import HelmertTransform
-from src.georeferencing_validation.validator import GeoreferencingValidator
+from src.georeferencing_validation._internal.control_points import ControlPoints
+from src.georeferencing_validation._internal.helmert import HelmertTransform
+from src.georeferencing_validation._internal.validator import GeoreferencingValidator
 
 
 def test_validator_metrics_exact_zero():

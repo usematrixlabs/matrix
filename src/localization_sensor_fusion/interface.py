@@ -16,11 +16,9 @@ from __future__ import annotations
 import csv
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Optional
 
 import numpy as np
-
-from src.visual_perception import S1Contract
 
 from ._internal.contracts import S2Contract
 from ._internal.engines.trajectory_smoother import TrajectorySmoother
@@ -104,7 +102,7 @@ def _gps_position_at(timestamp: float, gps_path: Path, anchor: _GpsAnchor) -> Po
     return Position(x=float(east), y=float(north), z=float(up))
 
 
-def _camera_info_from_s1(s1_contract: S1Contract) -> Optional[CameraInfo]:
+def _camera_info_from_s1(s1_contract: Any) -> Optional[CameraInfo]:
     """Extract S2 CameraInfo from the S1 contract's camera calibration metadata."""
     cam = s1_contract.camera
     if not cam:
@@ -141,7 +139,7 @@ def _camera_info_from_s1(s1_contract: S1Contract) -> Optional[CameraInfo]:
 
 
 def run_s2(
-    s1_contract: S1Contract,
+    s1_contract: Any,
     gps_path: Path,
     output_dir: Path,
     config: Optional[dict] = None,
@@ -150,8 +148,11 @@ def run_s2(
 
     Parameters
     ----------
-    s1_contract : S1Contract
-        Canonical Pydantic payload from S1.
+    s1_contract : S1Contract (duck-typed)
+        Canonical wire-format payload from S1. Typed as ``Any`` at
+        runtime because S2 must not import S1's types; the expected
+        shape is documented in
+        ``docs/architecture/contracts/perception-localization.md``.
     gps_path : Path
         Path to a GPS CSV (any reasonable schema with ``drone_lat`` /
         ``drone_lon`` / ``drone_altitude_m`` / ``video_time_s`` columns).

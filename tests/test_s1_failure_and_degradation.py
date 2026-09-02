@@ -14,18 +14,12 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from src.visual_perception import (
-    ObservationPackager,
-    QualityAssessor,
-    S1Config,
-    S1DiagnosticsEvaluator,
-    S1Output,
-    S1Pipeline,
-    VideoCorruptError,
-    VideoFormatError,
-    VideoNotFoundError,
-    VideoValidationError,
-)
+from src.visual_perception import S1Config, S1Output
+from src.visual_perception._internal.packager import ObservationPackager
+from src.visual_perception._internal.quality_assessor import QualityAssessor
+from src.visual_perception._internal.diagnostics import S1DiagnosticsEvaluator
+from src.visual_perception._internal.pipeline import S1Pipeline
+from src.visual_perception._internal.exceptions import VideoCorruptError, VideoFormatError, VideoNotFoundError, VideoValidationError
 
 
 def create_blurry_video(file_path: str, width: int = 320, height: int = 240, fps: float = 10.0, num_frames: int = 15) -> str:

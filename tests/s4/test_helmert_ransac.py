@@ -3,8 +3,8 @@
 import numpy as np
 import pytest
 
-from src.georeferencing_validation.control_points import ControlPoints
-from src.georeferencing_validation.helmert import HelmertTransform
+from src.georeferencing_validation._internal.control_points import ControlPoints
+from src.georeferencing_validation._internal.helmert import HelmertTransform
 
 
 def test_helmert_exact_identity():

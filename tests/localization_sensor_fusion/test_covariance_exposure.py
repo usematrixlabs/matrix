@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 
-from src.localization_sensor_fusion.fusion.fusion_engine import SensorFusionEngine
-from src.localization_sensor_fusion.schemas.contracts import (
+from src.localization_sensor_fusion._internal.fusion.fusion_engine import SensorFusionEngine
+from src.localization_sensor_fusion._internal.schemas.contracts import (
     CameraPose,
     Position,
     QuaternionOrientation,

@@ -13,20 +13,12 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from src.visual_perception import (
-    FrameExtractor,
-    S1Config,
-    S1Output,
-    S1Pipeline,
-    VideoCorruptError,
-    VideoFormatError,
-    VideoMetadata,
-    VideoMetadataError,
-    VideoNotFoundError,
-    VideoUnreadableError,
-    VideoValidationError,
-    VideoValidator,
-)
+from src.visual_perception import S1Config, S1Output
+from src.visual_perception._internal.frame_extractor import FrameExtractor
+from src.visual_perception._internal.pipeline import S1Pipeline
+from src.visual_perception._internal.exceptions import VideoCorruptError, VideoFormatError, VideoMetadataError, VideoNotFoundError, VideoUnreadableError, VideoValidationError
+from src.visual_perception._internal.types import VideoMetadata
+from src.visual_perception._internal.video_validator import VideoValidator
 
 
 def create_synthetic_video(

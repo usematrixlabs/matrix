@@ -1,4 +1,4 @@
-from src.localization_sensor_fusion.schemas.contracts import (
+from src.localization_sensor_fusion._internal.schemas.contracts import (
     S1ObservationInput,
     QualityStatus,
 )

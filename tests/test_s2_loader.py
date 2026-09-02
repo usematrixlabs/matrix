@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 import pytest
 
-from src.reconstruction.input.loader import S2InputLoader
-from src.reconstruction.models.schema import S2Payload
+from src.reconstruction._internal.input.loader import S2InputLoader
+from src.reconstruction._internal.models.schema import S2Payload
 from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 

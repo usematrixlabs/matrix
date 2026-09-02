@@ -5,12 +5,12 @@ Full Integration tests between Subsystem S3 (3D Reconstruction) and Subsystem S4
 import numpy as np
 import pytest
 
-from src.georeferencing_validation.control_points import ControlPoints
-from src.georeferencing_validation.crs import CoordinateReference
-from src.georeferencing_validation.georeferencer import Georeferencer
-from src.georeferencing_validation.input import ReconstructionInput
-from src.georeferencing_validation.validator import GeoreferencingValidator
-from src.reconstruction.pipeline import S3ReconstructionPipeline
+from src.georeferencing_validation._internal.control_points import ControlPoints
+from src.georeferencing_validation._internal.crs import CoordinateReference
+from src.georeferencing_validation._internal.georeferencer import Georeferencer
+from src.georeferencing_validation._internal.input import ReconstructionInput
+from src.georeferencing_validation._internal.validator import GeoreferencingValidator
+from src.reconstruction._internal.pipeline import S3ReconstructionPipeline
 from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 

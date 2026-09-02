@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
-from src.localization_sensor_fusion.utils.coordinate_transform import CoordinateTransformer
-from src.localization_sensor_fusion.fusion.fusion_engine import SensorFusionEngine
+from src.localization_sensor_fusion._internal.utils.coordinate_transform import CoordinateTransformer
+from src.localization_sensor_fusion._internal.fusion.fusion_engine import SensorFusionEngine
 
 
 def test_origin_round_trip():

@@ -43,7 +43,7 @@ uses ``TYPE_CHECKING`` for the upstream type hint.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Protocol, Tuple, Union
+from typing import Any, Dict, List, Optional, Protocol, Tuple, Union
 
 import numpy as np
 
@@ -63,10 +63,6 @@ from .models.schema import (
     S2Observation,
     S2Payload,
 )
-
-
-if TYPE_CHECKING:  # pragma: no cover - import-only for type hints
-    from src.localization_sensor_fusion import S2Contract, S2ObservationOutput
 
 
 class _S2CameraLike(Protocol):
@@ -420,15 +416,13 @@ def build_s2_payload(
     min_track_len: int = 2,
     max_features: int = 500,
 ) -> S2Payload:
-    """Convenience wrapper that accepts a plain list of S2 observations."""
+    """Convenience wrapper that accepts a plain list of S2 observations.
 
-    @_S2ContractLike
-    class _AdHoc:  # pragma: no cover - trivial shim
-        pass
+    Builds a tiny contract-shaped object that satisfies the duck-typed
+    protocol without depending on the upstream subsystem's types.
+    """
 
-    # Build a tiny object that satisfies _S2ContractLike without
-    # depending on the upstream subsystem.
-    class _Tiny:
+    class _TinyContract:
         def __init__(self, obs_list: List[_S2ObservationLike]) -> None:
             self.observations = obs_list
             self.coordinate_frame = "local"
@@ -436,7 +430,7 @@ def build_s2_payload(
             self.schema_version = "1.0.0"
 
     return build_s2_payload_from_contract(
-        _Tiny(observations),
+        _TinyContract(observations),
         image_root=image_root,
         min_track_len=min_track_len,
         max_features=max_features,

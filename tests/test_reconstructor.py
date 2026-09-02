@@ -1,4 +1,4 @@
-from src.reconstruction.reconstructor import Reconstructor
+from src.reconstruction._internal.reconstructor import Reconstructor
 
 
 def test_reconstruct_with_3d_points():

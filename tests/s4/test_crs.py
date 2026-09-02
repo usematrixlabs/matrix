@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from src.georeferencing_validation.crs import CoordinateReference, is_pyproj_available
+from src.georeferencing_validation._internal.crs import CoordinateReference, is_pyproj_available
 
 
 def test_crs_initialization_and_validation():

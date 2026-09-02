@@ -5,8 +5,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from src.reconstruction.models.schema import S3Status
-from src.reconstruction.pipeline import S3ReconstructionPipeline
+from src.reconstruction._internal.models.schema import S3Status
+from src.reconstruction._internal.pipeline import S3ReconstructionPipeline
 from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 

@@ -8,7 +8,7 @@ Generates mathematically controlled synthetic UAV flight trajectories, ground tr
 from typing import Any, Dict, List, Tuple
 import numpy as np
 
-from src.reconstruction.models.schema import (
+from src.reconstruction._internal.models.schema import (
     CameraIntrinsics,
     CameraPose,
     FeatureObservation,

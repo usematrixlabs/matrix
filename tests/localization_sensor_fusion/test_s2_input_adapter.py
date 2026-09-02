@@ -1,7 +1,7 @@
 """Unit tests for S2InputAdapter."""
 
 import pytest
-from src.localization_sensor_fusion.adapters.s2_input_adapter import (
+from src.localization_sensor_fusion._internal.adapters.s2_input_adapter import (
     S2InputAdapter,
 )
 

@@ -50,12 +50,23 @@ def s1_output_to_contract(s1_output: S1Output) -> S1Contract:
     The orchestrator is expected to call this exactly once on the
     boundary; downstream subsystems (S2 and beyond) operate on the
     validated ``S1Contract`` and never touch ``S1Output`` directly.
+
+    Each per-frame dict is normalized so that ``frame_id`` is exposed
+    as ``observation_id`` — the canonical field name documented in
+    ``docs/architecture/contracts/perception-localization.md``.
     """
     payload = s1_output.to_dict()
-    observations = payload.get("visual_observations", {}).get("frames", [])
+    raw_observations = payload.get("visual_observations", {}).get("frames", [])
     metadata = payload.get("metadata", {}) or {}
     camera = metadata.get("camera_calibration")
     keyframes = payload.get("visual_observations", {}).get("keyframes", []) or []
+
+    observations: List[Dict[str, Any]] = []
+    for frame in raw_observations:
+        normalized = dict(frame)
+        if "observation_id" not in normalized and "frame_id" in normalized:
+            normalized["observation_id"] = normalized["frame_id"]
+        observations.append(normalized)
 
     return S1Contract(
         schema_version="1.2.0",

@@ -2,19 +2,19 @@
 S3 Output Packaging
 
 Packages reconstructed 3D point cloud and metadata artifacts into disk deliverables
-(scene.ply + metadata.json) and in-memory S4 ReconstructionInput objects.
+(scene.ply + metadata.json).
 """
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Dict, Union
 
 from ..geometry.ply_io import PlyIO
 from ..models.s3_output import S3ReconstructionResult
 
 
 class S3OutputPackager:
-    """Packages S3 results for disk export and S4 downstream integration."""
+    """Packages S3 results for disk export."""
 
     @staticmethod
     def package_to_directory(
@@ -52,14 +52,4 @@ class S3OutputPackager:
             "ply": ply_path,
             "metadata": meta_path,
         }
-
-    @staticmethod
-    def to_s4_input(result: S3ReconstructionResult):
-        """
-        Convert S3 result directly into an S4 ReconstructionInput instance.
-
-        Returns:
-            ReconstructionInput from src.georeferencing_validation.input
-        """
-        return result.to_s4_reconstruction_input()
 

@@ -9,18 +9,12 @@ import os
 import tempfile
 import unittest
 
-from src.visual_perception import (
-    Frame,
-    FrameExtractor,
-    Keyframe,
-    KeyframeSelector,
-    S1Config,
-    S1Output,
-    S1Pipeline,
-    UAVTelemetry,
-    VisualObservations,
-    get_logger,
-)
+from src.visual_perception import S1Config, S1Output
+from src.visual_perception._internal.types import Frame, Keyframe, UAVTelemetry, VisualObservations
+from src.visual_perception._internal.frame_extractor import FrameExtractor
+from src.visual_perception._internal.keyframe_selector import KeyframeSelector
+from src.visual_perception._internal.pipeline import S1Pipeline
+from src.visual_perception._internal.logger import get_logger
 
 
 class TestS1Setup(unittest.TestCase):

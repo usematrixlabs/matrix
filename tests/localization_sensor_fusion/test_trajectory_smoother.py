@@ -3,8 +3,8 @@
 import numpy as np
 import pytest
 
-from src.localization_sensor_fusion.engines.trajectory_smoother import TrajectorySmoother
-from src.localization_sensor_fusion.schemas.contracts import (
+from src.localization_sensor_fusion._internal.engines.trajectory_smoother import TrajectorySmoother
+from src.localization_sensor_fusion._internal.schemas.contracts import (
     S2ObservationOutput,
     CameraPose,
     Position,

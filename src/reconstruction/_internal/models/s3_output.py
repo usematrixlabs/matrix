@@ -126,34 +126,16 @@ class S3ReconstructionResult:
         }
 
     def to_s4_reconstruction_input(self):
-        """Convert this result into an S4 ReconstructionInput.
+        """Deprecated: S4 boundary conversion is now the orchestrator's job.
 
-        Imports the S4 type lazily so S3 can be imported without S4 being
-        available (and so circular imports are avoided).
+        Kept as a stub that raises ``NotImplementedError`` so that any
+        legacy caller fails loudly instead of silently re-introducing a
+        cross-subsystem import. S3 → S4 conversion goes through the
+        S3 → S4 wire-format contract handled by ``run_s4`` (which
+        reads S3's ``scene.ply`` + ``metadata.json`` directly).
         """
-        from src.georeferencing_validation.input import ReconstructionInput
-
-        if self.point_cloud is None:
-            points = np.empty((0, 3), dtype=np.float64)
-            colors = None
-        else:
-            points = np.asarray(self.point_cloud.points, dtype=np.float64)
-            colors = (
-                np.asarray(self.point_cloud.colors, dtype=np.uint8)
-                if self.point_cloud.colors is not None
-                else None
-            )
-
-        return ReconstructionInput(
-            points=points,
-            colors=colors,
-            metadata={
-                "scene_id": self.scene_id,
-                "job_id": self.job_id,
-                "status": str(self.status),
-                "num_points": int(points.shape[0]),
-                "quality": self.to_metadata_dict().get("quality"),
-                "failure_info": self.failure_info,
-                **(self.metadata or {}),
-            },
+        raise NotImplementedError(
+            "S3ReconstructionResult.to_s4_reconstruction_input has been "
+            "removed during subsystem isolation. Use S4's run_s4() with "
+            "the S3Contract instead."
         )

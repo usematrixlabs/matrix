@@ -4,8 +4,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from src.reconstruction.geometry.ply_io import PlyIO
-from src.reconstruction.models.s3_output import PointCloudData
+from src.reconstruction._internal.geometry.ply_io import PlyIO
+from src.reconstruction._internal.models.s3_output import PointCloudData
 
 
 def test_ply_binary_roundtrip(tmp_path: Path):

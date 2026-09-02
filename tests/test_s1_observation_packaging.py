@@ -14,12 +14,9 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from src.visual_perception import (
-    ObservationPackager,
-    S1Config,
-    S1Output,
-    S1Pipeline,
-)
+from src.visual_perception import S1Config, S1Output
+from src.visual_perception._internal.pipeline import S1Pipeline
+from src.visual_perception._internal.packager import ObservationPackager
 
 
 def create_pack_test_video(file_path: str, width: int = 640, height: int = 480, fps: float = 20.0, num_frames: int = 30) -> str:

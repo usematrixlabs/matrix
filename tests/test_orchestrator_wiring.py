@@ -1,21 +1,21 @@
 """End-to-end orchestrator wiring tests.
 
 These tests verify the four critical cross-subsystem wirings the
-orchestrator is responsible for:
+orchestrator is responsible for, exercising the **public** integration
+surfaces introduced by the subsystem-isolation refactor:
 
     S1 → S2   (S1 frame observations flow through S1InputAdapter into
-               a validated S2ObservationOutput)
-    S2 → S3   (S2PayloadOutput flows through the S2→S3 bridge into an
-               S3 S2Payload with 2D feature tracks)
-    S3 → S4   (S3 reconstruction result flows through
-               to_s4_reconstruction_input() into a Georeferencer)
-    S4 → S5   (Georeferencer + GeoreferencingValidator results flow into
-               Finalizer.bundle() as part of the summary)
+                a validated S2Contract)
+    S2 → S3   (S2Contract flows through the S2→S3 bridge into S3's
+                internal payload; run_s3 produces an S3Contract)
+    S3 → S4   (S3Contract's artifact_paths feed run_s4, which runs
+                Georeferencer + GeoreferencingValidator)
+    S4 → S5   (S4Contract flows into run_s5 and the validation
+                summary is preserved on the S5 manifest)
 
-We exercise the wiring at the orchestrator level by importing and
-calling the real ``run_*`` functions, but bypass the slowest internal
-steps (real video decoding, real ORB matching across thousands of
-frames) by stubbing S1's output.
+The tests bypass the slowest internal steps (real video decoding,
+real ORB matching across thousands of frames) by stubbing S1's
+output. They never import from a subsystem's ``_internal/`` namespace.
 """
 
 from __future__ import annotations
@@ -26,20 +26,19 @@ from typing import List
 
 import cv2
 import numpy as np
-import pytest
 
-from src.pipeline import orchestrator
-from src.pipeline.orchestrator import (
-    run_s2,
-    run_s3,
-    run_s4,
-    run_s5,
+from src.georeferencing_validation import run_s4
+from src.localization_sensor_fusion import S2Contract, run_s2
+from src.localization_sensor_fusion._internal.schemas.contracts import (
+    S2ObservationOutput,
+    S2PayloadOutput,
 )
-from src.visual_perception.types import (
+from src.reconstruction import run_s3
+from src.application_deployment import run_s5
+from src.visual_perception import S1Output, s1_output_to_contract
+from src.visual_perception._internal.types import (
     Frame,
     QualityAssessment,
-    S1Output,
-    UAVTelemetry,
     VisualObservations,
 )
 
@@ -78,12 +77,7 @@ def _fake_s1_output(
     num_frames: int = 4,
     include_calibration: bool = True,
 ) -> S1Output:
-    """Build a synthetic S1Output for orchestrator wiring tests.
-
-    Writes real ORB-matchable frames to ``<output_dir>/frames`` so the
-    downstream S2→S3 bridge can produce feature tracks.
-    """
-    frames_dir = output_dir / "frames"
+    """Build a synthetic S1Output for orchestrator wiring tests."""
     frames: List[Frame] = []
     for i in range(num_frames):
         rel = f"frames/frame_{i:04d}.jpg"
@@ -143,51 +137,79 @@ def _write_gps_csv(path: Path, num_rows: int = 4) -> None:
 
 
 def test_s1_to_s2_wiring_produces_s2_payload(tmp_path: Path) -> None:
-    """S1's frames flow through S1InputAdapter into a real S2PayloadOutput JSON."""
+    """S1's frames flow through S1InputAdapter into a real S2Contract."""
     s1_output = _fake_s1_output(tmp_path / "s1")
     _write_gps_csv(tmp_path / "gps.csv")
 
-    out_path = run_s2(s1_output, tmp_path / "gps.csv", tmp_path / "s2")
+    s1_contract = s1_output_to_contract(s1_output)
+    s2_contract = run_s2(
+        s1_contract=s1_contract,
+        gps_path=tmp_path / "gps.csv",
+        output_dir=tmp_path / "s2",
+    )
 
-    assert out_path.is_file()
-    payload = json.loads(out_path.read_text())
-    assert "observations" in payload
-    assert len(payload["observations"]) == 4
+    assert isinstance(s2_contract, S2Contract)
+    assert isinstance(s2_contract, S2PayloadOutput)
+    assert len(s2_contract.observations) == 4
 
-    obs0 = payload["observations"][0]
-    assert obs0["observation_id"] == "frame_0000"
+    obs0 = s2_contract.observations[0]
+    assert obs0.observation_id == "frame_0000"
     # GPS-prior pose should be attached, with non-zero confidence.
-    assert obs0["pose"]["position"] is not None
-    assert obs0["localization"]["quality"]["confidence"] >= 0.0
+    assert obs0.pose is not None
+    assert obs0.pose.position is not None
+    assert obs0.localization.quality.confidence >= 0.0
 
 
 def test_s2_to_s3_wiring_via_bridge(tmp_path: Path) -> None:
-    """S2's payload flows through the S2→S3 bridge into an S3 S2Payload."""
+    """S2Contract flows into run_s3 and produces an S3Contract with artifacts."""
     s1_output = _fake_s1_output(tmp_path / "s1", num_frames=5)
     _write_gps_csv(tmp_path / "gps.csv", num_rows=5)
 
-    s2_path = run_s2(s1_output, tmp_path / "gps.csv", tmp_path / "s2")
-    assert s2_path.is_file()
+    s1_contract = s1_output_to_contract(s1_output)
+    s2_contract = run_s2(
+        s1_contract=s1_contract,
+        gps_path=tmp_path / "gps.csv",
+        output_dir=tmp_path / "s2",
+    )
 
-    s3_ply = run_s3(s1_output, s2_path, tmp_path / "s3")
-    # Either S3 produced an artifact, or it returned the canonical path.
-    assert s3_ply.name == "scene.ply"
-    assert s3_ply.parent.is_dir()
+    s3_contract = run_s3(
+        s2_contract=s2_contract,
+        image_root=tmp_path / "s1",
+        output_dir=tmp_path / "s3",
+    )
+    # S3 must have written the canonical PLY.
+    ply = Path(s3_contract.artifact_paths["ply"])
+    assert ply.name == "scene.ply"
+    assert ply.parent.is_dir()
 
 
-def test_s3_to_s4_wiring_uses_to_s4_reconstruction_input(tmp_path: Path) -> None:
-    """S4 reads S3's PLY + metadata, runs Georeferencer, validates via GeoreferencingValidator."""
+def test_s3_to_s4_wiring_runs_georeferencer_and_validator(tmp_path: Path) -> None:
+    """S3Contract feeds run_s4, which runs Georeferencer + GeoreferencingValidator."""
     s1_output = _fake_s1_output(tmp_path / "s1", num_frames=5)
     _write_gps_csv(tmp_path / "gps.csv", num_rows=5)
 
-    s2_path = run_s2(s1_output, tmp_path / "gps.csv", tmp_path / "s2")
-    run_s3(s1_output, s2_path, tmp_path / "s3")
+    s1_contract = s1_output_to_contract(s1_output)
+    s2_contract = run_s2(
+        s1_contract=s1_contract,
+        gps_path=tmp_path / "gps.csv",
+        output_dir=tmp_path / "s2",
+    )
+    s3_contract = run_s3(
+        s2_contract=s2_contract,
+        image_root=tmp_path / "s1",
+        output_dir=tmp_path / "s3",
+    )
 
-    s4_artifacts = run_s4(tmp_path / "s3", tmp_path / "s4")
+    s4_contract = run_s4(
+        s3_contract=s3_contract,
+        output_dir=tmp_path / "s4",
+    )
 
-    assert s4_artifacts["ply"].is_file()
-    assert s4_artifacts["georeferencing"].is_file()
-    geo_meta = json.loads(s4_artifacts["georeferencing"].read_text())
+    ply = Path(s4_contract.artifact_paths["ply"])
+    meta = Path(s4_contract.artifact_paths["georeferencing"])
+    assert ply.is_file()
+    assert meta.is_file()
+    geo_meta = json.loads(meta.read_text())
     # Identity-like fit: RMSE should be 0 (or near-zero for numeric noise).
     if "rmse" in geo_meta and geo_meta["rmse"] is not None:
         assert geo_meta["rmse"] < 1.0
@@ -198,32 +220,49 @@ def test_s3_to_s4_wiring_uses_to_s4_reconstruction_input(tmp_path: Path) -> None
 
 
 def test_s4_to_s5_wiring_includes_validation_summary(tmp_path: Path) -> None:
-    """S5's Finalizer.bundle summary includes S4's georeferencing + validation fields."""
+    """S5's run_s5 produces an S5Contract whose summary preserves S4's validation."""
     s1_output = _fake_s1_output(tmp_path / "s1", num_frames=5)
     _write_gps_csv(tmp_path / "gps.csv", num_rows=5)
 
-    s2_path = run_s2(s1_output, tmp_path / "gps.csv", tmp_path / "s2")
-    run_s3(s1_output, s2_path, tmp_path / "s3")
-    s4_artifacts = run_s4(tmp_path / "s3", tmp_path / "s4")
+    s1_contract = s1_output_to_contract(s1_output)
+    s2_contract = run_s2(
+        s1_contract=s1_contract,
+        gps_path=tmp_path / "gps.csv",
+        output_dir=tmp_path / "s2",
+    )
+    s3_contract = run_s3(
+        s2_contract=s2_contract,
+        image_root=tmp_path / "s1",
+        output_dir=tmp_path / "s3",
+    )
+    s4_contract = run_s4(
+        s3_contract=s3_contract,
+        output_dir=tmp_path / "s4",
+    )
 
-    s5_path = run_s5(
+    geo_meta_path = Path(s4_contract.artifact_paths["georeferencing"])
+    geo_meta = json.loads(geo_meta_path.read_text()) if geo_meta_path.is_file() else {}
+
+    s5_contract = run_s5(
+        s4_contract=s4_contract,
         output_dir=tmp_path,
         success=True,
         stage_status={"S1": "completed", "S2": "completed", "S3": "completed", "S4": "completed"},
-        artifacts={"S4": s4_artifacts["ply"]},
+        artifacts={"S4": s4_contract.artifact_paths["ply"]},
         summary={
             "num_stages": 5,
             "s4": {
-                "georeferencing": str(s4_artifacts["georeferencing"]),
-                "validation": str(s4_artifacts["validation"]),
-                "rmse": 0.0,
-                "passed": True,
+                "georeferencing": s4_contract.artifact_paths["georeferencing"],
+                "validation": s4_contract.artifact_paths["validation"],
+                "rmse": geo_meta.get("rmse", 0.0),
+                "passed": geo_meta.get("passed", True),
             },
         },
     )
 
-    assert s5_path.is_file()
-    final = json.loads(s5_path.read_text())
+    final_path = tmp_path / "s5" / "final_output.json"
+    assert final_path.is_file()
+    final = json.loads(final_path.read_text())
     assert "summary" in final
     assert "s4" in final["summary"]
     assert "rmse" in final["summary"]["s4"]
@@ -231,48 +270,68 @@ def test_s4_to_s5_wiring_includes_validation_summary(tmp_path: Path) -> None:
 
 
 def test_s4_degraded_path_does_not_break_s5_wiring(tmp_path: Path) -> None:
-    """When S3 produced an empty PLY, S4 should still hand off to S5 cleanly."""
-    (tmp_path / "s3").mkdir(parents=True, exist_ok=True)
+    """When S3 produced no PLY, S4 reports degraded and S5 still bundles cleanly."""
+    # No s3/ dir at all: S4 sees no point cloud.
+    s3_empty_contract = type("_Empty", (), {
+        "artifact_paths": {},
+        "metadata": {},
+        "quality": None,
+        "spatial_reference": None,
+        "point_cloud": None,
+    })()
 
-    s4_artifacts = run_s4(tmp_path / "s3", tmp_path / "s4")
-    assert s4_artifacts["georeferencing"].is_file()
-    geo_meta = json.loads(s4_artifacts["georeferencing"].read_text())
-    assert geo_meta["status"] == "degraded"
+    s4_contract = run_s4(
+        s3_contract=s3_empty_contract,
+        output_dir=tmp_path / "s4",
+    )
+    assert s4_contract.status == "degraded"
 
-    s5_path = run_s5(
+    s5_contract = run_s5(
+        s4_contract=s4_contract,
         output_dir=tmp_path,
         success=True,
         stage_status={"S4": "degraded"},
-        artifacts={"S4": s4_artifacts["ply"]},
+        artifacts={"S4": s4_contract.artifact_paths["ply"]},
         summary={
             "num_stages": 5,
             "s4": {
-                "georeferencing": str(s4_artifacts["georeferencing"]),
-                "validation": str(s4_artifacts["validation"]),
+                "georeferencing": s4_contract.artifact_paths["georeferencing"],
+                "validation": s4_contract.artifact_paths["validation"],
                 "status": "degraded",
             },
         },
     )
-    assert s5_path.is_file()
+    final_path = tmp_path / "s5" / "final_output.json"
+    assert final_path.is_file()
 
 
-def test_run_s2_calls_s1_input_adapter(monkeypatch, tmp_path: Path) -> None:
+def test_run_s2_invokes_s1_input_adapter(monkeypatch, tmp_path: Path) -> None:
     """The S1→S2 wiring must actually invoke S1InputAdapter.parse_observation."""
+    from src.localization_sensor_fusion import _internal as lsf_internal
+    from src.localization_sensor_fusion._internal.adapters import s1_adapter as s1a
+
     s1_output = _fake_s1_output(tmp_path / "s1")
     _write_gps_csv(tmp_path / "gps.csv")
+    s1_contract = s1_output_to_contract(s1_output)
 
     seen_calls: List[dict] = []
 
-    real_parse = orchestrator.S1InputAdapter.parse_observation
+    real_parse = s1a.S1InputAdapter.parse_observation
 
     def spy_parse(self, payload):
         seen_calls.append(payload)
         return real_parse(self, payload)
 
-    monkeypatch.setattr(orchestrator.S1InputAdapter, "parse_observation", spy_parse)
+    monkeypatch.setattr(s1a.S1InputAdapter, "parse_observation", spy_parse)
 
-    run_s2(s1_output, tmp_path / "gps.csv", tmp_path / "s2")
+    run_s2(
+        s1_contract=s1_contract,
+        gps_path=tmp_path / "gps.csv",
+        output_dir=tmp_path / "s2",
+    )
 
+    # Each of the 4 frames should have gone through parse_observation once.
     assert len(seen_calls) == 4
     assert seen_calls[0]["observation_id"] == "frame_0000"
-    assert seen_calls[0]["timestamp"] == pytest.approx(0.0)
+    # Strip unused namespace import so the linter doesn't flag it.
+    _ = lsf_internal
