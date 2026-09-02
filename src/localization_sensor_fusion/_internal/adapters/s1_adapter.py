@@ -1,7 +1,7 @@
 """S1 Input Adapter implementation."""
 
 from typing import Any, Dict, Optional
-from src.localization_sensor_fusion.schemas.contracts import S1ObservationInput
+from ..schemas.contracts import S1ObservationInput
 
 
 class S1AdapterValidationError(Exception):

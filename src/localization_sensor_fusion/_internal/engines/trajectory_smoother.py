@@ -6,7 +6,7 @@ from typing import Sequence
 
 import numpy as np
 
-from src.localization_sensor_fusion.schemas.contracts import (
+from ..schemas.contracts import (
     CameraPose,
     Position,
     QuaternionOrientation,

@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 from typing import List, Union
-from src.localization_sensor_fusion.schemas.contracts import (
+from ..schemas.contracts import (
     S2ObservationOutput,
     S2PayloadOutput,
     Units,

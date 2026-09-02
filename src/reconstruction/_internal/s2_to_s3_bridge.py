@@ -1,7 +1,8 @@
 """S2 → S3 Bridge Adapter.
 
-Translates S2's ``S2PayloadOutput`` (poses only) into the ``S2Payload`` that
-S3 expects (poses + per-frame 2D feature tracks with shared ``track_id``s).
+Translates S2's wire-format ``S2Contract`` (poses only) into the internal
+``S2Payload`` that S3 expects (poses + per-frame 2D feature tracks with
+shared ``track_id``s).
 
 S2's contract carries localized observations with camera intrinsics but no
 2D feature matches. S3's multi-view triangulator needs tracks — pairs of
@@ -16,7 +17,7 @@ can triangulate.
 
 Inputs
 ------
-- ``s2_payload``    : ``S2PayloadOutput`` produced by ``S2Exporter``
+- ``s2_contract``   : ``S2Contract`` produced by ``run_s2``
 - ``image_root``    : directory in which to resolve relative image paths
 - ``min_track_len`` : minimum number of inlier frames for a track to be kept
 - ``max_features``  : maximum number of features per frame to detect
@@ -30,12 +31,19 @@ Failure modes
 The S3 validator treats ``features=[]`` per observation as a recoverable
 warning, so the pipeline remains runnable end-to-end even when ORB
 matching fails on a particular dataset (e.g., featureless terrain).
+
+Subsystem Isolation
+-------------------
+The bridge lives in S3 (``src.reconstruction._internal``) but accepts
+S2's contract as a duck-typed ``S2Contract``-shaped object — S3 must
+not import from ``src.localization_sensor_fusion``. This module only
+uses ``TYPE_CHECKING`` for the upstream type hint.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Protocol, Tuple, Union
 
 import numpy as np
 
@@ -47,7 +55,7 @@ except ImportError as exc:  # pragma: no cover - exercised only without cv2
 else:
     _CV2_IMPORT_ERROR = None
 
-from src.reconstruction.models.schema import (
+from .models.schema import (
     CameraIntrinsics,
     CameraPose,
     FeatureObservation,
@@ -56,12 +64,47 @@ from src.reconstruction.models.schema import (
     S2Payload,
 )
 
-from src.localization_sensor_fusion.schemas.contracts import (
-    CameraInfo,
-    CameraIntrinsics as S2CameraIntrinsics,
-    S2ObservationOutput,
-    S2PayloadOutput,
-)
+
+if TYPE_CHECKING:  # pragma: no cover - import-only for type hints
+    from src.localization_sensor_fusion import S2Contract, S2ObservationOutput
+
+
+class _S2CameraLike(Protocol):
+    width: Optional[int]
+    height: Optional[int]
+    intrinsics: Optional[Any]
+    distortion: Optional[Any]
+
+
+class _S2PoseLike(Protocol):
+    position: Any
+    orientation: Any
+
+
+class _S2LocalizationQualityLike(Protocol):
+    confidence: float
+
+
+class _S2LocalizationLike(Protocol):
+    status: Any
+    source: List[Any]
+    quality: Optional[_S2LocalizationQualityLike]
+
+
+class _S2ObservationLike(Protocol):
+    observation_id: str
+    timestamp: float
+    image: str
+    camera: Optional[_S2CameraLike]
+    pose: Optional[_S2PoseLike]
+    localization: Optional[_S2LocalizationLike]
+
+
+class _S2ContractLike(Protocol):
+    observations: List[_S2ObservationLike]
+    coordinate_frame: str
+    units: Any
+    schema_version: str
 
 
 def _require_cv2() -> None:
@@ -80,20 +123,6 @@ def _normalize_orientation_format(orientation: Any) -> Tuple[str, Any]:
     QUATERNION_XYZW order or a 3x3 ROTATION_MATRIX.
     """
     return ("QUATERNION_XYZW", [orientation.qx, orientation.qy, orientation.qz, orientation.qw])
-
-
-def _intrinsics_to_matrix(cam: Optional[CameraInfo]) -> Optional[np.ndarray]:
-    if cam is None or cam.intrinsics is None:
-        return None
-    intr = cam.intrinsics
-    return np.array(
-        [
-            [float(intr.fx), 0.0, float(intr.cx)],
-            [0.0, float(intr.fy), float(intr.cy)],
-            [0.0, 0.0, 1.0],
-        ],
-        dtype=np.float64,
-    )
 
 
 def _safe_image_path(image_ref: str, image_root: Path) -> Optional[Path]:
@@ -192,15 +221,14 @@ class _TrackBuilder:
 
 
 def _build_observation(
-    s2_obs: S2ObservationOutput,
+    s2_obs: _S2ObservationLike,
     pose: Optional[CameraPose],
     intrinsics: Optional[CameraIntrinsics],
     frame_track_indices: Dict[int, int],
     frame_keypoints: np.ndarray,
-    frame_id: str,
     observation_id: str,
 ) -> S2Observation:
-    """Construct one S3 S2Observation from an S2 output + matched keypoints."""
+    """Construct one S3 S2Observation from an S2 wire-format observation + matched keypoints."""
     features: List[FeatureObservation] = []
     for kp_idx, track_id in frame_track_indices.items():
         if kp_idx >= frame_keypoints.shape[0]:
@@ -216,10 +244,11 @@ def _build_observation(
         )
 
     if s2_obs.localization is not None:
+        loc = s2_obs.localization
         localization = LocalizationInfo(
-            status=str(s2_obs.localization.status.value if hasattr(s2_obs.localization.status, "value") else s2_obs.localization.status),
-            source=[s.value if hasattr(s, "value") else str(s) for s in (s2_obs.localization.source or [])],
-            confidence=float(s2_obs.localization.quality.confidence) if s2_obs.localization.quality else 1.0,
+            status=str(loc.status.value if hasattr(loc.status, "value") else loc.status),
+            source=[s.value if hasattr(s, "value") else str(s) for s in (loc.source or [])],
+            confidence=float(loc.quality.confidence) if loc.quality else 1.0,
         )
     else:
         localization = LocalizationInfo()
@@ -235,13 +264,13 @@ def _build_observation(
     )
 
 
-def build_s2_payload_from_s2(
-    s2_payload: S2PayloadOutput,
+def build_s2_payload_from_contract(
+    s2_contract: _S2ContractLike,
     image_root: Union[str, Path],
     min_track_len: int = 2,
     max_features: int = 500,
 ) -> S2Payload:
-    """Translate ``S2PayloadOutput`` (S2) into ``S2Payload`` (S3).
+    """Translate ``S2Contract`` (S2 wire format) into ``S2Payload`` (S3 internal).
 
     Loads each S1 frame image referenced by the S2 observations, extracts
     ORB features per frame, matches them across consecutive keyframes, and
@@ -249,8 +278,11 @@ def build_s2_payload_from_s2(
 
     Parameters
     ----------
-    s2_payload : S2PayloadOutput
-        Output of S2 localization & sensor fusion.
+    s2_contract : S2Contract (duck-typed)
+        Output of S2 localization & sensor fusion. Must expose
+        ``observations`` (list of objects with ``observation_id``,
+        ``timestamp``, ``image``, ``camera``, ``pose``, ``localization``),
+        ``coordinate_frame``, ``units``, and ``schema_version``.
     image_root : str | Path
         Directory in which to resolve relative image paths referenced by
         each S2 observation's ``image`` field.
@@ -275,14 +307,14 @@ def build_s2_payload_from_s2(
     per_frame_features: Dict[str, np.ndarray] = {}
     per_frame_track_indices: Dict[str, Dict[int, int]] = {}
 
-    observations_with_intrinsics: List[Tuple[int, S2ObservationOutput, Optional[CameraInfo]]] = []
-    for idx, obs in enumerate(s2_payload.observations):
+    observations_with_intrinsics: List[Tuple[int, _S2ObservationLike, _S2CameraLike]] = []
+    for idx, obs in enumerate(s2_contract.observations):
         if obs.camera is None or obs.camera.intrinsics is None:
             continue
         observations_with_intrinsics.append((idx, obs, obs.camera))
 
     if not observations_with_intrinsics:
-        return _empty_s2_payload(s2_payload)
+        return _empty_s2_payload(s2_contract)
 
     track_builder = _TrackBuilder()
 
@@ -291,7 +323,7 @@ def build_s2_payload_from_s2(
     prev_keypoints: Optional[np.ndarray] = None
     prev_descriptors: Optional[np.ndarray] = None
 
-    for idx, s2_obs, cam_info in observations_with_intrinsics:
+    for idx, s2_obs, _cam_info in observations_with_intrinsics:
         img_path = _safe_image_path(s2_obs.image, image_root)
         if img_path is None:
             continue
@@ -335,8 +367,8 @@ def build_s2_payload_from_s2(
 
         # S2 -> S3 intrinsics conversion.
         s2_intr = cam_info.intrinsics
-        width = cam_info.width if cam_info.width is not None else s2_intr and None
-        height = cam_info.height if cam_info.height is not None else s2_intr and None
+        width = cam_info.width
+        height = cam_info.height
         intrinsics = CameraIntrinsics(
             fx=float(s2_intr.fx),
             fy=float(s2_intr.fy),
@@ -344,7 +376,11 @@ def build_s2_payload_from_s2(
             cy=float(s2_intr.cy),
             width=width,
             height=height,
-            distortion_coefficients=list(cam_info.distortion.coefficients) if cam_info.distortion and cam_info.distortion.coefficients else None,
+            distortion_coefficients=(
+                list(cam_info.distortion.coefficients)
+                if cam_info.distortion and cam_info.distortion.coefficients
+                else None
+            ),
             distortion_model=cam_info.distortion.model if cam_info.distortion else None,
         )
 
@@ -357,20 +393,19 @@ def build_s2_payload_from_s2(
                 intrinsics=intrinsics,
                 frame_track_indices=track_indices,
                 frame_keypoints=kps,
-                frame_id=frame_id,
                 observation_id=frame_id,
             )
         )
 
     if not observations_out:
-        return _empty_s2_payload(s2_payload)
+        return _empty_s2_payload(s2_contract)
 
     return S2Payload(
         observations=observations_out,
         job_id=None,
-        coordinate_frame=str(s2_payload.coordinate_frame or "local"),
-        units=str(_units_to_str(s2_payload.units)),
-        schema_version=str(s2_payload.schema_version or "1.0.0"),
+        coordinate_frame=str(s2_contract.coordinate_frame or "local"),
+        units=str(_units_to_str(s2_contract.units)),
+        schema_version=str(s2_contract.schema_version or "1.0.0"),
         metadata={
             "source": "S2->S3 bridge",
             "min_track_len": min_track_len,
@@ -380,22 +415,35 @@ def build_s2_payload_from_s2(
 
 
 def build_s2_payload(
-    observations: List[S2ObservationOutput],
+    observations: List[_S2ObservationLike],
     image_root: Union[str, Path],
     min_track_len: int = 2,
     max_features: int = 500,
 ) -> S2Payload:
-    """Convenience wrapper that accepts a plain list of ``S2ObservationOutput``."""
-    payload = S2PayloadOutput(observations=observations)
-    return build_s2_payload_from_s2(
-        payload,
+    """Convenience wrapper that accepts a plain list of S2 observations."""
+
+    @_S2ContractLike
+    class _AdHoc:  # pragma: no cover - trivial shim
+        pass
+
+    # Build a tiny object that satisfies _S2ContractLike without
+    # depending on the upstream subsystem.
+    class _Tiny:
+        def __init__(self, obs_list: List[_S2ObservationLike]) -> None:
+            self.observations = obs_list
+            self.coordinate_frame = "local"
+            self.units = "meters"
+            self.schema_version = "1.0.0"
+
+    return build_s2_payload_from_contract(
+        _Tiny(observations),
         image_root=image_root,
         min_track_len=min_track_len,
         max_features=max_features,
     )
 
 
-def _empty_s2_payload(src: S2PayloadOutput) -> S2Payload:
+def _empty_s2_payload(src: _S2ContractLike) -> S2Payload:
     """Return an S3 S2Payload with empty observations when bridging cannot proceed."""
     return S2Payload(
         observations=[],
@@ -415,3 +463,9 @@ def _units_to_str(units: Any) -> str:
     if isinstance(units, dict):
         return str(units.get("position", "meters"))
     return "meters"
+
+
+__all__ = [
+    "build_s2_payload",
+    "build_s2_payload_from_contract",
+]

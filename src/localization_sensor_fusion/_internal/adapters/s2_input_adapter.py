@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict
-from src.localization_sensor_fusion.schemas.contracts import (
+from ..schemas.contracts import (
     CameraPose,
     S2ObservationOutput,
 )

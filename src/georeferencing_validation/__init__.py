@@ -1,20 +1,17 @@
-"""S4 — Georeferencing & Validation
+"""S4 — Georeferencing & Validation (sealed).
 
-Transforms reconstruction into geographically meaningful representation
-and evaluates spatial quality.
+Public integration surface
+--------------------------
+- :func:`run_s4` — single entry point invoked by the pipeline
+  orchestrator.
+- :class:`S4Contract` — canonical Pydantic output of S4.
+
+Everything else (control points, CRS, Helmert, input validator,
+georeferencer, IO helpers) lives under
+``src.georeferencing_validation._internal``.
 """
-from .control_points import ControlPoints
-from .crs import CoordinateReference
-from .georeferencer import Georeferencer, GeoreferencedResult
-from .input import ReconstructionInput
-from .validator import GeoreferencingValidator, GeoreferencingValidator as Validator
 
-__all__ = [
-    "ControlPoints",
-    "CoordinateReference",
-    "Georeferencer",
-    "GeoreferencedResult",
-    "ReconstructionInput",
-    "GeoreferencingValidator",
-    "Validator",
-]
+from ._internal.contracts import S4Contract
+from .interface import run_s4
+
+__all__ = ["run_s4", "S4Contract"]

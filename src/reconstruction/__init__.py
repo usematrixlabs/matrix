@@ -1,58 +1,17 @@
+"""S3 — 3D Reconstruction (sealed).
+
+Public integration surface
+--------------------------
+- :func:`run_s3` — single entry point invoked by the pipeline
+  orchestrator.
+- :class:`S3Contract` — canonical Pydantic output of S3.
+
+Everything else (engines, geometry, input adapters, models, output
+packager, preprocessing, quality evaluator, the S2→S3 bridge) lives
+under ``src.reconstruction._internal``.
 """
-S3 — 3D Reconstruction Subsystem
 
-Transforms visual observations and camera localization into 3D representations.
-"""
+from ._internal.contracts import S3Contract
+from .interface import run_s3
 
-from .engine import DefaultReconstructionEngine, MultiViewTriangulator, ReconstructionEngineBase
-from .geometry import PlyIO, PointCloudProcessor
-from .input import S2InputLoader, S2InputValidator, ValidationReport
-from .models import (
-    BoundingBox3D,
-    CameraIntrinsics,
-    CameraPose,
-    FeatureObservation,
-    LocalizationInfo,
-    PointCloudData,
-    ReconstructionQuality,
-    S2Observation,
-    S2Payload,
-    S3ReconstructionResult,
-    S3Status,
-    SpatialReference,
-)
-from .pipeline import S3ReconstructionPipeline
-from .preprocessing import PreparedReconstructionData, PreparedTrack, ReconstructionDataPreparer
-from .quality import QualityEvaluator, S3FailureReason, S3ReconstructionError
-from .reconstructor import Reconstructor
-
-__all__ = [
-    "Reconstructor",
-    "S3ReconstructionPipeline",
-    "DefaultReconstructionEngine",
-    "MultiViewTriangulator",
-    "ReconstructionEngineBase",
-    "S2InputLoader",
-    "S2InputValidator",
-    "ValidationReport",
-    "ReconstructionDataPreparer",
-    "PreparedTrack",
-    "PreparedReconstructionData",
-    "PlyIO",
-    "PointCloudProcessor",
-    "QualityEvaluator",
-    "S3FailureReason",
-    "S3ReconstructionError",
-    "S3Status",
-    "CameraIntrinsics",
-    "CameraPose",
-    "LocalizationInfo",
-    "FeatureObservation",
-    "S2Observation",
-    "S2Payload",
-    "BoundingBox3D",
-    "SpatialReference",
-    "ReconstructionQuality",
-    "PointCloudData",
-    "S3ReconstructionResult",
-]
+__all__ = ["run_s3", "S3Contract"]
