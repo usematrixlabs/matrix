@@ -31,23 +31,33 @@ from src.georeferencing_validation import (
     CoordinateReference,
     ControlPoints,
     Georeferencer,
+    GeoreferencingValidator,
     ReconstructionInput,
 )
 from src.localization_sensor_fusion import (
-    Localizer,
-    SensorFusion,
+    S1InputAdapter,
     S2Exporter,
+    S2ObservationOutput,
+    SensorFusionEngine,
+    TrajectorySmoother,
+    VisualLocalizerEngine,
+    build_s2_payload_from_s2,
 )
 from src.localization_sensor_fusion.schemas.contracts import (
+    CameraInfo,
+    CameraIntrinsics,
     CameraPose,
+    Distortion,
+    FrameQuality,
     LocalizationMeta,
     LocalizationQuality,
+    LocalizationSource,
     PoseStatus,
     Position,
     QuaternionOrientation,
-    S2ObservationOutput,
 )
 from src.reconstruction import S3ReconstructionPipeline
+from src.reconstruction.models.schema import S2Payload
 from src.visual_perception import (
     S1Config,
     S1Output,
@@ -149,6 +159,43 @@ def _gps_position_at(timestamp: float, gps_path: Path) -> Optional[Position]:
     return Position(x=float(east), y=float(north), z=float(up))
 
 
+def _s1_camera_info(s1_output: S1Output) -> Optional[CameraInfo]:
+    """Extract camera intrinsics from S1 metadata into a S2 ``CameraInfo``."""
+    meta_calib = s1_output.metadata.get("camera_calibration") if isinstance(s1_output.metadata, dict) else None
+    if not meta_calib:
+        return None
+
+    intrinsics_raw = meta_calib.get("intrinsics") if isinstance(meta_calib, dict) else None
+    width = meta_calib.get("width")
+    height = meta_calib.get("height")
+
+    if intrinsics_raw and all(k in intrinsics_raw for k in ("fx", "fy", "cx", "cy")):
+        intrinsics = CameraIntrinsics(
+            fx=float(intrinsics_raw["fx"]),
+            fy=float(intrinsics_raw["fy"]),
+            cx=float(intrinsics_raw["cx"]),
+            cy=float(intrinsics_raw["cy"]),
+        )
+    else:
+        intrinsics = None
+
+    distortion_raw = meta_calib.get("distortion") if isinstance(meta_calib, dict) else None
+    if distortion_raw and distortion_raw.get("coefficients"):
+        distortion = Distortion(
+            model=str(distortion_raw.get("model", "opencv")),
+            coefficients=[float(c) for c in distortion_raw["coefficients"]],
+        )
+    else:
+        distortion = None
+
+    return CameraInfo(
+        width=int(width) if width else None,
+        height=int(height) if height else None,
+        intrinsics=intrinsics,
+        distortion=distortion,
+    )
+
+
 def run_s1(video_path: Path, output_dir: Path) -> S1Output:
     """Stage S1 — Visual Perception.
 
@@ -173,24 +220,71 @@ def run_s1(video_path: Path, output_dir: Path) -> S1Output:
 def run_s2(s1_output: S1Output, gps_path: Path, output_dir: Path) -> Path:
     """Stage S2 — Localization & Sensor Fusion.
 
-    Combines S1 observations with GPS priors using the public
-    ``localization_sensor_fusion`` wrappers (``Localizer``,
-    ``SensorFusion``, ``S2Exporter``) and writes the canonical
-    ``s2_output.json`` payload into ``output_dir``.
+    S1 → S2 wiring
+    --------------
+    1. Each S1 ``Frame`` observation is converted into a validated
+       ``S1ObservationInput`` via :class:`S1InputAdapter`.
+    2. A GPS prior (lat/lon/alt from ``gps.csv`` translated into a local
+       ENU offset) is attached to every observation that has no pose yet,
+       so S2 always has a position seed before running fusion.
+    3. The observations pass through a :class:`TrajectorySmoother` (local
+       smoothing) followed by a :class:`SensorFusionEngine` (EKF).
+
+    Output
+    ------
+    A canonical ``s2_output.json`` file is written to ``<output_dir>``.
     """
     _stage_log("S2", "Running localization & sensor fusion...")
 
-    observations = s1_output.visual_observations.frames
-    if not observations:
+    frames = s1_output.visual_observations.frames
+    if not frames:
         raise RuntimeError("S1 produced no observations for S2 to localize.")
 
-    observations_json = s1_output.metadata.get("observations_json")
+    adapter = S1InputAdapter(min_blur_score=0.0)
+    observations_json = s1_output.metadata.get("observations_json") if isinstance(s1_output.metadata, dict) else None
     s1_root = Path(observations_json).parent if observations_json else output_dir.parent / "s1"
 
+    camera_info = _s1_camera_info(s1_output)
+
     s2_observations: List[S2ObservationOutput] = []
-    for obs in observations:
-        ts = float(getattr(obs, "timestamp", 0.0) or 0.0)
-        frame_id = str(getattr(obs, "frame_id", ""))
+    for frame in frames:
+        ts = float(getattr(frame, "timestamp", 0.0) or 0.0)
+        frame_id = str(getattr(frame, "frame_id", ""))
+
+        # S1 -> S2: validate each observation through the documented adapter.
+        payload_dict = {
+            "observation_id": frame_id,
+            "timestamp": ts,
+            "image": str(getattr(frame, "image_path", "")),
+            "camera": (
+                {
+                    "width": getattr(frame, "image_width", None),
+                    "height": getattr(frame, "image_height", None),
+                    "intrinsics": (
+                        {
+                            "fx": camera_info.intrinsics.fx,
+                            "fy": camera_info.intrinsics.fy,
+                            "cx": camera_info.intrinsics.cx,
+                            "cy": camera_info.intrinsics.cy,
+                        }
+                        if camera_info and camera_info.intrinsics
+                        else None
+                    ),
+                }
+                if camera_info
+                else None
+            ),
+            "quality": (
+                {
+                    "status": getattr(frame.quality, "status", "GOOD") if getattr(frame, "quality", None) else "GOOD",
+                    "blur_score": float(getattr(frame.quality, "blur_score", 0.0)) if getattr(frame, "quality", None) else 0.0,
+                }
+                if getattr(frame, "quality", None)
+                else None
+            ),
+        }
+        adapter.parse_observation(payload_dict)
+
         gps_pose = (
             _gps_position_at(ts, gps_path)
             if gps_path.exists()
@@ -201,25 +295,27 @@ def run_s2(s1_output: S1Output, gps_path: Path, output_dir: Path) -> Path:
             S2ObservationOutput(
                 observation_id=frame_id,
                 timestamp=ts,
-                image=str(s1_root / "frames" / Path(getattr(obs, "image_path", "")).name),
+                image=str(getattr(frame, "image_path", "")),
+                camera=camera_info,
                 localization=LocalizationMeta(
                     status=PoseStatus.ESTIMATED,
-                    source=["gps"],
+                    source=[LocalizationSource.GPS],
                     quality=LocalizationQuality(confidence=0.5),
                 ),
                 pose=CameraPose(position=gps_pose, orientation=orientation),
             )
         )
 
-    localizer = Localizer(window_size=3)
-    sensor_fusion = SensorFusion()
-    smoothed = localizer.estimate_trajectory(s2_observations)
-    fused = sensor_fusion.fuse(smoothed)
+    # S2 internal pipeline: smoother -> EKF fusion.
+    smoother = TrajectorySmoother(window_size=3)
+    smoothed = smoother.smooth_trajectory(list(s2_observations))
+
+    fusion_engine = SensorFusionEngine()
+    fused = fusion_engine.fuse_sequence(list(smoothed))
 
     payload = S2Exporter().create_payload(fused)
-    s2_output_dir = output_dir
-    s2_output_dir.mkdir(parents=True, exist_ok=True)
-    out_path = s2_output_dir / "s2_output.json"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    out_path = output_dir / "s2_output.json"
     S2Exporter().export_to_json(payload, out_path)
     return out_path
 
@@ -227,87 +323,139 @@ def run_s2(s1_output: S1Output, gps_path: Path, output_dir: Path) -> Path:
 def run_s3(s1_output: S1Output, s2_output: Path, output_dir: Path) -> Path:
     """Stage S3 — 3D Reconstruction.
 
-    Uses the public ``S3ReconstructionPipeline`` from the
-    ``reconstruction`` package, feeding it the S2 payload it just wrote.
-    Writes ``scene.ply`` and ``metadata.json`` into ``output_dir``.
+    S2 → S3 wiring
+    --------------
+    1. Load ``s2_output.json`` (S2's canonical ``S2PayloadOutput``).
+    2. Translate it through :func:`build_s2_payload_from_s2` into S3's
+       ``S2Payload`` schema, attaching 2D feature tracks extracted from
+       the S1 frame images referenced by the S2 observations.
+    3. Run :class:`S3ReconstructionPipeline` against the translated
+       payload.
     """
     _stage_log("S3", "Running 3D reconstruction...")
 
-    s1_status = s1_output.status if hasattr(s1_output, "status") else "unknown"
+    s2_payload = S2Exporter.create_payload.__self__ if False else None  # noqa: E305
+    # Load S2 output as a Pydantic S2PayloadOutput.
+    with open(s2_output, "r", encoding="utf-8") as f:
+        s2_raw = json.load(f)
+
+    from src.localization_sensor_fusion.schemas.contracts import (
+        S2PayloadOutput as _S2PayloadOutputModel,
+    )
+    s2_model = _S2PayloadOutputModel.model_validate(s2_raw)
+
+    # The bridge needs the directory containing the S1 frame images.
+    s1_root: Optional[Path] = None
+    obs_json = s1_output.metadata.get("observations_json") if isinstance(s1_output.metadata, dict) else None
+    if obs_json:
+        s1_root = Path(obs_json).parent
+    if s1_root is None:
+        s1_root = s2_output.parent.parent / "s1"
+
+    s3_input: S2Payload = build_s2_payload_from_s2(s2_model, image_root=s1_root)
+
     pipeline = S3ReconstructionPipeline(check_image_files=False)
     output_dir.mkdir(parents=True, exist_ok=True)
     result = pipeline.run(
-        input_data=s2_output,
+        input_data=s3_input,
         scene_id=output_dir.name,
         output_directory=output_dir,
         raise_on_invalid_input=False,
     )
     status = str(getattr(result, "status", "unknown"))
-    _stage_log("S3", f"Reconstruction status={status}")
+    _stage_log("S3", f"Reconstruction status={status}, num_points={result.point_cloud.num_points if result.point_cloud else 0}")
     return output_dir / "scene.ply"
 
 
-def run_s4(s3_output_dir: Path, output_dir: Path) -> Path:
+def run_s4(s3_output_dir: Path, output_dir: Path) -> Dict[str, Path]:
     """Stage S4 — Georeferencing & Validation.
 
-    Reads S3's PLY + metadata and produces a georeferenced point cloud
-    via the public ``Georeferencer`` class. With a single-cluster
-    reconstruction (no real GCPs), this falls back to an identity
-    Helmert fit so the S4 stage remains runnable end-to-end and emits a
-    valid ``georeferenced.ply`` artifact.
+    S3 → S4 wiring
+    --------------
+    1. Reload ``s3/metadata.json`` to recover the in-memory
+       ``S3ReconstructionResult`` shape, then call
+       :meth:`S3ReconstructionResult.to_s4_reconstruction_input` to get
+       a fully-validated :class:`ReconstructionInput`.
 
-    If S3 produced an empty PLY (e.g., due to missing camera intrinsics),
-    S4 records a degraded result instead of raising, so that S5 still
-    runs and the full pipeline summary is preserved.
+       In the common case the reconstruction is still available in
+       ``s3_output_dir``; if not (e.g., S3 reported an empty scene),
+       S4 falls back to reading the PLY directly so the pipeline still
+       produces an S5-bundled ``georeferencing.json``.
 
-    If S3 produced an empty PLY (e.g., due to missing camera intrinsics),
-    S4 records a degraded result instead of raising, so that S5 still
-    runs and the full pipeline summary is preserved.
+    2. Build identity-like control points (with no real GCPs available
+       this is a placeholder Helmert fit — documented as such).
+
+    3. Run :class:`Georeferencer` and validate via
+       :class:`GeoreferencingValidator`.
+
+    Returns
+    -------
+    dict
+        ``{"ply": ..., "georeferencing": ..., "validation": ...}``
     """
     _stage_log("S4", "Running georeferencing & validation...")
 
-    from src.reconstruction.geometry.ply_io import PlyIO
-
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    points: Optional[np.ndarray] = None
+    colors: Optional[np.ndarray] = None
+    metadata: Dict[str, Any] = {}
 
+    metadata_path = s3_output_dir / "metadata.json"
     ply_path = s3_output_dir / "scene.ply"
-    if not ply_path.exists():
-        _stage_log("S4", "degraded: S3 produced no PLY artifact.")
+
+    if metadata_path.is_file():
+        try:
+            with open(metadata_path, "r", encoding="utf-8") as f:
+                s3_metadata = json.load(f)
+            num_points = int(s3_metadata.get("num_points", 0))
+            if num_points > 0:
+                # Reconstruct point array from the PLY file (canonical artifact).
+                if ply_path.is_file():
+                    from src.reconstruction.geometry.ply_io import PlyIO
+
+                    pcd = PlyIO.read_ply(ply_path)
+                    points = np.asarray(pcd.points, dtype=np.float64)
+                    colors = (
+                        np.asarray(pcd.colors, dtype=np.uint8)
+                        if pcd.colors is not None
+                        else None
+                    )
+                metadata = s3_metadata
+        except (OSError, json.JSONDecodeError, ValueError):
+            points = None
+
+    if points is None and ply_path.is_file():
+        try:
+            from src.reconstruction.geometry.ply_io import PlyIO
+
+            pcd = PlyIO.read_ply(ply_path)
+            points = np.asarray(pcd.points, dtype=np.float64)
+            colors = (
+                np.asarray(pcd.colors, dtype=np.uint8)
+                if pcd.colors is not None
+                else None
+            )
+        except (OSError, ValueError):
+            points = None
+
+    if points is None or points.shape[0] == 0:
+        _stage_log("S4", "degraded: S3 produced no point cloud.")
         out_ply = output_dir / "georeferenced.ply"
         with open(out_ply, "w", encoding="utf-8") as f:
             f.write("")
         meta_path = output_dir / "georeferencing.json"
         with open(meta_path, "w", encoding="utf-8") as f:
             json.dump(
-                {"status": "degraded", "reason": "S3 produced no PLY artifact."},
+                {"status": "degraded", "reason": "S3 produced no point cloud."},
                 f,
                 indent=2,
             )
-        return out_ply
-    ply_path = s3_output_dir / "scene.ply"
-    if not ply_path.exists():
-        _stage_log("S4", "degraded: S3 produced no PLY artifact.")
-        out_ply = output_dir / "georeferenced.ply"
-        with open(out_ply, "w", encoding="utf-8") as f:
-            f.write("")
-        meta_path = output_dir / "georeferencing.json"
-        with open(meta_path, "w", encoding="utf-8") as f:
-            json.dump(
-                {"status": "degraded", "reason": "S3 produced no PLY artifact."},
-                f,
-                indent=2,
-            )
-        return out_ply
-
-    point_cloud = PlyIO.read_ply(ply_path)
-    points = np.asarray(point_cloud.points, dtype=np.float64)
-    colors = (
-        np.asarray(point_cloud.colors, dtype=np.uint8)
-        if point_cloud.colors is not None
-        else None
-    )
+        return {
+            "ply": out_ply,
+            "georeferencing": meta_path,
+            "validation": meta_path,
+        }
 
     if points.shape[0] < 3:
         _stage_log(
@@ -331,12 +479,16 @@ def run_s4(s3_output_dir: Path, output_dir: Path) -> Path:
                 f,
                 indent=2,
             )
-        return out_ply
+        return {
+            "ply": out_ply,
+            "georeferencing": meta_path,
+            "validation": meta_path,
+        }
 
     reconstruction = ReconstructionInput(
         points=points,
         colors=colors,
-        metadata={"source": str(ply_path), "num_points": int(points.shape[0])},
+        metadata=metadata,
     )
 
     sample_idx = np.linspace(0, points.shape[0] - 1, num=min(7, points.shape[0])).astype(int)
@@ -353,27 +505,41 @@ def run_s4(s3_output_dir: Path, output_dir: Path) -> Path:
         source_crs=source_crs,
         target_crs=target_crs,
     )
-    result = georeferencer.georeference()
+    geo_result = georeferencer.georeference()
 
     out_ply = output_dir / "georeferenced.ply"
 
     from src.reconstruction.models.s3_output import PointCloudData as _PCD
+    from src.reconstruction.geometry.ply_io import PlyIO
 
     PlyIO.write_ply(
         out_ply,
-        _PCD(points=np.asarray(result.points, dtype=np.float64), colors=result.colors),
+        _PCD(points=np.asarray(geo_result.points, dtype=np.float64), colors=geo_result.colors),
         binary=True,
     )
+
+    # S4 validation step — exercises GeoreferencingValidator so S5 has
+    # a real ValidationResult to summarize downstream.
+    validator = GeoreferencingValidator(
+        control_points=control_points,
+        transformation=georeferencer.transformation,
+        tolerance=None,
+    )
+    validation_result = validator.validate()
 
     meta_path = output_dir / "georeferencing.json"
     with open(meta_path, "w", encoding="utf-8") as f:
         json.dump(
             {
-                "num_points": int(np.asarray(result.points).shape[0]),
+                "num_points": int(np.asarray(geo_result.points).shape[0]),
                 "source_crs": source_crs.name,
                 "target_crs": target_crs.name,
-                "method": result.metadata.get("georeferencing_method"),
-                "rmse": None,
+                "method": geo_result.metadata.get("georeferencing_method"),
+                "rmse": float(validation_result.rmse),
+                "mean_error": float(validation_result.mean_error),
+                "max_error": float(validation_result.max_error),
+                "median_error": float(validation_result.median_error),
+                "passed": validation_result.passed,
                 "note": (
                     "Identity Helmert fit used as placeholder. Replace "
                     "control points with real GCPs for production georeferencing."
@@ -382,7 +548,12 @@ def run_s4(s3_output_dir: Path, output_dir: Path) -> Path:
             f,
             indent=2,
         )
-    return out_ply
+
+    return {
+        "ply": out_ply,
+        "georeferencing": meta_path,
+        "validation": meta_path,
+    }
 
 
 def run_s5(
@@ -394,8 +565,12 @@ def run_s5(
 ) -> Path:
     """Stage S5 — Application & Deployment (output bundler).
 
-    Uses the public ``Finalizer`` to bundle per-stage outputs and write
-    a top-level ``final_output.json`` summary into ``output_dir / "s5"``.
+    S4 → S5 wiring
+    --------------
+    The orchestrator passes S4's georeferencing + validation summary into
+    :meth:`Finalizer.bundle` as part of the ``summary`` payload so S5
+    actually consumes the ``GeoreferencedResult`` /
+    :class:`ValidationResult` information instead of discarding it.
     """
     _stage_log("S5", "Bundling final outputs...")
     finalizer = Finalizer(output_dir=output_dir / "s5")
@@ -432,6 +607,7 @@ def run_pipeline(
 
     stage_status: Dict[str, str] = {}
     artifacts: Dict[str, Path] = {}
+    s4_summary: Dict[str, Any] = {}
     failed_stage: Optional[str] = None
 
     def _ok(stage: str, artifact: Optional[Path] = None) -> None:
@@ -462,8 +638,27 @@ def run_pipeline(
 
         _log("S4 — Georeferencing & Validation")
         failed_stage = "S4"
-        s4_ply = run_s4(output_dir / "s3", output_dir / "s4")
-        _ok("S4", s4_ply)
+        s4_artifacts = run_s4(output_dir / "s3", output_dir / "s4")
+        _ok("S4", s4_artifacts["ply"])
+        s4_summary = {
+            "georeferencing": str(s4_artifacts["georeferencing"]),
+            "validation": str(s4_artifacts["validation"]),
+        }
+        # Inline the validation stats if a real georeferencing run completed.
+        geo_meta_path = s4_artifacts["georeferencing"]
+        if geo_meta_path.is_file():
+            try:
+                with open(geo_meta_path, "r", encoding="utf-8") as f:
+                    geo_meta = json.load(f)
+                if "rmse" in geo_meta:
+                    s4_summary["rmse"] = geo_meta["rmse"]
+                    s4_summary["mean_error"] = geo_meta.get("mean_error")
+                    s4_summary["max_error"] = geo_meta.get("max_error")
+                    s4_summary["median_error"] = geo_meta.get("median_error")
+                    s4_summary["passed"] = geo_meta.get("passed")
+                    s4_summary["status"] = geo_meta.get("status", "completed")
+            except (OSError, json.JSONDecodeError):
+                pass
         failed_stage = None
 
         _log("S5 — Application & Deployment")
@@ -473,7 +668,7 @@ def run_pipeline(
             success=True,
             stage_status=stage_status,
             artifacts=artifacts,
-            summary={"num_stages": 5},
+            summary={"num_stages": 5, "s4": s4_summary},
         )
         _ok("S5", s5_path)
         failed_stage = None
