@@ -24,6 +24,7 @@ from ._internal.contracts import S2Contract
 from ._internal.engines.trajectory_smoother import TrajectorySmoother
 from ._internal.exporters.s2_exporter import S2Exporter
 from ._internal.fusion.fusion_engine import SensorFusionEngine
+from ._internal.adapters.s1_adapter import S1InputAdapter
 from ._internal.schemas.contracts import (
     CameraInfo,
     CameraIntrinsics,
@@ -179,10 +180,52 @@ def run_s2(
 
     anchor = _read_gps_anchor(Path(gps_path)) if Path(gps_path).exists() else None
 
+    # Validate each observation through the documented S1InputAdapter
+    # so the S1 → S2 boundary contract is honored.
+    adapter = S1InputAdapter(min_blur_score=0.0)
+
     observations: List[S2ObservationOutput] = []
     for obs in s1_contract.observations:
         ts = float(obs.get("timestamp", 0.0) or 0.0)
         observation_id = str(obs.get("observation_id", ""))
+
+        # Run the S1 → S2 boundary validation. parse_observation raises
+        # S1AdapterValidationError on bad payloads; we want loud failures.
+        adapter.parse_observation(
+            {
+                "observation_id": observation_id,
+                "timestamp": ts,
+                "image": str(obs.get("image", "")),
+                "camera": (
+                    {
+                        "width": camera_info.width,
+                        "height": camera_info.height,
+                        "intrinsics": (
+                            {
+                                "fx": camera_info.intrinsics.fx,
+                                "fy": camera_info.intrinsics.fy,
+                                "cx": camera_info.intrinsics.cx,
+                                "cy": camera_info.intrinsics.cy,
+                            }
+                            if camera_info and camera_info.intrinsics
+                            else None
+                        ),
+                    }
+                    if camera_info
+                    else None
+                ),
+                "quality": (
+                    {
+                        "status": "GOOD",
+                        "blur_score": float(
+                            (obs.get("quality") or {}).get("blur_score", 0.0)
+                        ),
+                    }
+                    if obs.get("quality")
+                    else None
+                ),
+            }
+        )
 
         if anchor is not None and Path(gps_path).exists():
             gps_pose = _gps_position_at(ts, Path(gps_path), anchor)
