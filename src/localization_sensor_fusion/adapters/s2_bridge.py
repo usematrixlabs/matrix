@@ -202,16 +202,14 @@ def _build_observation(
 ) -> S2Observation:
     """Construct one S3 S2Observation from an S2 output + matched keypoints."""
     features: List[FeatureObservation] = []
-    for kp_idx, (xy, track_id) in enumerate(
-        ((frame_keypoints[i, 0], frame_keypoints[i, 1]), tid)
-        for i, tid in frame_track_indices.items()
-    ):
-        if i >= frame_keypoints.shape[0]:
+    for kp_idx, track_id in frame_track_indices.items():
+        if kp_idx >= frame_keypoints.shape[0]:
             continue
+        x, y = float(frame_keypoints[kp_idx, 0]), float(frame_keypoints[kp_idx, 1])
         features.append(
             FeatureObservation(
                 feature_id=f"{observation_id}_f{kp_idx:04d}",
-                xy=(float(xy[0]), float(xy[1])),
+                xy=(x, y),
                 track_id=f"trk_{track_id:06d}",
                 response=1.0,
             )

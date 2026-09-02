@@ -112,7 +112,9 @@ def test_bridge_produces_features_with_track_ids(tmp_path: Path) -> None:
     s2_observations = []
     for i in range(4):
         img_rel = f"frames/frame_{i:03d}.jpg"
-        _write_synthetic_frame(tmp_path / img_rel, seed=42 + i)
+        # Each successive frame is shifted by a few pixels so the
+        # ORB matcher can find inlier correspondences across frames.
+        _write_synthetic_frame(tmp_path / img_rel, seed=42, shift_x=i * 4, shift_y=i * 2)
         s2_observations.append(
             _make_s2_observation(
                 observation_id=f"frame_{i:03d}",
