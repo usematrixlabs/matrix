@@ -25,3 +25,6 @@ testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
 pythonpath = ["src"]
+markers = [
+    "benchmark: tests requiring benchmark datasets / longer execution",
+]
