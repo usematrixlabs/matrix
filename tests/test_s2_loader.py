@@ -1,6 +1,7 @@
 """Unit tests for S3 Input Loader."""
 
 import json
+from dataclasses import asdict
 from pathlib import Path
 import pytest
 
@@ -11,7 +12,7 @@ from fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 def test_load_from_dict_valid():
     payload, gt_points, _ = generate_synthetic_uav_dataset(num_frames=4, num_points=20)
-    data = payload.to_dict()
+    data = asdict(payload)
 
     loader = S2InputLoader()
     loaded_payload = loader.load_from_dict(data)
@@ -27,7 +28,7 @@ def test_load_from_file_valid(tmp_path: Path):
     json_path = tmp_path / "s2_output.json"
     
     with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(payload.to_dict(), f)
+        json.dump(asdict(payload), f)
 
     loader = S2InputLoader()
     loaded_payload = loader.load_from_file(json_path)

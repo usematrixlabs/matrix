@@ -34,7 +34,7 @@ def test_pipeline_end_to_end_synthetic(tmp_path: Path):
     with open(out_dir / "metadata.json", "r", encoding="utf-8") as f:
         meta = json.load(f)
     assert meta["scene_id"] == "test_scene_001"
-    assert meta["geometry"]["point_count"] == result.point_cloud.num_points
+    assert meta["num_points"] == result.point_cloud.num_points
     assert meta["spatial_reference"]["coordinate_frame"] == "S3_LOCAL"
 
 

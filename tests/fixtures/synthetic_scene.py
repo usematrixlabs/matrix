@@ -46,10 +46,10 @@ def generate_synthetic_uav_dataset(
     cy = 540.0
     intrinsics = CameraIntrinsics(
         fx=fx, fy=fy, cx=cx, cy=cy,
-        model="PINHOLE",
-        image_width=width, image_height=height,
+        width=width, height=height,
+        distortion_model="PINHOLE",
     )
-    k_mat = intrinsics.k_matrix
+    k_mat = intrinsics.to_matrix()
 
     # 2. Ground truth 3D landmarks in local frame [X: -15 to 15, Y: -15 to 15, Z: 0 to 4]
     gt_points = np.zeros((num_points, 3), dtype=np.float64)
@@ -132,27 +132,23 @@ def generate_synthetic_uav_dataset(
             observation_id=obs_id,
             timestamp=timestamp,
             image_path=img_path,
-            image_width=width,
-            image_height=height,
             camera=intrinsics,
             pose=pose,
             localization=LocalizationInfo(
                 status="ESTIMATED",
                 confidence=0.95,
-                source="VISUAL_GPS_FUSED",
+                source=["VISUAL_GPS_FUSED"],
             ),
             features=features,
-            metadata={"drone_altitude": 25.0, "x_pos": x_pos},
         ))
 
     payload = S2Payload(
         schema_version="1.0.0",
         job_id="job_synthetic_uav_test",
-        source_system="S2_LOCALIZATION_SENSOR_FUSION",
-        timestamp_created=1772456000.0,
         coordinate_frame="S2_LOCAL",
         units="meters",
         observations=observations,
+        metadata={"source_system": "S2_LOCALIZATION_SENSOR_FUSION", "timestamp_created": 1772456000.0},
     )
 
     metadata = {

@@ -30,11 +30,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from src.application_deployment import S5Contract, run_s5
-from src.georeferencing_validation import S4Contract, run_s4
-from src.localization_sensor_fusion import S2Contract, run_s2
-from src.reconstruction import S3Contract, run_s3
-from src.visual_perception import S1Output, s1_output_to_contract
+from application_deployment import S5Contract, run_s5
+from georeferencing_validation import S4Contract, run_s4
+from localization_sensor_fusion import S2Contract, run_s2
+from reconstruction import S3Contract, run_s3
+from visual_perception import S1Output, run_s1, s1_output_to_contract
 
 
 PIPELINE_TAG = "[MATRIX]"

@@ -26,8 +26,12 @@ def test_s3_to_s4_seamless_integration():
 
     assert s3_result.point_cloud.num_points >= 15
 
-    # 3. Direct conversion to S4 ReconstructionInput
-    s4_input = s3_result.to_s4_reconstruction_input()
+    # 3. Build S4 ReconstructionInput from S3 point cloud (no cross-subsystem import)
+    s4_input = ReconstructionInput(
+        points=s3_result.point_cloud.points,
+        colors=s3_result.point_cloud.colors,
+        metadata=s3_result.metadata if hasattr(s3_result, "metadata") else {},
+    )
     assert isinstance(s4_input, ReconstructionInput)
     assert s4_input.num_points == s3_result.point_cloud.num_points
     assert s4_input.points.shape == (s3_result.point_cloud.num_points, 3)
