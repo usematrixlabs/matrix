@@ -1,7 +1,7 @@
 """Unit tests for S1 Input Adapter."""
 
 import pytest
-from src.localization_sensor_fusion._internal.adapters.s1_adapter import (
+from localization_sensor_fusion._internal.adapters.s1_adapter import (
     S1AdapterValidationError,
     S1InputAdapter,
 )

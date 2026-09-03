@@ -27,16 +27,16 @@ from typing import List
 import cv2
 import numpy as np
 
-from src.georeferencing_validation import run_s4
-from src.localization_sensor_fusion import S2Contract, run_s2
-from src.localization_sensor_fusion._internal.schemas.contracts import (
+from georeferencing_validation import run_s4
+from localization_sensor_fusion import S2Contract, run_s2
+from localization_sensor_fusion._internal.schemas.contracts import (
     S2ObservationOutput,
     S2PayloadOutput,
 )
-from src.reconstruction import run_s3
-from src.application_deployment import run_s5
-from src.visual_perception import S1Output, s1_output_to_contract
-from src.visual_perception._internal.types import (
+from reconstruction import run_s3
+from application_deployment import run_s5
+from visual_perception import S1Output, s1_output_to_contract
+from visual_perception._internal.types import (
     Frame,
     QualityAssessment,
     VisualObservations,
@@ -324,8 +324,8 @@ def test_s4_degraded_path_does_not_break_s5_wiring(tmp_path: Path) -> None:
 
 def test_run_s2_invokes_s1_input_adapter(monkeypatch, tmp_path: Path) -> None:
     """The S1→S2 wiring must actually invoke S1InputAdapter.parse_observation."""
-    from src.localization_sensor_fusion import _internal as lsf_internal
-    from src.localization_sensor_fusion._internal.adapters import s1_adapter as s1a
+    from localization_sensor_fusion import _internal as lsf_internal
+    from localization_sensor_fusion._internal.adapters import s1_adapter as s1a
 
     s1_output = _fake_s1_output(tmp_path / "s1")
     _write_gps_csv(tmp_path / "gps.csv")

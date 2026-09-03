@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from src.localization_sensor_fusion._internal.engines.colmap_engine import VisualLocalizerEngine
+from localization_sensor_fusion._internal.engines.colmap_engine import VisualLocalizerEngine
 
 def test_pnp_pose_estimation_success():
     K = np.array([

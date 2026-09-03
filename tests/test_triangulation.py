@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from src.reconstruction._internal.engine.triangulation import MultiViewTriangulator
+from reconstruction._internal.engine.triangulation import MultiViewTriangulator
 from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 

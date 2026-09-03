@@ -8,10 +8,13 @@ Public integration surface
 
 Everything else (control points, CRS, Helmert, input validator,
 georeferencer, IO helpers) lives under
-``src.georeferencing_validation._internal``.
+``georeferencing_validation._internal``.
 """
 
 from ._internal.contracts import S4Contract
 from .interface import run_s4
 
-__all__ = ["run_s4", "S4Contract"]
+# Expose internal modules for testing
+from . import _internal
+
+__all__ = ["run_s4", "S4Contract", "_internal"]

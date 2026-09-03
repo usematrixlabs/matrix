@@ -13,10 +13,10 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from src.visual_perception import S1Config, S1Output
-from src.visual_perception._internal.types import Frame
-from src.visual_perception._internal.frame_extractor import FrameExtractor
-from src.visual_perception._internal.pipeline import S1Pipeline
+from visual_perception import S1Config, S1Output
+from visual_perception._internal.types import Frame
+from visual_perception._internal.frame_extractor import FrameExtractor
+from visual_perception._internal.pipeline import S1Pipeline
 
 
 def create_sample_video(

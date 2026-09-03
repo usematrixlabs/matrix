@@ -3,8 +3,8 @@
 import numpy as np
 import pytest
 
-from src.reconstruction._internal.models.schema import S3Status
-from src.reconstruction._internal.quality.evaluator import QualityEvaluator
+from reconstruction._internal.models.schema import S3Status
+from reconstruction._internal.quality.evaluator import QualityEvaluator
 
 
 def test_evaluate_zero_points():

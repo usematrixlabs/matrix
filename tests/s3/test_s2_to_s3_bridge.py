@@ -21,11 +21,11 @@ import cv2
 import numpy as np
 import pytest
 
-from src.reconstruction._internal.s2_to_s3_bridge import (
+from reconstruction._internal.s2_to_s3_bridge import (
     build_s2_payload,
     build_s2_payload_from_contract,
 )
-from src.localization_sensor_fusion._internal.schemas.contracts import (
+from localization_sensor_fusion._internal.schemas.contracts import (
     CameraInfo,
     CameraIntrinsics,
     CameraPose,
@@ -107,7 +107,7 @@ def _make_s2_observation(
 
 def test_s2_bridge_requires_opencv() -> None:
     """Sanity check that the bridge module imports cleanly."""
-    from src.reconstruction._internal.s2_to_s3_bridge import _require_cv2
+    from reconstruction._internal.s2_to_s3_bridge import _require_cv2
 
     _require_cv2()
 

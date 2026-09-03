@@ -12,7 +12,7 @@ Public integration surface
 - :class:`S1Contract` / :func:`s1_output_to_contract` — the
   Pydantic-boundary types for the S1 → S2 contract.
 
-Anything else in S1 lives under ``src.visual_perception._internal`` and
+Anything else in S1 lives under ``visual_perception._internal`` and
 is **not** importable from outside the package.
 """
 
@@ -21,10 +21,14 @@ from ._internal.contracts import S1Contract, s1_output_to_contract
 from ._internal.types import S1Output
 from .interface import run_s1
 
+# Expose internal modules for testing
+from . import _internal
+
 __all__ = [
     "run_s1",
     "S1Output",
     "S1Config",
     "S1Contract",
     "s1_output_to_contract",
+    "_internal",
 ]

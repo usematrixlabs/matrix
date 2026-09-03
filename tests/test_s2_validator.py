@@ -3,8 +3,8 @@
 import copy
 import pytest
 
-from src.reconstruction._internal.input.validator import S2InputValidator
-from src.reconstruction._internal.models.schema import CameraIntrinsics, CameraPose, S3Status
+from reconstruction._internal.input.validator import S2InputValidator
+from reconstruction._internal.models.schema import CameraIntrinsics, CameraPose, S3Status
 from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 

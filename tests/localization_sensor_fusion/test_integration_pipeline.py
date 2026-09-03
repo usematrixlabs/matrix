@@ -2,9 +2,9 @@
 
 import numpy as np
 
-from src.localization_sensor_fusion._internal.engines.colmap_engine import VisualLocalizerEngine
-from src.localization_sensor_fusion._internal.fusion.fusion_engine import SensorFusionEngine
-from src.localization_sensor_fusion._internal.schemas.contracts import (
+from localization_sensor_fusion._internal.engines.colmap_engine import VisualLocalizerEngine
+from localization_sensor_fusion._internal.fusion.fusion_engine import SensorFusionEngine
+from localization_sensor_fusion._internal.schemas.contracts import (
     CameraPose,
     Position,
     QuaternionOrientation,

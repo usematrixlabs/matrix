@@ -8,10 +8,13 @@ Public integration surface
   ``s2_output.json`` shape).
 
 Everything else (adapters, engines, fusion, exporters, schemas) lives
-under ``src.localization_sensor_fusion._internal``.
+under ``localization_sensor_fusion._internal``.
 """
 
 from ._internal.contracts import S2Contract
 from .interface import run_s2
 
-__all__ = ["run_s2", "S2Contract"]
+# Expose internal modules for testing
+from . import _internal
+
+__all__ = ["run_s2", "S2Contract", "_internal"]

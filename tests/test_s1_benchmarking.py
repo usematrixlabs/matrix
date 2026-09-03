@@ -12,7 +12,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from src.visual_perception._internal.benchmark import S1BenchmarkRunner
+from visual_perception._internal.benchmark import S1BenchmarkRunner
 
 
 def create_bench_video(file_path: str, width: int = 320, height: int = 240, fps: float = 30.0, num_frames: int = 30) -> str:

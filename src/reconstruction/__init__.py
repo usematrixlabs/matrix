@@ -8,10 +8,13 @@ Public integration surface
 
 Everything else (engines, geometry, input adapters, models, output
 packager, preprocessing, quality evaluator, the S2→S3 bridge) lives
-under ``src.reconstruction._internal``.
+under ``reconstruction._internal``.
 """
 
 from ._internal.contracts import S3Contract
 from .interface import run_s3
 
-__all__ = ["run_s3", "S3Contract"]
+# Expose internal modules for testing
+from . import _internal
+
+__all__ = ["run_s3", "S3Contract", "_internal"]

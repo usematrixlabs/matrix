@@ -3,10 +3,10 @@
 import numpy as np
 import pytest
 
-from src.georeferencing_validation._internal.control_points import ControlPoints
-from src.georeferencing_validation._internal.crs import CoordinateReference
-from src.georeferencing_validation._internal.georeferencer import Georeferencer
-from src.georeferencing_validation._internal.input import ReconstructionInput
+from georeferencing_validation._internal.control_points import ControlPoints
+from georeferencing_validation._internal.crs import CoordinateReference
+from georeferencing_validation._internal.georeferencer import Georeferencer
+from georeferencing_validation._internal.input import ReconstructionInput
 
 
 def test_georeferencer_end_to_end_with_colors():

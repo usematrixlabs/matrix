@@ -12,11 +12,11 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from src.visual_perception import S1Config, S1Output
-from src.visual_perception._internal.types import Frame, QualityAssessment
-from src.visual_perception._internal.frame_extractor import FrameExtractor
-from src.visual_perception._internal.quality_assessor import QualityAssessor
-from src.visual_perception._internal.pipeline import S1Pipeline
+from visual_perception import S1Config, S1Output
+from visual_perception._internal.types import Frame, QualityAssessment
+from visual_perception._internal.frame_extractor import FrameExtractor
+from visual_perception._internal.quality_assessor import QualityAssessor
+from visual_perception._internal.pipeline import S1Pipeline
 
 
 def create_textured_sharp_image(width: int = 320, height: int = 240) -> np.ndarray:

@@ -7,11 +7,14 @@ Public integration surface
 - :class:`S5Contract` — canonical Pydantic output of S5.
 
 Everything else (finalizer, dead-code alternates) lives under
-``src.application_deployment._internal`` (or has been removed — see
+``application_deployment._internal`` (or has been removed — see
 Phase G of the isolation refactor).
 """
 
 from ._internal.contracts import S5Contract
 from .interface import run_s5
 
-__all__ = ["run_s5", "S5Contract"]
+# Expose internal modules for testing
+from . import _internal
+
+__all__ = ["run_s5", "S5Contract", "_internal"]

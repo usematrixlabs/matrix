@@ -13,11 +13,11 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from src.visual_perception import S1Config, S1Output
-from src.visual_perception._internal.types import CameraCalibration
-from src.visual_perception._internal.camera_calibrator import CameraCalibrationLoader
-from src.visual_perception._internal.metadata_extractor import MetadataExtractor
-from src.visual_perception._internal.pipeline import S1Pipeline
+from visual_perception import S1Config, S1Output
+from visual_perception._internal.types import CameraCalibration
+from visual_perception._internal.camera_calibrator import CameraCalibrationLoader
+from visual_perception._internal.metadata_extractor import MetadataExtractor
+from visual_perception._internal.pipeline import S1Pipeline
 
 
 def create_calib_test_video(file_path: str, width: int = 1280, height: int = 720, fps: float = 30.0) -> str:
