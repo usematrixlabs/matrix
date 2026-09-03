@@ -33,7 +33,12 @@ from typing import Any, Dict, List, Optional, Union
 from src.application_deployment import S5Contract, run_s5
 from src.georeferencing_validation import S4Contract, run_s4
 from src.localization_sensor_fusion import S2Contract, run_s2
-from src.reconstruction import S3Contract, run_s3
+from src.reconstruction import (
+    CameraCalibration,
+    OpenCVCameraCalibrationLoader,
+    S3Contract,
+    run_s3,
+)
 from src.visual_perception import S1Output, run_s1, s1_output_to_contract
 
 
@@ -63,17 +68,42 @@ def run_pipeline(
     video_path: Union[str, Path],
     gps_path: Union[str, Path],
     output_dir: Union[str, Path],
+    calibration_path: Optional[Union[str, Path]] = None,
 ) -> PipelineResult:
     """Run the full Matrix pipeline on a single video + GPS pair.
 
     Returns a :class:`PipelineResult`. On any stage failure the pipeline
     stops, preserves all previously written outputs under ``output_dir``,
     and returns ``success=False`` with ``failed_stage`` and ``error`` set.
+
+    Parameters
+    ----------
+    video_path, gps_path, output_dir
+        Standard pipeline inputs (video, GPS CSV, output directory).
+    calibration_path : optional
+        Path to an OpenCV ``%YAML:1.0`` camera calibration file
+        (e.g. ``camera_calibration.yaml``). When supplied it is loaded
+        by :class:`OpenCVCameraCalibrationLoader` and threaded into S3
+        via :func:`run_s3`, where it undistorts observation pixel
+        coordinates before triangulation. The calibration is *not*
+        silently scaled to a different video resolution; mismatches
+        produce an explicit error.
     """
     video_path = Path(video_path)
     gps_path = Path(gps_path)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Resolve calibration (if any) before any stage runs so we can fail
+    # fast on a malformed file rather than partway through S3.
+    calibration: Optional[CameraCalibration] = None
+    if calibration_path is not None:
+        calibration = OpenCVCameraCalibrationLoader.load_from_file(calibration_path)
+        _log(
+            f"calibration: {calibration_path} "
+            f"({calibration.camera_name} {calibration.image_width}x"
+            f"{calibration.image_height}, {calibration.distortion_model})"
+        )
 
     _log("Starting pipeline")
     _log(f"video: {video_path}")
@@ -119,6 +149,7 @@ def run_pipeline(
             s2_contract=s2_contract,
             image_root=s1_root,
             output_dir=output_dir / "s3",
+            calibration=calibration,
         )
         # Validate that S3 actually produced a non-empty point cloud and a
         # real artifact on disk. PARTIAL / WARNING are legitimate S3
@@ -181,6 +212,7 @@ def run_pipeline(
                 "scene_id": s3_contract.scene_id,
                 "status": s3_contract.status,
                 "num_points": (s3_contract.point_cloud or {}).get("num_points", 0),
+                "camera_calibration": (s3_contract.metadata or {}).get("camera_calibration_summary"),
             },
             "s4": {
                 "georeferencing": s4_contract.artifact_paths.get("georeferencing"),
@@ -235,9 +267,18 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--video", required=True, type=Path, help="Path to UAV video (.mp4)")
     parser.add_argument("--gps", required=True, type=Path, help="Path to GPS CSV")
     parser.add_argument("--output", required=True, type=Path, help="Output directory for this run")
+    parser.add_argument(
+        "--calibration",
+        required=False,
+        type=Path,
+        default=None,
+        help="Optional path to an OpenCV YAML camera calibration file "
+             "(%%YAML:1.0 format). When provided, observation pixel "
+             "coordinates are undistorted in S3 before triangulation.",
+    )
     args = parser.parse_args(argv)
 
-    result = run_pipeline(args.video, args.gps, args.output)
+    result = run_pipeline(args.video, args.gps, args.output, calibration_path=args.calibration)
 
     print(json.dumps(
         {

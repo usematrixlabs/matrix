@@ -18,7 +18,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Optional
 
+from ._internal.calibration.loader import OpenCVCameraCalibrationLoader
 from ._internal.contracts import S3Contract, s3_result_to_contract
+from ._internal.models.calibration import CameraCalibration
 from ._internal.pipeline import S3ReconstructionPipeline
 from ._internal.s2_to_s3_bridge import build_s2_payload_from_contract
 
@@ -28,6 +30,7 @@ def run_s3(
     image_root: Path,
     output_dir: Path,
     config: Optional[dict] = None,
+    calibration: Optional[CameraCalibration] = None,
 ) -> S3Contract:
     """Single integration entry point for S3.
 
@@ -44,7 +47,14 @@ def run_s3(
     output_dir : Path
         Directory where ``scene.ply`` and ``metadata.json`` are written.
     config : dict, optional
-        Reserved for future tuning. Ignored for now.
+        Reserved for future tuning. May contain a ``"calibration_path"``
+        key pointing to an OpenCV YAML calibration file. Explicitly
+        passing ``calibration`` overrides this.
+    calibration : CameraCalibration, optional
+        Pre-loaded camera calibration. When ``None`` and ``config`` does
+        not contain ``"calibration_path"``, S3 falls back to the existing
+        heuristic intrinsics derived from image dimensions (documented
+        in ``docs/architecture/system-architecture.md`` §8).
 
     Returns
     -------
@@ -55,12 +65,22 @@ def run_s3(
     output_dir.mkdir(parents=True, exist_ok=True)
     image_root = Path(image_root)
 
+    # Resolve calibration from explicit argument or config dict.
+    resolved_calibration: Optional[CameraCalibration] = calibration
+    if resolved_calibration is None and isinstance(config, dict):
+        calib_path = config.get("calibration_path")
+        if calib_path:
+            resolved_calibration = OpenCVCameraCalibrationLoader.load_from_file(calib_path)
+
     s2_payload = build_s2_payload_from_contract(
         s2_contract,
         image_root=image_root,
     )
 
-    pipeline = S3ReconstructionPipeline(check_image_files=False)
+    pipeline = S3ReconstructionPipeline(
+        check_image_files=False,
+        calibration=resolved_calibration,
+    )
     result = pipeline.run(
         input_data=s2_payload,
         scene_id=output_dir.name,

@@ -281,6 +281,94 @@ S3 generates the 3D dense/sparse representation of the observed scene from multi
 4. **Standard Artifacts:** Outputs standard binary/ASCII `scene.ply` and structured `metadata.json`.
 5. **S2 → S3 Bridge:** S3 consumes S2's `S2Contract` (poses + camera info) and S1's frame images via the duck-typed bridge in `src.reconstruction._internal.s2_to_s3_bridge`. When no camera intrinsics are present in the upstream payload, the bridge derives a documented heuristic intrinsics guess (`fx = fy = image_width`, principal point at the image center, no distortion) so the pipeline remains runnable end-to-end on uncalibrated UAV footage.
 
+### 8.1 Camera Calibration as a First-Class Input
+
+S3 accepts an optional external **camera calibration** as a first-class input. Calibration is intentionally **distinct from camera pose**:
+
+| Concept | Question it answers |
+| :--- | :--- |
+| **Calibration** | *How does a pixel map to a camera ray?* (intrinsics + distortion) |
+| **Camera Pose** | *Where is that ray pointing in the world?* (position + orientation) |
+
+A triangulation pipeline requires both. Conflating them (e.g., "fixing" calibration when poses are wrong) hides real defects.
+
+**Supported calibration format**
+
+S3's :class:`src.reconstruction.CameraCalibration` and :class:`src.reconstruction.OpenCVCameraCalibrationLoader` consume OpenCV ``FileStorage`` YAML files (``%YAML:1.0`` header with ``!!opencv-matrix`` and ``!x!opencv-matrix`` custom tags), e.g.::
+
+    %YAML:1.0
+    ---
+    camera_name: <string>
+    image_width:  <int>
+    image_height: <int>
+    distortion_model: plumb_bob
+    camera_matrix: !!opencv-matrix
+       rows: 3
+       cols: 3
+       dt: d
+       data: [ fx, 0, cx,
+               0, fy, cy,
+               0,  0,  1 ]
+    distortion_coefficients: !!opencv-matrix
+       rows: 1
+       cols: 5
+       dt: d
+       data: [ k1, k2, p1, p2, k3 ]
+
+**Distortion model**
+
+``distortion_model: plumb_bob`` (alias ``radtan``) follows OpenCV's standard 5-coefficient ordering ``[k1, k2, p1, p2, k3]``. ``fisheye`` and other models are not yet supported and produce a clear ``CameraCalibrationError``. Calibration values are consumed **exactly as supplied** — no normalization, clamping, or "correction" of strong coefficients is performed.
+
+**Validation invariants**
+
+The loader enforces:
+
+* 3×3 pinhole ``camera_matrix`` with ``K[2,2] ≈ 1.0``,
+* ``fx > 0``, ``fy > 0``, ``0 ≤ cx ≤ image_width``, ``0 ≤ cy ≤ image_height``,
+* a 1D ``distortion_coefficients`` vector of length 5 for ``plumb_bob``.
+
+**Resolution compatibility**
+
+Calibration resolution must match the actual video resolution. When it does not, the calibration is **not** silently reused — the caller must explicitly invoke :meth:`CameraCalibration.scale_to_resolution` which enforces an **isotropic uniform resize** policy (``sx ≈ sy``) and rescales ``fx``, ``fy``, ``cx``, ``cy``. Non-uniform scaling is rejected.
+
+**Integration point**
+
+The pipeline orchestrator (``src/pipeline/orchestrator.py``) accepts a ``--calibration`` CLI flag pointing to the YAML file. The file is loaded once at the pipeline boundary, validated against the video dimensions, and threaded into S3 via :func:`src.reconstruction.run_s3`'s new ``calibration`` parameter. S1's existing ``--calibration`` flag remains the canonical way for the upstream visual-perception layer to record calibration in ``observations.json``.
+
+**Undistortion**
+
+S3 applies distortion correction at the preprocessing boundary in :class:`src.reconstruction._internal.preprocessing.undistort.ObservationUndistorter`. The implementation uses ``cv2.undistortPoints(pts, K, D, P=K, ...)`` which:
+
+* inverts the forward ``cv2.projectPoints`` model,
+* returns **undistorted pixel coordinates in the same K pixel space** (``P=K`` is explicit — passing ``P=None`` would silently return normalized camera coordinates and break the existing ``P = K [R | t]`` projection model),
+* records both the raw (distorted) and undistorted coordinates on :class:`src.reconstruction._internal.preprocessing.prepare.PreparedTrack` (``points_2d_raw`` vs ``points_2d``) so that debugging and diagnostics can compare the two.
+
+**Raw vs undistorted observations**
+
+Observations in :class:`S2Observation.features[*]` are **always** raw (distorted) — that is what the upstream detector actually saw. Distortion correction happens at the S3 preparer boundary and produces a *separate* set of coordinates on the :class:`PreparedTrack`. The triangulation engine consumes the undistorted coordinates.
+
+**Output metadata**
+
+S3's ``metadata.json`` records calibration provenance whenever a calibration was supplied::
+
+    metadata.camera_calibration: {
+      camera_name, image_width, image_height, distortion_model,
+      camera_matrix, distortion_coefficients, source,
+      undistortion_applied: <bool>,
+    }
+    metadata.camera_calibration_summary: {
+      camera_name, image_width, image_height,
+      distortion_model, distortion_applied: <bool>,
+    }
+
+The high-level ``camera_calibration_summary`` block is also surfaced in the S5 ``final_output.json`` so downstream consumers can quickly see which calibration was used and whether undistortion was actually applied.
+
+**Coordinate convention**
+
+* Pixel origin at top-left, ``x`` increasing right, ``y`` increasing down.
+* Distortion model: ``plumb_bob`` = ``[k1, k2, p1, p2, k3]``.
+* Projection convention: world-to-camera, ``P = K [R | t]``, with ``t`` such that ``X_cam = R @ X_world + t``.
+
 ---
 
 ## 9. S3 → S4 Interface

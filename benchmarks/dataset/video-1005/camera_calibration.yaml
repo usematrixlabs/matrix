@@ -1,0 +1,20 @@
+%YAML:1.0
+---
+camera_name: DJI_Air_2S
+image_width: 1920
+image_height: 1080
+distortion_model: plumb_bob
+camera_matrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 1764.4124664880155, 0.0, 940.3814483113493,
+           0.0, 1775.548789765484, 576.0927258679475,
+           0.0, 0.0, 1.0 ]
+distortion_coefficients: !x!opencv-matrix
+   rows: 1
+   cols: 5
+   dt: d
+   data: [ 0.08871744254107644, -1.5438032369603156,
+           0.004217725112875651, -0.005798505222584687,
+           5.873702095567386 ]
