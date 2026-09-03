@@ -131,6 +131,39 @@ def _safe_image_path(image_ref: str, image_root: Path) -> Optional[Path]:
     return p if p.is_file() else None
 
 
+def _read_image_size(img_path: Path) -> Optional[Tuple[int, int]]:
+    """Read a grayscale image and return ``(width, height)``.
+
+    Returns ``None`` if OpenCV cannot load the image.
+    """
+    gray = cv2.imread(str(img_path), cv2.IMREAD_GRAYSCALE)
+    if gray is None:
+        return None
+    h, w = gray.shape[:2]
+    return int(w), int(h)
+
+
+def _heuristic_intrinsics(width: int, height: int) -> CameraIntrinsics:
+    """Return a reasonable intrinsics guess for an uncalibrated camera.
+
+    Standard heuristic used when no calibration is supplied: focal length
+    equal to image width (≈ 90° horizontal FOV), principal point at the
+    image center, no distortion. This is sufficient for demonstrative
+    triangulation on uncalibrated UAV footage and clearly documented as a
+    fallback in the architecture.
+    """
+    return CameraIntrinsics(
+        fx=float(width),
+        fy=float(width),
+        cx=float(width) / 2.0,
+        cy=float(height) / 2.0,
+        width=int(width),
+        height=int(height),
+        distortion_coefficients=None,
+        distortion_model=None,
+    )
+
+
 def _extract_orb(gray: np.ndarray, max_features: int) -> Tuple[np.ndarray, np.ndarray]:
     """Run ORB detect+compute on a grayscale image, returning keypoints + descriptors.
 
@@ -241,10 +274,21 @@ def _build_observation(
 
     if s2_obs.localization is not None:
         loc = s2_obs.localization
+        status_val = getattr(loc, "status", None)
+        status_str = (
+            str(status_val.value if hasattr(status_val, "value") else status_val)
+            if status_val is not None
+            else "unknown"
+        )
+        source_val = getattr(loc, "source", None) or []
+        quality_obj = getattr(loc, "quality", None)
+        confidence_val = (
+            float(getattr(quality_obj, "confidence", 1.0)) if quality_obj is not None else 1.0
+        )
         localization = LocalizationInfo(
-            status=str(loc.status.value if hasattr(loc.status, "value") else loc.status),
-            source=[s.value if hasattr(s, "value") else str(s) for s in (loc.source or [])],
-            confidence=float(loc.quality.confidence) if loc.quality else 1.0,
+            status=status_str,
+            source=[s.value if hasattr(s, "value") else str(s) for s in source_val],
+            confidence=confidence_val,
         )
     else:
         localization = LocalizationInfo()
@@ -303,13 +347,20 @@ def build_s2_payload_from_contract(
     per_frame_features: Dict[str, np.ndarray] = {}
     per_frame_track_indices: Dict[str, Dict[int, int]] = {}
 
-    observations_with_intrinsics: List[Tuple[int, _S2ObservationLike, _S2CameraLike]] = []
+    # We accept any observation with a resolvable image; intrinsics are
+    # taken from S2's `camera.intrinsics` when present, otherwise derived
+    # heuristically from the image dimensions (see ``_heuristic_intrinsics``).
+    image_resolution: List[Tuple[int, _S2ObservationLike, Optional[_S2CameraLike]]] = []
     for idx, obs in enumerate(s2_contract.observations):
-        if obs.camera is None or obs.camera.intrinsics is None:
+        img_path = _safe_image_path(obs.image, image_root)
+        if img_path is None:
             continue
-        observations_with_intrinsics.append((idx, obs, obs.camera))
+        size = _read_image_size(img_path)
+        if size is None:
+            continue
+        image_resolution.append((idx, obs, obs.camera))
 
-    if not observations_with_intrinsics:
+    if not image_resolution:
         return _empty_s2_payload(s2_contract)
 
     track_builder = _TrackBuilder()
@@ -319,16 +370,14 @@ def build_s2_payload_from_contract(
     prev_keypoints: Optional[np.ndarray] = None
     prev_descriptors: Optional[np.ndarray] = None
 
-    for idx, s2_obs, _cam_info in observations_with_intrinsics:
+    for idx, s2_obs, _cam_info in image_resolution:
         img_path = _safe_image_path(s2_obs.image, image_root)
-        if img_path is None:
-            continue
-
-        frame_id = s2_obs.observation_id or f"obs_{idx:04d}"
+        assert img_path is not None
         gray = cv2.imread(str(img_path), cv2.IMREAD_GRAYSCALE)
         if gray is None:
             continue
 
+        frame_id = s2_obs.observation_id or f"obs_{idx:04d}"
         kps, descs = _extract_orb(gray, max_features=max_features)
         per_frame_features[frame_id] = kps
 
@@ -345,7 +394,7 @@ def build_s2_payload_from_contract(
         per_frame_track_indices[frame_id] = mapping
 
     # Now build S3 observations.
-    for idx, s2_obs, cam_info in observations_with_intrinsics:
+    for idx, s2_obs, cam_info in image_resolution:
         frame_id = s2_obs.observation_id or f"obs_{idx:04d}"
         if frame_id not in per_frame_features:
             continue
@@ -361,24 +410,35 @@ def build_s2_payload_from_contract(
                 orientation_format=ori_fmt,
             )
 
-        # S2 -> S3 intrinsics conversion.
-        s2_intr = cam_info.intrinsics
-        width = cam_info.width
-        height = cam_info.height
-        intrinsics = CameraIntrinsics(
-            fx=float(s2_intr.fx),
-            fy=float(s2_intr.fy),
-            cx=float(s2_intr.cx),
-            cy=float(s2_intr.cy),
-            width=width,
-            height=height,
-            distortion_coefficients=(
-                list(cam_info.distortion.coefficients)
-                if cam_info.distortion and cam_info.distortion.coefficients
-                else None
-            ),
-            distortion_model=cam_info.distortion.model if cam_info.distortion else None,
-        )
+        # S2 -> S3 intrinsics conversion. Prefer S2's calibrated values;
+        # fall back to a documented heuristic derived from image size when
+        # no calibration is available.
+        if cam_info is not None and cam_info.intrinsics is not None:
+            s2_intr = cam_info.intrinsics
+            width = cam_info.width or s2_intr.width
+            height = cam_info.height or s2_intr.height
+            intrinsics = CameraIntrinsics(
+                fx=float(s2_intr.fx),
+                fy=float(s2_intr.fy),
+                cx=float(s2_intr.cx),
+                cy=float(s2_intr.cy),
+                width=width,
+                height=height,
+                distortion_coefficients=(
+                    list(cam_info.distortion.coefficients)
+                    if cam_info.distortion and cam_info.distortion.coefficients
+                    else None
+                ),
+                distortion_model=cam_info.distortion.model if cam_info.distortion else None,
+            )
+        else:
+            img_path = _safe_image_path(s2_obs.image, image_root)
+            assert img_path is not None
+            size = _read_image_size(img_path)
+            if size is None:
+                continue
+            width, height = size
+            intrinsics = _heuristic_intrinsics(width, height)
 
         track_indices = per_frame_track_indices.get(frame_id, {})
         kps = per_frame_features[frame_id]

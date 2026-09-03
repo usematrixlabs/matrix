@@ -203,7 +203,7 @@ def test_bridge_handles_missing_images_gracefully(tmp_path: Path) -> None:
     assert s3_payload.observations == []
 
 
-def test_bridge_observation_without_intrinsics_is_dropped(tmp_path: Path) -> None:
+def test_bridge_observation_without_intrinsics_uses_heuristic(tmp_path: Path) -> None:
     _write_synthetic_frame(tmp_path / "frames/frame_000.jpg", seed=11)
 
     obs_no_intr = S2ObservationOutput(
@@ -224,7 +224,16 @@ def test_bridge_observation_without_intrinsics_is_dropped(tmp_path: Path) -> Non
 
     s2_payload = S2PayloadOutput(observations=[obs_no_intr])
     s3_payload = build_s2_payload_from_contract(s2_payload, image_root=tmp_path)
-    assert s3_payload.observations == []
+
+    # Observation is kept; the bridge synthesizes intrinsics from image
+    # dimensions so the pipeline remains runnable end-to-end on
+    # uncalibrated UAV footage. See docs/architecture/system-architecture.md §8.
+    assert len(s3_payload.observations) == 1
+    out_obs = s3_payload.observations[0]
+    assert out_obs.camera is not None
+    assert out_obs.camera.fx == out_obs.camera.fy == out_obs.camera.width
+    assert out_obs.camera.cx == out_obs.camera.width / 2.0
+    assert out_obs.camera.cy == out_obs.camera.height / 2.0
 
 
 def test_build_s2_payload_list_wrapper(tmp_path: Path) -> None:

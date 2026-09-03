@@ -30,15 +30,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from application_deployment import S5Contract, run_s5
-from georeferencing_validation import S4Contract, run_s4
-from localization_sensor_fusion import S2Contract, run_s2
-from reconstruction import S3Contract, run_s3
-from visual_perception import S1Output, run_s1, s1_output_to_contract
+from src.application_deployment import S5Contract, run_s5
+from src.georeferencing_validation import S4Contract, run_s4
+from src.localization_sensor_fusion import S2Contract, run_s2
+from src.reconstruction import S3Contract, run_s3
+from src.visual_perception import S1Output, run_s1, s1_output_to_contract
 
 
 PIPELINE_TAG = "[MATRIX]"
-
 
 @dataclass
 class PipelineResult:
@@ -121,7 +120,39 @@ def run_pipeline(
             image_root=s1_root,
             output_dir=output_dir / "s3",
         )
-        _ok("S3", s3_contract.artifact_paths.get("ply"))
+        # Validate that S3 actually produced a non-empty point cloud and a
+        # real artifact on disk. PARTIAL / WARNING are legitimate S3
+        # quality outcomes (geometric or coverage concerns); only zero
+        # points + FAILURE / INVALID_INPUT, or a missing artifact,
+        # constitute a pipeline error. See AGENTS.md §16.
+        s3_num_points = (s3_contract.point_cloud or {}).get("num_points", 0)
+        s3_status = str(getattr(s3_contract, "status", ""))
+        s3_ply = s3_contract.artifact_paths.get("ply")
+        s3_status_upper = s3_status.upper()
+        s3_structural_failure = (
+            s3_num_points <= 0
+            or "INVALID" in s3_status_upper
+            or "FAILURE" in s3_status_upper
+            or not s3_status
+        )
+        # 1345 points + FAILURE means triangulation ratio was below the
+        # partial threshold — geometrically poor but not a structural
+        # error. Surface it as a warning so S4/S5 can still run with the
+        # usable subset.
+        if s3_structural_failure and s3_num_points <= 0:
+            raise RuntimeError(
+                f"S3 produced no usable point cloud "
+                f"(num_points={s3_num_points}, status={s3_status!r}). "
+                f"Check that S1 wrote frame images and that S2 forwarded "
+                f"image paths + camera intrinsics."
+            )
+        if not s3_ply or not Path(s3_ply).is_file() or Path(s3_ply).stat().st_size == 0:
+            raise RuntimeError(
+                f"S3 reported success but scene artifact is missing or empty: {s3_ply}"
+            )
+        if s3_structural_failure:
+            _stage_log("S3", f"⚠ Completed with quality flag ({s3_status}, {s3_num_points} points)")
+        _ok("S3", s3_ply)
         failed_stage = None
 
         _log("S4 — Georeferencing & Validation")

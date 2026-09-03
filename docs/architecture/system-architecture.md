@@ -67,7 +67,7 @@ s1_output/
 2. **Stable Deterministic Identifiers:** Observations have immutable IDs (`frame_000001`, `frame_000002`, ...) that persist across S1 $\rightarrow$ S2 $\rightarrow$ S3.
 3. **Capture Timestamps:** Timestamps represent source video capture time in seconds ($t_k < t_{k+1}$ monotonic).
 4. **Camera Intrinsics:** Dimensions (`width`, `height`) are always known. Intrinsics (`fx, fy, cx, cy`) and distortion are preserved when supplied, and explicitly set to `null` with `is_calibrated: false` when unavailable.
-5. **Portable Relative Paths:** Image paths inside `observations.json` use relative paths (`frames/frame_000001.jpg`) from the package root.
+5. **Portable Relative Paths:** Image paths inside `observations.json` use relative paths (`frames/frame_000001.jpg`) from the package root. The in-memory `S1Contract.observations[]` carries the same field as `image_path` (S1's dataclass field name); S2's `run_s2` accepts both keys (`image` or `image_path`) at the boundary so the contract tolerates either naming.
 
 ---
 
@@ -249,6 +249,19 @@ stack trace to stderr, and returns a `PipelineResult(success=False, ...)`.
 All artifacts produced by stages that ran successfully are preserved on
 disk so they can be inspected or replayed.
 
+In addition to exception-based failure, the orchestrator performs
+**structural validation** of the S3 output before continuing to S4:
+
+* S3 must report a non-zero `point_cloud.num_points` with a status
+  other than `INVALID_INPUT` / `FAILURE` with zero points.
+* The S3 `scene.ply` artifact must exist on disk and be non-empty.
+
+A non-zero point cloud with `FAILURE`/`WARNING`/`PARTIAL` status
+indicates a quality concern (e.g., low triangulation ratio from
+uncalibrated-camera heuristics) but is **not** a pipeline error —
+S4/S5 still run with the usable subset and the quality flag is surfaced
+in `stage_status` and the S5 summary.
+
 Stages are also allowed to record **degraded** outcomes (e.g., S4 with
 an empty input point cloud) rather than failing the whole pipeline.
 These are surfaced through `stage_status` and the `sN/` summary files.
@@ -266,6 +279,7 @@ S3 generates the 3D dense/sparse representation of the observed scene from multi
 2. **Quality Evaluation:** Mean and median reprojection error computation with statistical outlier filtering.
 3. **Local Spatial Frame:** Coordinates remain in `S3_LOCAL` meters with bounding box metadata.
 4. **Standard Artifacts:** Outputs standard binary/ASCII `scene.ply` and structured `metadata.json`.
+5. **S2 → S3 Bridge:** S3 consumes S2's `S2Contract` (poses + camera info) and S1's frame images via the duck-typed bridge in `src.reconstruction._internal.s2_to_s3_bridge`. When no camera intrinsics are present in the upstream payload, the bridge derives a documented heuristic intrinsics guess (`fx = fy = image_width`, principal point at the image center, no distortion) so the pipeline remains runnable end-to-end on uncalibrated UAV footage.
 
 ---
 

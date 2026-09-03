@@ -195,7 +195,7 @@ def run_s2(
             {
                 "observation_id": observation_id,
                 "timestamp": ts,
-                "image": str(obs.get("image", "")),
+                "image": str(obs.get("image") or obs.get("image_path") or ""),
                 "camera": (
                     {
                         "width": camera_info.width,
@@ -237,7 +237,7 @@ def run_s2(
             S2ObservationOutput(
                 observation_id=observation_id,
                 timestamp=ts,
-                image=str(obs.get("image", "")),
+                image=str(obs.get("image") or obs.get("image_path") or ""),
                 camera=camera_info,
                 localization=LocalizationMeta(
                     status=PoseStatus.ESTIMATED,

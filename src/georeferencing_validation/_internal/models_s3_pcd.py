@@ -60,11 +60,14 @@ class PointCloudData:
             if has_color
             else None
         )
-        point_dtype = np.float64 if is_binary else np.float32
+        # PLY `property float` is 32-bit (4 bytes). S3 writes ``float`` /
+        # ``property float`` in its binary_little_endian PLY output, so we
+        # must match that width here. Earlier versions used float64 for
+        # xyz which overran the buffer.
         per_point_dtypes = []
         for name in properties:
             if name in ("x", "y", "z"):
-                per_point_dtypes.append((name, "<f8" if is_binary and little_endian else "<f4"))
+                per_point_dtypes.append((name, "<f4"))
             elif has_color and name in ("red", "green", "blue"):
                 per_point_dtypes.append((name, "u1"))
             else:
