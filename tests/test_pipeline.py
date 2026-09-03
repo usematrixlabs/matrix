@@ -7,7 +7,7 @@ import pytest
 
 from reconstruction._internal.models.schema import S3Status
 from reconstruction._internal.pipeline import S3ReconstructionPipeline
-from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
+from fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 
 def test_pipeline_end_to_end_synthetic(tmp_path: Path):

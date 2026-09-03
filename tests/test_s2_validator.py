@@ -5,7 +5,7 @@ import pytest
 
 from reconstruction._internal.input.validator import S2InputValidator
 from reconstruction._internal.models.schema import CameraIntrinsics, CameraPose, S3Status
-from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
+from fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 
 def test_validate_valid_payload():

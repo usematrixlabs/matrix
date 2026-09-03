@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from reconstruction._internal.engine.triangulation import MultiViewTriangulator
-from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
+from fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 
 def test_triangulate_synthetic_exact():

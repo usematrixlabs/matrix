@@ -6,7 +6,7 @@ import pytest
 
 from reconstruction._internal.input.loader import S2InputLoader
 from reconstruction._internal.models.schema import S2Payload
-from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
+from fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 
 def test_load_from_dict_valid():

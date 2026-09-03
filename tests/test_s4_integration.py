@@ -11,7 +11,7 @@ from georeferencing_validation._internal.georeferencer import Georeferencer
 from georeferencing_validation._internal.input import ReconstructionInput
 from georeferencing_validation._internal.validator import GeoreferencingValidator
 from reconstruction._internal.pipeline import S3ReconstructionPipeline
-from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
+from fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 
 def test_s3_to_s4_seamless_integration():
