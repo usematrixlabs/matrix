@@ -267,6 +267,65 @@ an empty input point cloud) rather than failing the whole pipeline.
 These are surfaced through `stage_status` and the `sN/` summary files.
 ---
 
+## 7a. S2: Localization & Sensor Fusion
+
+### Overview
+
+S2 turns S1's per-frame observations into a camera trajectory. Today
+the canonical path is **GPS-anchored localization + sensor fusion**;
+visual pose recovery (the `VisualLocalizerEngine`) is a present-but
+opt-in engine that downstream integrations may invoke.
+
+### 7a.1 Pluggable Visual-Correspondence Backend
+
+The 2D-to-2D feature-matching step inside S2 is a **pluggable backend**
+selected via the `config["matcher"]` mapping on
+`run_s2(s1_contract, gps_path, output_dir, config=...)`. The selected
+backend is recorded on `S2Contract.metadata.matcher` so the choice is
+auditable per run.
+
+```yaml
+matcher:
+  backend: lightglue        # or "classical"
+  max_num_keypoints: 2048   # lightglue-only
+```
+
+Backends:
+
+| Backend     | Implementation                                | Notes |
+| :---------- | :-------------------------------------------- | :---- |
+| `classical` | ORB + Hamming BFMatcher (OpenCV)              | Historical default; no learned weights. |
+| `lightglue` | SuperPoint + LightGlue (vendored at `models/LightGlue`) | Pretrained weights cached at runtime under `~/.cache/torch/hub`; **not** committed to the repo. |
+
+The two backends share the internal contract
+`localization_sensor_fusion._internal.matching.FeatureMatcher` and
+return a `MatchResult(points0, points1, scores=None)`. **No LightGlue
+type leaks outside `matching/`**: S2's pose-estimation, sensor fusion,
+trajectory smoother, and the S2→S3 wire contract are all
+backend-agnostic. Selecting `classical` is a one-line config rollback.
+
+Because LightGlue's `SuperPoint.extract` performs internal resizing,
+keypoint coordinates returned by the `lightglue` backend live in the
+**resized image coordinate space** (default long-side 1024 px). Any
+future integration of these matches into the camera-model pipeline
+must perform coordinate rescaling *inside the matcher module* so the
+rest of S2 continues to see backend-agnostic pixel coordinates.
+
+### 7a.2 Boundary Impact
+
+* **S1 → S2 contract:** unchanged.
+* **S2 → S3 contract:** unchanged. `S2Contract` shape and JSON schema
+  are identical to the pre-LightGlue form.
+* **S2 internal layout:** new subpackage
+  `src/localization_sensor_fusion/_internal/matching/` (base,
+  classical, lightglue).
+* **Vendored dependency:** `models/LightGlue/` (Apache-2.0,
+  [cvg/LightGlue](https://github.com/cvg/LightGlue), ICCV 2023).
+  Installed editable into the existing `.venv` via
+  `uv pip install -e models/LightGlue`.
+
+---
+
 ## 8. S3: 3D Reconstruction
 
 ### Overview
