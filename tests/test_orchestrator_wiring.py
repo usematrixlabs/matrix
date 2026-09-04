@@ -26,6 +26,7 @@ from typing import List
 
 import cv2
 import numpy as np
+import pytest
 
 from georeferencing_validation import run_s4
 from localization_sensor_fusion import S2Contract, run_s2
@@ -352,3 +353,49 @@ def test_run_s2_invokes_s1_input_adapter(monkeypatch, tmp_path: Path) -> None:
     assert seen_calls[0]["observation_id"] == "frame_0000"
     # Strip unused namespace import so the linter doesn't flag it.
     _ = lsf_internal
+
+
+def test_run_s2_records_selected_matcher_backend(tmp_path: Path) -> None:
+    """The matcher backend choice must propagate into S2 metadata.
+
+    This guarantees a one-line rollback: changing ``matcher.backend``
+    in config is the only edit needed to swap matchers, with no
+    contract or call-site changes anywhere else in the system.
+    """
+    s1_output = _fake_s1_output(tmp_path / "s1")
+    _write_gps_csv(tmp_path / "gps.csv")
+    s1_contract = s1_output_to_contract(s1_output)
+
+    s2_contract = run_s2(
+        s1_contract=s1_contract,
+        gps_path=tmp_path / "gps.csv",
+        output_dir=tmp_path / "s2",
+        config={"matcher": {"backend": "classical"}},
+    )
+
+    assert s2_contract.metadata["matcher"]["backend"] == "classical"
+
+    s2_contract_lg = run_s2(
+        s1_contract=s1_contract,
+        gps_path=tmp_path / "gps.csv",
+        output_dir=tmp_path / "s2_lg",
+        config={"matcher": {"backend": "lightglue", "max_num_keypoints": 256}},
+    )
+    assert s2_contract_lg.metadata["matcher"]["backend"] == "lightglue"
+    assert (
+        s2_contract_lg.metadata["matcher"]["config"]["max_num_keypoints"] == 256
+    )
+
+
+def test_run_s2_rejects_unknown_matcher_backend(tmp_path: Path) -> None:
+    s1_output = _fake_s1_output(tmp_path / "s1")
+    _write_gps_csv(tmp_path / "gps.csv")
+    s1_contract = s1_output_to_contract(s1_output)
+
+    with pytest.raises(ValueError, match="Unknown matcher backend"):
+        run_s2(
+            s1_contract=s1_contract,
+            gps_path=tmp_path / "gps.csv",
+            output_dir=tmp_path / "s2",
+            config={"matcher": {"backend": "definitely-not-real"}},
+        )

@@ -25,6 +25,7 @@ from ._internal.engines.trajectory_smoother import TrajectorySmoother
 from ._internal.exporters.s2_exporter import S2Exporter
 from ._internal.fusion.fusion_engine import SensorFusionEngine
 from ._internal.adapters.s1_adapter import S1InputAdapter
+from ._internal.matching import FeatureMatcher, build_matcher
 from ._internal.schemas.contracts import (
     CameraInfo,
     CameraIntrinsics,
@@ -160,8 +161,11 @@ def run_s2(
     output_dir : Path
         Directory where the canonical ``s2_output.json`` is written.
     config : dict, optional
-        Reserved for future tuning (window size, fusion params). Ignored
-        for now.
+        Reserved for future tuning (window size, fusion params). May
+        contain a ``"matcher"`` sub-mapping (e.g. ``{"backend":
+        "lightglue", "max_num_keypoints": 2048}``) that selects the
+        visual-correspondence backend. Unknown backends raise so
+        misconfiguration is loud.
 
     Returns
     -------
@@ -172,6 +176,10 @@ def run_s2(
     """
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    cfg = dict(config or {})
+    matcher_cfg = cfg.get("matcher") if isinstance(cfg.get("matcher"), dict) else {}
+    matcher: FeatureMatcher = build_matcher(matcher_cfg)
 
     if not s1_contract.observations:
         raise RuntimeError("S1 produced no observations for S2 to localize.")
@@ -273,6 +281,10 @@ def run_s2(
                 if anchor is not None
                 else None
             ),
+            "matcher": {
+                "backend": matcher.backend_name,
+                "config": dict(matcher_cfg or {}),
+            },
         },
     )
 
