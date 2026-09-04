@@ -1,58 +1,34 @@
-"""
-S3 — 3D Reconstruction Subsystem
+"""S3 — 3D Reconstruction (sealed).
 
-Transforms visual observations and camera localization into 3D representations.
+Public integration surface
+--------------------------
+- :func:`run_s3` — single entry point invoked by the pipeline
+  orchestrator.
+- :class:`S3Contract` — canonical Pydantic output of S3.
+
+Reusable components exposed for the pipeline orchestrator (cross-
+subsystem composition lives there):
+- :class:`CameraCalibration` — generic camera calibration record.
+- :class:`OpenCVCameraCalibrationLoader` — parses OpenCV YAML files.
+
+Everything else (engines, geometry, input adapters, models, output
+packager, preprocessing, quality evaluator, the S2→S3 bridge) lives
+under ``reconstruction._internal``.
 """
 
-from .engine import DefaultReconstructionEngine, MultiViewTriangulator, ReconstructionEngineBase
-from .geometry import PlyIO, PointCloudProcessor
-from .input import S2InputLoader, S2InputValidator, ValidationReport
-from .models import (
-    BoundingBox3D,
-    CameraIntrinsics,
-    CameraPose,
-    FeatureObservation,
-    LocalizationInfo,
-    PointCloudData,
-    ReconstructionQuality,
-    S2Observation,
-    S2Payload,
-    S3ReconstructionResult,
-    S3Status,
-    SpatialReference,
-)
-from .pipeline import S3ReconstructionPipeline
-from .preprocessing import PreparedReconstructionData, PreparedTrack, ReconstructionDataPreparer
-from .quality import QualityEvaluator, S3FailureReason, S3ReconstructionError
-from .reconstructor import Reconstructor
+from ._internal.calibration.loader import OpenCVCameraCalibrationLoader
+from ._internal.contracts import S3Contract
+from ._internal.models.calibration import CameraCalibration, CameraCalibrationError
+from .interface import run_s3
+
+# Expose internal modules for testing
+from . import _internal
 
 __all__ = [
-    "Reconstructor",
-    "S3ReconstructionPipeline",
-    "DefaultReconstructionEngine",
-    "MultiViewTriangulator",
-    "ReconstructionEngineBase",
-    "S2InputLoader",
-    "S2InputValidator",
-    "ValidationReport",
-    "ReconstructionDataPreparer",
-    "PreparedTrack",
-    "PreparedReconstructionData",
-    "PlyIO",
-    "PointCloudProcessor",
-    "QualityEvaluator",
-    "S3FailureReason",
-    "S3ReconstructionError",
-    "S3Status",
-    "CameraIntrinsics",
-    "CameraPose",
-    "LocalizationInfo",
-    "FeatureObservation",
-    "S2Observation",
-    "S2Payload",
-    "BoundingBox3D",
-    "SpatialReference",
-    "ReconstructionQuality",
-    "PointCloudData",
-    "S3ReconstructionResult",
+    "run_s3",
+    "S3Contract",
+    "CameraCalibration",
+    "CameraCalibrationError",
+    "OpenCVCameraCalibrationLoader",
+    "_internal",
 ]

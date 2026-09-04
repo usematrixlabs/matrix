@@ -1,11 +1,11 @@
 ﻿import numpy as np
 import pytest
 
-from src.georeferencing_validation.control_points import ControlPoints
-from src.georeferencing_validation.crs import CoordinateReference
-from src.georeferencing_validation.georeferencer import Georeferencer
-from src.georeferencing_validation.helmert import HelmertTransform
-from src.georeferencing_validation.input import ReconstructionInput
+from georeferencing_validation._internal.control_points import ControlPoints
+from georeferencing_validation._internal.crs import CoordinateReference
+from georeferencing_validation._internal.georeferencer import Georeferencer
+from georeferencing_validation._internal.helmert import HelmertTransform
+from georeferencing_validation._internal.input import ReconstructionInput
 
 
 def test_georeferencer_rejects_local_to_projected_without_explicit_policy():

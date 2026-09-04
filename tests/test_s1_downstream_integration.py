@@ -14,12 +14,10 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from src.visual_perception import (
-    DownstreamValidator,
-    ObservationPackager,
-    S1Config,
-    S1Pipeline,
-)
+from visual_perception import S1Config
+from visual_perception._internal.downstream_validator import DownstreamValidator
+from visual_perception._internal.packager import ObservationPackager
+from visual_perception._internal.pipeline import S1Pipeline
 
 
 def create_integration_video(file_path: str, width: int = 640, height: int = 480, fps: float = 24.0, num_frames: int = 48) -> str:

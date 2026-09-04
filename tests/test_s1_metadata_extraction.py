@@ -13,18 +13,11 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from src.visual_perception import (
-    CameraMetadata,
-    FlightMetadata,
-    FrameExtractor,
-    FrameTimingInfo,
-    MetadataExtractor,
-    S1Config,
-    S1Output,
-    S1Pipeline,
-    SensorMetadata,
-    VideoMetadataRecord,
-)
+from visual_perception import S1Config, S1Output
+from visual_perception._internal.types import CameraMetadata, FlightMetadata, FrameTimingInfo, SensorMetadata, VideoMetadataRecord
+from visual_perception._internal.frame_extractor import FrameExtractor
+from visual_perception._internal.metadata_extractor import MetadataExtractor
+from visual_perception._internal.pipeline import S1Pipeline
 
 
 def create_test_video(file_path: str, width: int = 640, height: int = 480, fps: float = 30.0, num_frames: int = 60) -> str:

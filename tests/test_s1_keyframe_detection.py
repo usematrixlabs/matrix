@@ -12,16 +12,11 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from src.visual_perception import (
-    Frame,
-    FrameExtractor,
-    Keyframe,
-    KeyframeSelector,
-    QualityAssessment,
-    S1Config,
-    S1Output,
-    S1Pipeline,
-)
+from visual_perception import S1Config, S1Output
+from visual_perception._internal.pipeline import S1Pipeline
+from visual_perception._internal.frame_extractor import FrameExtractor
+from visual_perception._internal.keyframe_selector import KeyframeSelector
+from visual_perception._internal.types import Frame, Keyframe, QualityAssessment
 
 
 def create_dynamic_scene_video(file_path: str, width: int = 320, height: int = 240, fps: float = 10.0) -> str:

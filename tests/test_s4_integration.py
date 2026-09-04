@@ -5,13 +5,13 @@ Integration tests between Subsystem S3 (3D Reconstruction) and Subsystem S4 (Geo
 import numpy as np
 import pytest
 
-from src.georeferencing_validation.control_points import ControlPoints
-from src.georeferencing_validation.crs import CoordinateReference
-from src.georeferencing_validation.georeferencer import Georeferencer
-from src.georeferencing_validation.input import ReconstructionInput
-from src.georeferencing_validation.validator import GeoreferencingValidator
-from src.reconstruction.pipeline import S3ReconstructionPipeline
-from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
+from georeferencing_validation._internal.control_points import ControlPoints
+from georeferencing_validation._internal.crs import CoordinateReference
+from georeferencing_validation._internal.georeferencer import Georeferencer
+from georeferencing_validation._internal.input import ReconstructionInput
+from georeferencing_validation._internal.validator import GeoreferencingValidator
+from reconstruction._internal.pipeline import S3ReconstructionPipeline
+from fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 
 def test_s3_to_s4_seamless_integration():
@@ -26,8 +26,12 @@ def test_s3_to_s4_seamless_integration():
 
     assert s3_result.point_cloud.num_points >= 15
 
-    # 3. Direct conversion to S4 ReconstructionInput
-    s4_input = s3_result.to_s4_reconstruction_input()
+    # 3. Build S4 ReconstructionInput from S3 point cloud (no cross-subsystem import)
+    s4_input = ReconstructionInput(
+        points=s3_result.point_cloud.points,
+        colors=s3_result.point_cloud.colors,
+        metadata=s3_result.metadata if hasattr(s3_result, "metadata") else {},
+    )
     assert isinstance(s4_input, ReconstructionInput)
     assert s4_input.num_points == s3_result.point_cloud.num_points
     assert s4_input.points.shape == (s3_result.point_cloud.num_points, 3)

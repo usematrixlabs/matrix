@@ -853,3 +853,82 @@ Architecture is not documentation that gets written once.
 **The architecture document is a living representation of the system.**
 
 If the implementation and architecture disagree, the repository is considered inconsistent until the discrepancy is resolved.
+
+# Reuse Before Reinventing
+
+## Principle
+
+**Prefer composition and reuse over implementing functionality from scratch.**
+
+Before writing non-trivial functionality, the agent MUST determine whether the requirement can be satisfied by an existing implementation.
+
+The preferred order is:
+
+1. **Existing project functionality**
+2. **Standard library**
+3. **Existing dependencies**
+4. **Mature third-party package**
+5. **New implementation**
+
+Do not reinvent functionality that is already solved well by a reliable, maintained dependency.
+
+## Mandatory Reuse Check
+
+Before creating a new utility, helper, abstraction, subsystem, or significant piece of functionality, evaluate:
+
+* Does the repository already provide this?
+* Does the language standard library provide this?
+* Does an existing project dependency provide this?
+* Is there a mature third-party package that provides this?
+* Would using an existing solution introduce unacceptable complexity, security risk, performance problems, or incompatibility?
+* If implementing from scratch, what specifically justifies doing so?
+
+For non-trivial functionality, explicitly record the conclusion in the implementation plan or task notes.
+
+### Decision Rule
+
+If an established package satisfies the requirements with reasonable compatibility and maintenance characteristics:
+
+> **Use the package rather than implementing equivalent functionality yourself.**
+
+Only implement from scratch when there is a concrete reason not to reuse an existing solution.
+
+## Examples
+
+Prefer established packages or existing abstractions for functionality such as:
+
+* Retry and exponential backoff
+* Schema validation
+* JWT/OAuth handling
+* PDF parsing
+* HTML parsing
+* Database migrations
+* Scheduling
+* Caching
+* Queues
+* Fuzzy matching
+* Serialization formats
+* Cryptographic primitives
+* Complex date/time operations
+
+Do **not** add a dependency merely to avoid writing a few trivial lines of code. Small, obvious functionality should remain simple when the standard library or a tiny local implementation is clearly superior.
+
+## Why This Matters
+
+Unnecessary custom implementations increase:
+
+* Codebase size
+* Maintenance burden
+* Bug surface
+* Testing requirements
+* Cognitive load
+* Dependency on undocumented internal behavior
+* Difficulty for future engineers and agents to understand the system
+
+Agents should optimize for **the smallest robust solution**, not the largest amount of newly generated code.
+
+### Core Heuristic
+
+> **Before asking "How do I implement this?", ask "Who has already implemented this well?"**
+
+The goal is not to minimize lines of code at all costs. The goal is to minimize **unnecessary complexity and duplicated functionality** while preserving correctness, reliability, security, and maintainability.

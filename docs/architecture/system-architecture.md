@@ -67,7 +67,7 @@ s1_output/
 2. **Stable Deterministic Identifiers:** Observations have immutable IDs (`frame_000001`, `frame_000002`, ...) that persist across S1 $\rightarrow$ S2 $\rightarrow$ S3.
 3. **Capture Timestamps:** Timestamps represent source video capture time in seconds ($t_k < t_{k+1}$ monotonic).
 4. **Camera Intrinsics:** Dimensions (`width`, `height`) are always known. Intrinsics (`fx, fy, cx, cy`) and distortion are preserved when supplied, and explicitly set to `null` with `is_calibrated: false` when unavailable.
-5. **Portable Relative Paths:** Image paths inside `observations.json` use relative paths (`frames/frame_000001.jpg`) from the package root.
+5. **Portable Relative Paths:** Image paths inside `observations.json` use relative paths (`frames/frame_000001.jpg`) from the package root. The in-memory `S1Contract.observations[]` carries the same field as `image_path` (S1's dataclass field name); S2's `run_s2` accepts both keys (`image` or `image_path`) at the boundary so the contract tolerates either naming.
 
 ---
 
@@ -140,6 +140,8 @@ Input Error  ──>  Processing Error  ──>  Quality Warning  ──>  Degra
                         │    & Sensor Fusion        │
                         │                           │
                         │ • Visual pose estimation  │
+                        │   (pluggable matcher:     │
+                        │    classical | lightglue) │
                         │ • EKF state filtering     │
                         │ • Telemetry fusion        │
                         │ • Trajectory smoothing    │
@@ -208,11 +210,11 @@ python -m src.pipeline.orchestrator \
 
 | Stage | Subsystem | Public Entry Point                          | Input Contract                                        | Output Contract                                  |
 | :--- | :--- | :------------------------------------------ | :---------------------------------------------------- | :----------------------------------------------- |
-| S1 | Visual Perception | `src.visual_perception.S1Pipeline` | `--video` path | `s1/observations.json` + `s1/frames/` |
-| S2 | Localization & Sensor Fusion | `src.localization_sensor_fusion` (`Localizer`, `SensorFusion`, `S2Exporter`) | `s1_output` observations + `--gps` CSV | `s2/s2_output.json` |
-| S3 | 3D Reconstruction | `src.reconstruction.S3ReconstructionPipeline` | `s2_output.json` | `s3/scene.ply` + `s3/metadata.json` |
-| S4 | Georeferencing & Validation | `src.georeferencing_validation.Georeferencer` | `s3/scene.ply` | `s4/georeferenced.ply` + `s4/georeferencing.json` |
-| S5 | Application & Deployment | `src.application_deployment.Finalizer` | per-stage artifacts | `s5/final_output.json` |
+| S1 | Visual Perception | `src.visual_perception.run_s1` | `--video` path | `S1Output` → `S1Contract` (`s1/observations.json` + `s1/frames/`) |
+| S2 | Localization & Sensor Fusion | `src.localization_sensor_fusion.run_s2` | `S1Contract` + `--gps` CSV + optional `config["matcher"]` (`{"backend": "classical"|"lightglue", "max_num_keypoints": int}`) | `S2Contract` (`s2/s2_output.json`) |
+| S3 | 3D Reconstruction | `src.reconstruction.run_s3` | `S2Contract` + `image_root` | `S3Contract` (`s3/scene.ply` + `s3/metadata.json`) |
+| S4 | Georeferencing & Validation | `src.georeferencing_validation.run_s4` | `S3Contract` | `S4Contract` (`s4/georeferenced.ply` + `s4/georeferencing.json`) |
+| S5 | Application & Deployment | `src.application_deployment.run_s5` | `S4Contract` + per-stage metadata | `S5Contract` (`s5/final_output.json`) |
 
 The GPS CSV enters the system through **S2** (sensor fusion), not
 through the orchestrator as a separate processing stage.
@@ -249,12 +251,84 @@ stack trace to stderr, and returns a `PipelineResult(success=False, ...)`.
 All artifacts produced by stages that ran successfully are preserved on
 disk so they can be inspected or replayed.
 
+In addition to exception-based failure, the orchestrator performs
+**structural validation** of the S3 output before continuing to S4:
+
+* S3 must report a non-zero `point_cloud.num_points` with a status
+  other than `INVALID_INPUT` / `FAILURE` with zero points.
+* The S3 `scene.ply` artifact must exist on disk and be non-empty.
+
+A non-zero point cloud with `FAILURE`/`WARNING`/`PARTIAL` status
+indicates a quality concern (e.g., low triangulation ratio from
+uncalibrated-camera heuristics) but is **not** a pipeline error —
+S4/S5 still run with the usable subset and the quality flag is surfaced
+in `stage_status` and the S5 summary.
+
 Stages are also allowed to record **degraded** outcomes (e.g., S4 with
 an empty input point cloud) rather than failing the whole pipeline.
 These are surfaced through `stage_status` and the `sN/` summary files.
 ---
 
-## 7. S3: 3D Reconstruction
+## 7a. S2: Localization & Sensor Fusion
+
+### Overview
+
+S2 turns S1's per-frame observations into a camera trajectory. Today
+the canonical path is **GPS-anchored localization + sensor fusion**;
+visual pose recovery (the `VisualLocalizerEngine`) is a present-but
+opt-in engine that downstream integrations may invoke.
+
+### 7a.1 Pluggable Visual-Correspondence Backend
+
+The 2D-to-2D feature-matching step inside S2 is a **pluggable backend**
+selected via the `config["matcher"]` mapping on
+`run_s2(s1_contract, gps_path, output_dir, config=...)`. The selected
+backend is recorded on `S2Contract.metadata.matcher` so the choice is
+auditable per run.
+
+```yaml
+matcher:
+  backend: lightglue        # or "classical"
+  max_num_keypoints: 2048   # lightglue-only
+```
+
+Backends:
+
+| Backend     | Implementation                                | Notes |
+| :---------- | :-------------------------------------------- | :---- |
+| `classical` | ORB + Hamming BFMatcher (OpenCV)              | Historical default; no learned weights. |
+| `lightglue` | SuperPoint + LightGlue (vendored at `models/LightGlue`) | Pretrained weights cached at runtime under `~/.cache/torch/hub`; **not** committed to the repo. |
+
+The two backends share the internal contract
+`localization_sensor_fusion._internal.matching.FeatureMatcher` and
+return a `MatchResult(points0, points1, scores=None)`. **No LightGlue
+type leaks outside `matching/`**: S2's pose-estimation, sensor fusion,
+trajectory smoother, and the S2→S3 wire contract are all
+backend-agnostic. Selecting `classical` is a one-line config rollback.
+
+Because LightGlue's `SuperPoint.extract` performs internal resizing,
+keypoint coordinates returned by the `lightglue` backend live in the
+**resized image coordinate space** (default long-side 1024 px). Any
+future integration of these matches into the camera-model pipeline
+must perform coordinate rescaling *inside the matcher module* so the
+rest of S2 continues to see backend-agnostic pixel coordinates.
+
+### 7a.2 Boundary Impact
+
+* **S1 → S2 contract:** unchanged.
+* **S2 → S3 contract:** unchanged. `S2Contract` shape and JSON schema
+  are identical to the pre-LightGlue form.
+* **S2 internal layout:** new subpackage
+  `src/localization_sensor_fusion/_internal/matching/` (base,
+  classical, lightglue).
+* **Vendored dependency:** `models/LightGlue/` (Apache-2.0,
+  [cvg/LightGlue](https://github.com/cvg/LightGlue), ICCV 2023).
+  Installed editable into the existing `.venv` via
+  `uv pip install -e models/LightGlue`.
+
+---
+
+## 8. S3: 3D Reconstruction
 
 ### Overview
 
@@ -266,10 +340,99 @@ S3 generates the 3D dense/sparse representation of the observed scene from multi
 2. **Quality Evaluation:** Mean and median reprojection error computation with statistical outlier filtering.
 3. **Local Spatial Frame:** Coordinates remain in `S3_LOCAL` meters with bounding box metadata.
 4. **Standard Artifacts:** Outputs standard binary/ASCII `scene.ply` and structured `metadata.json`.
+5. **S2 → S3 Bridge:** S3 consumes S2's `S2Contract` (poses + camera info) and S1's frame images via the duck-typed bridge in `src.reconstruction._internal.s2_to_s3_bridge`. When no camera intrinsics are present in the upstream payload, the bridge derives a documented heuristic intrinsics guess (`fx = fy = image_width`, principal point at the image center, no distortion) so the pipeline remains runnable end-to-end on uncalibrated UAV footage.
+
+### 8.1 Camera Calibration as a First-Class Input
+
+S3 accepts an optional external **camera calibration** as a first-class input. Calibration is intentionally **distinct from camera pose**:
+
+| Concept | Question it answers |
+| :--- | :--- |
+| **Calibration** | *How does a pixel map to a camera ray?* (intrinsics + distortion) |
+| **Camera Pose** | *Where is that ray pointing in the world?* (position + orientation) |
+
+A triangulation pipeline requires both. Conflating them (e.g., "fixing" calibration when poses are wrong) hides real defects.
+
+**Supported calibration format**
+
+S3's :class:`src.reconstruction.CameraCalibration` and :class:`src.reconstruction.OpenCVCameraCalibrationLoader` consume OpenCV ``FileStorage`` YAML files (``%YAML:1.0`` header with ``!!opencv-matrix`` and ``!x!opencv-matrix`` custom tags), e.g.::
+
+    %YAML:1.0
+    ---
+    camera_name: <string>
+    image_width:  <int>
+    image_height: <int>
+    distortion_model: plumb_bob
+    camera_matrix: !!opencv-matrix
+       rows: 3
+       cols: 3
+       dt: d
+       data: [ fx, 0, cx,
+               0, fy, cy,
+               0,  0,  1 ]
+    distortion_coefficients: !!opencv-matrix
+       rows: 1
+       cols: 5
+       dt: d
+       data: [ k1, k2, p1, p2, k3 ]
+
+**Distortion model**
+
+``distortion_model: plumb_bob`` (alias ``radtan``) follows OpenCV's standard 5-coefficient ordering ``[k1, k2, p1, p2, k3]``. ``fisheye`` and other models are not yet supported and produce a clear ``CameraCalibrationError``. Calibration values are consumed **exactly as supplied** — no normalization, clamping, or "correction" of strong coefficients is performed.
+
+**Validation invariants**
+
+The loader enforces:
+
+* 3×3 pinhole ``camera_matrix`` with ``K[2,2] ≈ 1.0``,
+* ``fx > 0``, ``fy > 0``, ``0 ≤ cx ≤ image_width``, ``0 ≤ cy ≤ image_height``,
+* a 1D ``distortion_coefficients`` vector of length 5 for ``plumb_bob``.
+
+**Resolution compatibility**
+
+Calibration resolution must match the actual video resolution. When it does not, the calibration is **not** silently reused — the caller must explicitly invoke :meth:`CameraCalibration.scale_to_resolution` which enforces an **isotropic uniform resize** policy (``sx ≈ sy``) and rescales ``fx``, ``fy``, ``cx``, ``cy``. Non-uniform scaling is rejected.
+
+**Integration point**
+
+The pipeline orchestrator (``src/pipeline/orchestrator.py``) accepts a ``--calibration`` CLI flag pointing to the YAML file. The file is loaded once at the pipeline boundary, validated against the video dimensions, and threaded into S3 via :func:`src.reconstruction.run_s3`'s new ``calibration`` parameter. S1's existing ``--calibration`` flag remains the canonical way for the upstream visual-perception layer to record calibration in ``observations.json``.
+
+**Undistortion**
+
+S3 applies distortion correction at the preprocessing boundary in :class:`src.reconstruction._internal.preprocessing.undistort.ObservationUndistorter`. The implementation uses ``cv2.undistortPoints(pts, K, D, P=K, ...)`` which:
+
+* inverts the forward ``cv2.projectPoints`` model,
+* returns **undistorted pixel coordinates in the same K pixel space** (``P=K`` is explicit — passing ``P=None`` would silently return normalized camera coordinates and break the existing ``P = K [R | t]`` projection model),
+* records both the raw (distorted) and undistorted coordinates on :class:`src.reconstruction._internal.preprocessing.prepare.PreparedTrack` (``points_2d_raw`` vs ``points_2d``) so that debugging and diagnostics can compare the two.
+
+**Raw vs undistorted observations**
+
+Observations in :class:`S2Observation.features[*]` are **always** raw (distorted) — that is what the upstream detector actually saw. Distortion correction happens at the S3 preparer boundary and produces a *separate* set of coordinates on the :class:`PreparedTrack`. The triangulation engine consumes the undistorted coordinates.
+
+**Output metadata**
+
+S3's ``metadata.json`` records calibration provenance whenever a calibration was supplied::
+
+    metadata.camera_calibration: {
+      camera_name, image_width, image_height, distortion_model,
+      camera_matrix, distortion_coefficients, source,
+      undistortion_applied: <bool>,
+    }
+    metadata.camera_calibration_summary: {
+      camera_name, image_width, image_height,
+      distortion_model, distortion_applied: <bool>,
+    }
+
+The high-level ``camera_calibration_summary`` block is also surfaced in the S5 ``final_output.json`` so downstream consumers can quickly see which calibration was used and whether undistortion was actually applied.
+
+**Coordinate convention**
+
+* Pixel origin at top-left, ``x`` increasing right, ``y`` increasing down.
+* Distortion model: ``plumb_bob`` = ``[k1, k2, p1, p2, k3]``.
+* Projection convention: world-to-camera, ``P = K [R | t]``, with ``t`` such that ``X_cam = R @ X_world + t``.
 
 ---
 
-## 8. S3 → S4 Interface
+## 9. S3 → S4 Interface
 
 See [S3 → S4 Interface Contract](contracts/reconstruction-georeferencing.md).
 
@@ -277,30 +440,7 @@ S3 provides the local 3D reconstruction (`PointCloudData` / `ReconstructionInput
 
 ---
 
-## 7. S3: 3D Reconstruction
-
-### Overview
-
-S3 generates the 3D dense/sparse representation of the observed scene from multi-view feature tracks and localized camera poses.
-
-### Key Architectural Properties
-
-1. **Multi-View Triangulation:** Linear DLT / SVD triangulation with cheirality checks.
-2. **Quality Evaluation:** Mean and median reprojection error computation with statistical outlier filtering.
-3. **Local Spatial Frame:** Coordinates remain in `S3_LOCAL` meters with bounding box metadata.
-4. **Standard Artifacts:** Outputs standard binary/ASCII `scene.ply` and structured `metadata.json`.
-
----
-
-## 8. S3 → S4 Interface
-
-See [S3 → S4 Interface Contract](contracts/reconstruction-georeferencing.md).
-
-S3 provides the local 3D reconstruction (`PointCloudData` / `ReconstructionInput`), color arrays, and reconstruction quality metadata to S4.
-
----
-
-## 9. S4: Georeferencing & Validation
+## 10. S4: Georeferencing & Validation
 
 ### Overview
 
@@ -316,7 +456,7 @@ S4 transforms the local 3D reconstruction into real-world geographic coordinates
 
 ---
 
-## 10. S4 → S5 Interface
+## 11. S4 → S5 Interface
 
 See [S4 → S5 Interface Contract](contracts/georeferencing-application.md).
 
@@ -324,7 +464,7 @@ S4 delivers the georeferenced 3D scene, validation metrics, CRS metadata, qualit
 
 ---
 
-## 11. S5: Application & Deployment
+## 12. S5: Application & Deployment
 
 ### Overview
 
@@ -332,7 +472,7 @@ S5 is the system-facing orchestration layer. It manages the complete end-to-end 
 
 ### Core Capabilities
 
-1. **Pipeline Orchestrator:** `Orchestrator.run_pipeline()` coordinates execution from raw UAV video or intermediate representations.
+1. **Pipeline Orchestrator:** `src.pipeline.run_pipeline()` (the sole integration owner) drives S1 → S5. S5 itself exposes only :func:`run_s5`; cross-subsystem orchestration lives in `src/pipeline/`.
 2. **Deliverables Packaging:** Assembles deliverables (`scene.ply`, `s2_output.json`, `georeferencing_report.html`, `pipeline_manifest.json`).
 3. **Stage Metrics & Telemetry:** Monitors per-stage execution times, status, points reconstructed, and accuracy metrics.
 
@@ -342,13 +482,119 @@ Per [ADR-002](../../decisions/ADR-002-independent-subsystems-pipeline-owned-inte
 
 ---
 
-## 6. Independent Subsystems & Pipeline-Owned Integration (ADR-002)
+## 6. Subsystem Public Surface
+
+Each subsystem is a **sealed module**. It exposes exactly one integration
+symbol (a `run_sN` function) plus the canonical Pydantic contract type
+it produces. Anything else lives under a private `_internal/` namespace
+and is **not** importable from outside the subsystem package.
+
+### 6.1 Public Symbols
+
+| Subsystem | Integration Symbol | Contract Type |
+| :--- | :--- | :--- |
+| **S1** — Visual Perception | `run_s1(video_path, output_dir, config=None) -> S1Output` | `S1Contract` / `S1Output.to_contract() -> S1Contract` |
+| **S2** — Localization & Sensor Fusion | `run_s2(s1_contract, gps_path, output_dir, config=None) -> S2Contract` | `S2Contract` (matches `s2_output.json` schema) |
+| **S3** — 3D Reconstruction | `run_s3(s2_contract, image_root, output_dir, config=None) -> S3Contract` | `S3Contract` (`point_cloud`, `metadata`, `spatial_reference`) |
+| **S4** — Georeferencing & Validation | `run_s4(s3_contract, output_dir, config=None) -> S4Contract` | `S4Contract` (`georeferenced_scene`, `validation_metrics`, `coordinate_reference`) |
+| **S5** — Application & Deployment | `run_s5(s4_contract, output_dir, success, stage_status, artifacts, summary, config=None) -> S5Contract` | `S5Contract` (`manifest`, `artifacts`, `summary`) |
+
+### 6.2 Directory Layout
+
+Every subsystem follows the same physical structure:
+
+```text
+src/<subsystem>/
+├── __init__.py        # public API only — single import surface
+├── interface.py       # the single runner (run_sN)
+└── _internal/         # everything else, leading underscore
+    ├── contracts.py   # producer-owned Pydantic boundary types
+    └── ...            # algorithms, adapters, helpers
+```
+
+The pipeline (`src/pipeline/`) imports **only** each subsystem's public
+surface (`src.<subsystem>`). Subsystems never import each other.
+
+### 6.3 Isolation Rule
+
+The canonical principle is unchanged:
+
+> **Subsystems own computation. The pipeline owns composition. Contracts own boundaries.**
+
+In code, this translates to:
+
+```python
+# ALLOWED — orchestrator imports the public surface:
+from src.visual_perception import run_s1, S1Output
+from src.localization_sensor_fusion import run_s2, S2Contract
+from src.reconstruction import run_s3, S3Contract
+from src.georeferencing_validation import run_s4, S4Contract
+from src.application_deployment import run_s5, S5Contract
+
+# FORBIDDEN — any of these is a CI violation:
+from src.visual_perception.frame_extractor import FrameExtractor
+from src.localization_sensor_fusion._internal.adapters.s1_adapter import S1InputAdapter
+from src.reconstruction.models.schema import S2Payload        # S3 reaching into itself is fine,
+                                                              # but S2 / S4 must not reach here.
+```
+
+The forbidden imports are enforced by `tests/test_isolation.py`:
+
+* No module under `src/<subsystem>/` may `import` a sibling subsystem
+  package (`src.<other_subsystem>`).
+* `src/<subsystem>/interface.py` may import nothing outside its own
+  `_internal/` namespace.
+* Outside `src/pipeline/`, no module may import across subsystem
+  boundaries. The orchestrator is the single allowed cross-subsystem
+  importer.
+
+### 6.4 Contract Ownership
+
+Each producer owns its contract type under its own `_internal/contracts.py`:
+
+| Producer | Contract Type | Boundary |
+| :--- | :--- | :--- |
+| S1 | `S1Contract` | `docs/architecture/contracts/perception-localization.md` |
+| S2 | `S2Contract` | `docs/architecture/contracts/localization-reconstruction.md` |
+| S3 | `S3Contract` | `docs/architecture/contracts/reconstruction-georeferencing.md` |
+| S4 | `S4Contract` | `docs/architecture/contracts/georeferencing-application.md` |
+| S5 | `S5Contract` | internal S4 → S5 wire format |
+
+The orchestrator is the **only** place that constructs an `S2Contract`
+from an `S1Contract`, an `S3Contract` from an `S2Contract`, etc.
+Subsystems no longer accept dicts shaped like other subsystems'
+outputs — they receive their upstream wire-format contract and the
+producer's documented fields are accessed via duck-typed attribute
+access (S3 reading S2's `S2Contract.observations`, etc.).
+
+### 6.5 Why This Matters
+
+Sealed subsystems and the CI guard deliver three guarantees that the
+older "everything is public" layout could not:
+
+1. **A subsystem can be swapped, refactored, or rewritten as long as
+   its `run_sN` and `S<N>Contract` honor the contract.** Internal
+   modules in `_internal/` are free to change without coordinating with
+   other subsystem owners.
+2. **Integration failures are attributable.** When a downstream stage
+   crashes, the only places a violation could have been introduced are
+   the producer's contract output, the orchestrator's adaptation, or
+   the consumer's input validation — not a third subsystem quietly
+   reaching into a sibling.
+3. **The contract types become the currency.** Once `S1Contract` etc.
+   are Pydantic-validated wire formats, the orchestrator can stop
+   carrying ad-hoc dicts around; contracts become the canonical data
+   flowing through `src/pipeline/`.
+
+---
+
+## 7. Independent Subsystems & Pipeline-Owned Integration (ADR-002)
 
 **Status: Adopted** — See [ADR-002](../../decisions/ADR-002-independent-subsystems-pipeline-owned-integration.md) and `system.md` §15.
 
 > **Subsystems own computation. The pipeline owns composition. Contracts own boundaries.**
 
-### 6.1 Responsibility Boundary
+### 7.1 Responsibility Boundary
 
 ```text
 ┌─────────────────┐
@@ -381,7 +627,7 @@ Per [ADR-002](../../decisions/ADR-002-independent-subsystems-pipeline-owned-inte
 * **Subsystem** owns: algorithms, contract compliance, input validation, outputs/metrics/diagnostics/status, degraded-input handling.
 * **Pipeline** (`src/pipeline/`) owns: execution order, invocation, obtaining/adapting/passing data between contracts, artifact locations, status/failure propagation, orchestration, cross-subsystem validation. It is not part of any subsystem's internals.
 
-### 6.2 Data Ownership — Pipeline-Mediated Only
+### 7.2 Data Ownership — Pipeline-Mediated Only
 
 ```text
 S1 output → Pipeline obtains → Pipeline adapts → S2 input
@@ -392,7 +638,7 @@ S4 output → Pipeline obtains → Pipeline adapts → S5 input
 
 No subsystem reads another subsystem's private artifacts directly. Adapters live in `src/pipeline/`.
 
-### 6.3 What a Subsystem Must NOT Do
+### 7.3 What a Subsystem Must NOT Do
 
 * Reach into another subsystem's internal code or private artifacts.
 * Assume how upstream data was generated.
@@ -402,11 +648,11 @@ No subsystem reads another subsystem's private artifacts directly. Adapters live
 
 Example: S3 does not care whether camera poses came from GPS, visual odometry, EKF, COLMAP, or synthetic data — only that the S3 input contract is satisfied.
 
-### 6.4 Contract-First Integration
+### 7.4 Contract-First Integration
 
 Every boundary in `docs/architecture/contracts/` must define input (required/optional fields, types, units, coordinate frames, valid ranges, quality requirements) and output (artifacts, schemas, metrics, status, diagnostics, failure/degradation semantics). The pipeline converts one contract's output into the next contract's input.
 
-### 6.5 Status Classification
+### 7.5 Status Classification
 
 Three statuses must not be conflated:
 
@@ -426,7 +672,7 @@ End-to-end pipeline:   ❌ Fails
 
 A zero-point S3 result does not automatically imply an S3 defect if the pipeline failed to provide valid camera geometry — that is a pipeline integration issue if S3 correctly handled invalid input per its contract.
 
-### 6.6 Engineering Rule — Trace to the Contract Boundary
+### 7.6 Engineering Rule — Trace to the Contract Boundary
 
 ```text
 Did upstream produce valid output? ──NO→ upstream issue
@@ -437,7 +683,7 @@ Did downstream correctly process it? ──NO→ downstream issue
         │ YES → investigate subsequent boundary
 ```
 
-### 6.7 Current Assessment (under this principle)
+### 7.7 Current Assessment (under this principle)
 
 | Component | Assessment |
 |-----------|------------|

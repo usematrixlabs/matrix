@@ -5,9 +5,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from src.reconstruction.models.schema import S3Status
-from src.reconstruction.pipeline import S3ReconstructionPipeline
-from tests.fixtures.synthetic_scene import generate_synthetic_uav_dataset
+from reconstruction._internal.models.schema import S3Status
+from reconstruction._internal.pipeline import S3ReconstructionPipeline
+from fixtures.synthetic_scene import generate_synthetic_uav_dataset
 
 
 def test_pipeline_end_to_end_synthetic(tmp_path: Path):
@@ -34,7 +34,7 @@ def test_pipeline_end_to_end_synthetic(tmp_path: Path):
     with open(out_dir / "metadata.json", "r", encoding="utf-8") as f:
         meta = json.load(f)
     assert meta["scene_id"] == "test_scene_001"
-    assert meta["geometry"]["point_count"] == result.point_cloud.num_points
+    assert meta["num_points"] == result.point_cloud.num_points
     assert meta["spatial_reference"]["coordinate_frame"] == "S3_LOCAL"
 
 
