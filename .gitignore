@@ -242,6 +242,11 @@ data/output/
 checkpoints/
 weights/
 
+# Vendored third-party ML repositories carry their own .git directory
+# which confuses the parent repo. Strip it when re-vendoring.
+models/*/.git/
+models/*/.gitignore
+
 # ----------------
 
 # Docker

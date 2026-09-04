@@ -140,6 +140,8 @@ Input Error  ──>  Processing Error  ──>  Quality Warning  ──>  Degra
                         │    & Sensor Fusion        │
                         │                           │
                         │ • Visual pose estimation  │
+                        │   (pluggable matcher:     │
+                        │    classical | lightglue) │
                         │ • EKF state filtering     │
                         │ • Telemetry fusion        │
                         │ • Trajectory smoothing    │
@@ -209,7 +211,7 @@ python -m src.pipeline.orchestrator \
 | Stage | Subsystem | Public Entry Point                          | Input Contract                                        | Output Contract                                  |
 | :--- | :--- | :------------------------------------------ | :---------------------------------------------------- | :----------------------------------------------- |
 | S1 | Visual Perception | `src.visual_perception.run_s1` | `--video` path | `S1Output` → `S1Contract` (`s1/observations.json` + `s1/frames/`) |
-| S2 | Localization & Sensor Fusion | `src.localization_sensor_fusion.run_s2` | `S1Contract` + `--gps` CSV | `S2Contract` (`s2/s2_output.json`) |
+| S2 | Localization & Sensor Fusion | `src.localization_sensor_fusion.run_s2` | `S1Contract` + `--gps` CSV + optional `config["matcher"]` (`{"backend": "classical"|"lightglue", "max_num_keypoints": int}`) | `S2Contract` (`s2/s2_output.json`) |
 | S3 | 3D Reconstruction | `src.reconstruction.run_s3` | `S2Contract` + `image_root` | `S3Contract` (`s3/scene.ply` + `s3/metadata.json`) |
 | S4 | Georeferencing & Validation | `src.georeferencing_validation.run_s4` | `S3Contract` | `S4Contract` (`s4/georeferenced.ply` + `s4/georeferencing.json`) |
 | S5 | Application & Deployment | `src.application_deployment.run_s5` | `S4Contract` + per-stage metadata | `S5Contract` (`s5/final_output.json`) |
