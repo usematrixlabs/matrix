@@ -125,17 +125,17 @@ class S3ReconstructionResult:
             "metadata": self.metadata,
         }
 
-    def to_s4_reconstruction_input(self):
-        """Deprecated: S4 boundary conversion is now the orchestrator's job.
+    # def to_s4_reconstruction_input(self):
+    #     """Deprecated: S4 boundary conversion is now the orchestrator's job.
 
-        Kept as a stub that raises ``NotImplementedError`` so that any
-        legacy caller fails loudly instead of silently re-introducing a
-        cross-subsystem import. S3 → S4 conversion goes through the
-        S3 → S4 wire-format contract handled by ``run_s4`` (which
-        reads S3's ``scene.ply`` + ``metadata.json`` directly).
-        """
-        raise NotImplementedError(
-            "S3ReconstructionResult.to_s4_reconstruction_input has been "
-            "removed during subsystem isolation. Use S4's run_s4() with "
-            "the S3Contract instead."
-        )
+    #     Kept as a stub that raises ``NotImplementedError`` so that any
+    #     legacy caller fails loudly instead of silently re-introducing a
+    #     cross-subsystem import. S3 → S4 conversion goes through the
+    #     S3 → S4 wire-format contract handled by ``run_s4`` (which
+    #     reads S3's ``scene.ply`` + ``metadata.json`` directly).
+    #     """
+    #     raise NotImplementedError(
+    #         "S3ReconstructionResult.to_s4_reconstruction_input has been "
+    #         "removed during subsystem isolation. Use S4's run_s4() with "
+    #         "the S3Contract instead."
+    #     )
